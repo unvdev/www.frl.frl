@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>CMS</title>
+    <!-- <link href="cms.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" /> -->
+    <script src="cms-loader.js"></script>
+</head>
+
+<body>
+<div data-name="cms environment">
+    <div class="cms-menu-bar">
+        <button id="style-element">Style Element</button>
+        <button id="delete-element">Delete Element</button>
+        <button id="move-element-up">&#x25B2;</button>
+        <button id="move-element-down">&#x25BC;</button>
+        <button id="save-and-copy">Save and Copy</button>
+    </div>
+
+    <div class="text-editor-pop content-hide">
+        <div class="text-editor">
+            <div id="quill-editor"></div>
+        </div>
+    </div>
+
+<div id="style-editor-sidebar" class="sidebar content-hide">
+  <div class="sidebar-header">
+    <h3>Style Editor</h3>
+  </div>
+
+  <div class="sidebar-section">
+    <h4 class="sidebar-section-title">Appearance</h4>
+    <div class="sidebar-control-group">
+      <label>
+        Background Color
+        <div class="color-input-wrapper">
+          <input type="color" id="style-editor-bg-color-input" value="#FFFFFF">
+          <span id="style-editor-bg-color-input-value" class="color-hex">#FFFFFF</span>
+      </div>
+      </label>
+
+      <label>
+        Border Color
+        <div class="color-input-wrapper">
+          <input type="color" id="style-editor-border-color-input" value="#FFFFFF">
+        <span id="style-editor-border-color-input-value" class="color-hex">#FFFFFF</span>
+      </div>
+      </label>
+
+      <label>
+        Border Width
+        <div class="input-with-unit">
+          <input type="number" id="style-editor-border-width-input" value="0" min="0">
+        </div>
+      </label>
+
+      <label>
+        Border Radius
+        <div class="input-with-unit">
+          <input type="number" id="style-editor-border-radius-input" value="0" min="0">
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <h4 class="sidebar-section-title">Sizing & Alignment</h4>
+    <div class="sidebar-control-group">
+      <label>
+        Width
+        <div class="input-with-unit">
+          <input type="number" id="style-editor-width-input" value="100" min="1" max="100">
+        </div>
+      </label>
+    </div>
+
+    <div class="sidebar-control-group">
+      <label>
+        Horizontal Alignment
+        <div class="sidebar-segmented-control">
+          <button id="style-editor-align-left-button" class="active" title="Align Left">
+            <i class="fa-solid fa-align-left"></i>
+          </button>
+          <button id="style-editor-align-center-button" title="Align Center">
+            <i class="fa-solid fa-align-center"></i>
+          </button>
+          <button id="style-editor-align-right-button" title="Align Right">
+            <i class="fa-solid fa-align-right"></i>
+          </button>
+        </div>
+      </label>
+
+      <div id="style-editor-vertical-align-controls" class="content-hide">
+      <label>
+        Vertical Alignment
+        <div class="sidebar-segmented-control">
+          <button id="style-editor-align-top-button" class="active" title="Align Top">
+            <i class="fa-solid fa-arrow-up"></i>
+          </button>
+          <button id="style-editor-align-middle-button" title="Align Middle">
+            <i class="fa-solid fa-arrows-up-down"></i>
+          </button>
+          <button id="style-editor-align-bottom-button" title="Align Bottom">
+            <i class="fa-solid fa-arrow-down"></i>
+          </button>
+        </div>
+      </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+      <h4 class="sidebar-section-title">Spacing</h4>
+
+    <div class="sidebar-control-group">
+      <label>
+        Padding
+      </label>
+    </div>
+    <div class="sidebar-quad-control">
+      <input type="number" id="style-editor-padding-top-input" class="quad-top" value="0" min="0" title="Top Padding">
+      <input type="number" id="style-editor-padding-left-input" class="quad-left" value="0" min="0" title="Left Padding">
+      <div class="quad-center-label">
+        <i class="fa-solid fa-link"></i>
+      </div>
+      <input type="number" id="style-editor-padding-right-input" class="quad-right" value="0" min="0" title="Right Padding">
+      <input type="number" id="style-editor-padding-bottom-input" class="quad-bottom" value="0" min="0" title="Bottom Padding">
+    </div>
+  </div>
+
+  <div id="style-editor-image-controls" class="content-hide">
+    <div class="sidebar-section">
+      <h4 class="sidebar-section-title">Image Options</h4>
+      <div class="sidebar-control-group">
+        <label>
+          Image Style
+          <div class="sidebar-segmented-control">
+            <button id="style-editor-image-default-button" class="active" title="image default">
+              <i class="fa-solid fa-up-right-and-down-left-from-center" style="transform: rotate(45deg)"></i>
+            </button>
+            <button id="style-editor-image-crop-button" title="image crop">
+              <i class="fa-solid fa-crop"></i>
+            </button>
+          </div>
+        </label>
+          <div id="style-editor-image-crop-controls" class="content-hide">
+            <div class="sidebar-control-group">
+            <label>
+              Image Width
+              <div class="input-with-unit">
+                <input type="number" id="style-editor-crop-width-input" value="0" min="10">
+              </div>
+            </label>
+            <label>
+              Image Height
+              <div class="input-with-unit">
+                <input type="number" id="style-editor-crop-height-input" value="0" min="10">
+              </div>
+            </label>
+            <label>
+              Frame Position
+              <div class="input-with-unit">
+                <input type="number" id="style-editor-crop-position-input" value="0" min="1" max="100">
+              </div>
+            </label>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-element-sidebar" class="cms-menu sidebar content-hide">
+  <div class="sidebar-header">
+    <h3>Page Elements</h3>
+  </div>
+
+  <div class="sidebar-section">
+    <h4 class="sidebar-section-title">Text Elements</h4>
+    <div class="sidebar-control-group">
+      <label>
+        Title
+        <div id="text-element-heading-one-button" class="sidebar-button">Heading 1</div>
+        <div id="text-element-heading-two-button" class="sidebar-button">Heading 2</div>
+        <div id="text-element-heading-three-button" class="sidebar-button">Heading 3</div>
+        <div id="text-element-heading-four-button" class="sidebar-button">Heading 4</div>
+        <div id="text-element-heading-five-button" class="sidebar-button">Heading 5</div>
+      </label>
+      <label>
+        Paragraph
+        <div id="text-element-paragraph-button" class="sidebar-button">Paragraph</div>
+      </label>
+      <label>
+        List
+        <div id="text-element-unordered-button" class="sidebar-button">Bulleted List</div>
+        <div id="text-element-ordered-button" class="sidebar-button">Numbered List</div>
+      </label>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <h4 class="sidebar-section-title">Image Elements</h4>
+    <div class="sidebar-control-group">
+      <label>
+        Single Image
+        <div id="image-element-link-button" class="sidebar-button">Link Image</div>
+        <div id="image-element-upload-button" class="sidebar-button">Upload Image</div>
+      </label>
+      <label>
+        Image Gallery
+        <div id="" class="sidebar-button">Google Drive Gallery Link</div>
+        <div id="" class="sidebar-button">Upload Multiple Images</div>
+      </label>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <h4 class="sidebar-section-title">Cleanup Elements</h4>
+    <div class="sidebar-control-group">
+      <label>
+        Breakup               
+        <div id="layout-element-spacer-button" class="sidebar-button">Spacer</div>
+        <div id="layout-element-divider-button" class="sidebar-button">Divider</div>
+      </label>
+      <label>
+        Contain
+        <div id="layout-element-accordion-button" class="sidebar-button">Accordion</div>
+      </label>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <h4 class="sidebar-section-title">Embed Element</h4>
+    <div class="sidebar-control-group">
+      <label>
+        Title
+      </label>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <h4 class="sidebar-section-title">Layout Elements</h4>
+    <div class="sidebar-control-group">
+      <label>
+        Regular
+        <div id="layout-element-one-column-button" class="sidebar-button">One Column</div>
+        <div id="layout-element-two-column-button" class="sidebar-button">Two Columns</div>
+        <div id="layout-element-three-column-button" class="sidebar-button">Three Columns</div>
+        <div id="layout-element-four-column-button" class="sidebar-button">Four Columns</div>
+        <div id="layout-element-five-column-button" class="sidebar-button">Five Columns</div>
+        <div id="layout-element-six-column-button" class="sidebar-button">Six Columns</div>
+      </label>
+      <label>
+        Asymmetrical
+        <div id="layout-element-asymm-left-column-button" class="sidebar-button">Left Column</div>
+        <div id="layout-element-asymm-right-column-button" class="sidebar-button">Right Column</div>
+      </label>
+  </div>
+
+</div>
+
+    <!-- <div id="loaded-page" style="margin-top: 40px;"></div> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script src="cms-core.js"></script>
+    <script src="cms-menu.js"></script>
+    <script src="cms-text-editor.js"></script>
+    <script src="buildingblocks.js"></script>
+    <script>
+        let paramString = window.location.search.split('?')[1];
+        let queryString = new URLSearchParams(paramString);
+        let nva = parseInt(queryString.get('nva'));
+        if (Number.isNaN(nva) || new Date().getTime() > nva) window.location = '/cms_login';
+    </script> -->
+    </div>
+</body>
+
+</html>
