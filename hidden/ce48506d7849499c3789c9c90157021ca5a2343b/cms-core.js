@@ -5,7 +5,7 @@ const styleButton = document.getElementById("style-element");
 const deleteButton = document.getElementById("delete-element");
 const moveUp = document.getElementById("move-element-up");
 const moveDown = document.getElementById("move-element-down");
-const saveButton = document.getElementById("save-and-copy");
+const publishPage = document.getElementById("publish-page");
 const previewPage = document.getElementById("preview-page");
 const loadedPage = document.getElementById("loaded-page");
 
@@ -246,7 +246,7 @@ function formatHtml(node, level = 0, indentChar = '  ') {
    return result;
 }
 
-async function savePage() {
+async function publishPageCode() {
     deselectAll();
     cleanWidth();
 
@@ -417,7 +417,7 @@ document.addEventListener("keydown", e => {
 });
 
 deleteButton.addEventListener("click", deleteElement);
-saveButton.addEventListener("click", savePage);
+publishPage.addEventListener("click", publishPageCode);
 
 
 // const cms = document.querySelector(".cms-menu");
