@@ -38,8 +38,10 @@ function selectBuildingBlock(blockToSelect, originalTarget) {
    currentlySelected.classList.add('selected');
 }
 
-function getCurrentlySelected() {
-
+function updateSelectedLabel() {
+   if (currentlySelected) {
+      selectedElementLabel.innerText = currentlySelected.dataset.name;
+   }
 }
 
 function deleteElement() {
