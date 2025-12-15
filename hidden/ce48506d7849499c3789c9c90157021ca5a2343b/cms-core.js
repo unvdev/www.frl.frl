@@ -20,7 +20,6 @@ function deselectAll() {
    if (currentlySelected) {
       currentlySelected.classList.remove('selected');
       currentlySelected = null;
-      updateSelectedLabel();
       cms.classList.add("content-hide");
       styles.classList.add("content-hide");
       loadedPage.classList.remove("sidebar-active");
@@ -31,14 +30,12 @@ function selectBuildingBlock(blockToSelect, originalTarget) {
    if (originalTarget.closest('.placeholder-block')) {
       deselectAll();
       currentlySelected = originalTarget;
-      updateSelectedLabel();
       invokeCMSMenu();
       return;
    }
    deselectAll();
    currentlySelected = blockToSelect;
    currentlySelected.classList.add('selected');
-   updateSelectedLabel();
 }
 
 function updateSelectedLabel() {
@@ -379,6 +376,8 @@ document.addEventListener("click", (e) => {
    } else {
       deselectAll();
    }
+   
+   updateSelectedLabel();
 });
 
 document.addEventListener("keydown", e => {
