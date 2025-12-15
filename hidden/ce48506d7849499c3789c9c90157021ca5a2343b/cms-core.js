@@ -55,15 +55,15 @@ function updateSelectedLabel() {
 function updateMovementArrows() {
    if (currentlySelected) {
       if (currentlySelected.classList.contains('building-column')) {
-         moveUp.innerHTML = '◀';
-         moveDown.innerHTML = '▶';
+         moveUp.innerHTML = 'Move Left';
+         moveDown.innerHTML = 'Move Right';
       } else {
-         moveUp.innerHTML = '▲';
-         moveDown.innerHTML = '▼';
+         moveUp.innerHTML = 'Move Up';
+         moveDown.innerHTML = 'Move Down';
       }
    } else {
-      moveUp.innerHTML = '▲';
-      moveDown.innerHTML = '▼';
+      moveUp.innerHTML = 'Move Up';
+      moveDown.innerHTML = 'Move Down';
    }
 }
 
