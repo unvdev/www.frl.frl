@@ -31,6 +31,7 @@ function selectBuildingBlock(blockToSelect, originalTarget) {
    if (originalTarget.closest('.placeholder-block')) {
       deselectAll();
       currentlySelected = originalTarget;
+      updateSelectedLabel();
       invokeCMSMenu();
       return;
    }
