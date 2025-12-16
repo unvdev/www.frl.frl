@@ -127,8 +127,15 @@ function pasteElement() {
             return;
          }
          if (currentlySelected.classList.contains('building-column')) {
-            alert('A building container can only be pasted after another building container or inside a building column.');
-            return;
+            parentColumn = currentlySelected;
+            const placeholder = parentColumn.querySelector('.placeholder-block');
+            if (placeholder) {
+               placeholder.insertAdjacentHTML('beforebegin', clipboard.html);
+               return;
+            } else {
+               currentlySelected.insertAdjacentHTML('beforeend', clipboard.html);
+               return;
+            }
          }
          else {
             currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
