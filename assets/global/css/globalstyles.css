@@ -419,6 +419,13 @@ a:focus {
     height: auto;
 }
 
+.ratio-image {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
 .crop-image {
     display: block;
     position: relative;
