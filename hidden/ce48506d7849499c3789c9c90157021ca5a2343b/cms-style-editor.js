@@ -493,14 +493,22 @@ function checkRestrictedControls() {
 
   if (currentlySelected?.classList.contains("ratio-image")) {
     imageRatioControls.classList.remove("content-hide");
+    widthInput.disabled = true;
+    widthInput.style.opacity = "0.5";
   } else {
     imageRatioControls.classList.add("content-hide");
+    widthInput.disabled = false;
+    widthInput.style.opacity = "1.0";
   }
 
   if (currentlySelected?.classList.contains("crop-image")) {
     imageCropControls.classList.remove("content-hide");
+    widthInput.disabled = true;
+    widthInput.style.opacity = "0.5";
   } else {
     imageCropControls.classList.add("content-hide");
+    widthInput.disabled = false;
+    widthInput.style.opacity = "1.0";
   }
 }
 
