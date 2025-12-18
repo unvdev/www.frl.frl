@@ -378,7 +378,7 @@ function cleanWidth() {
 }
 
 //Helper: Load the cropped image styles
-function loadCroppedImageValues() {
+function loadImageValues() {
     if (currentlySelected.classList.contains("image-element")) {
         const computedStyle = window.getComputedStyle(currentlySelected);
         const inlineStyle = currentlySelected.style;
@@ -427,7 +427,7 @@ function loadStylesFromSelected() {
     if (backgroundColorValueSpan) backgroundColorValueSpan.textContent = rgbToHex(computed.backgroundColor).toUpperCase();
 
 if (currentlySelected.style.width && currentlySelected.style.width.includes("px")) {
-    loadCroppedImageValues();
+    loadImageValues();
 } else {
     const realPercent = getRealWidthPercent();
     widthInput.value = realPercent;
@@ -465,6 +465,7 @@ if (borderColorValueSpan) borderColorValueSpan.textContent = finalBorderColor.to
 
 highlightActiveControls();
 }
+
 function checkRestrictedControls() {
   const verticalAlignControls = document.getElementById("style-editor-vertical-align-controls");
   const imageControls = document.getElementById("style-editor-image-controls");
@@ -509,7 +510,7 @@ imageRatio.addEventListener("click", () => {
     currentlySelected.style.removeProperty('width');
     currentlySelected.style.removeProperty('height');
     currentlySelected.style.removeProperty('object-position');
-    loadCroppedImageValues();
+    loadImageValues();
     setTimeout(checkRestrictedControls, 0);
 });
 
@@ -517,7 +518,7 @@ imageCrop.addEventListener("click", () => {
     currentlySelected.style.removeProperty('width');
     currentlySelected.style.removeProperty('height');
     currentlySelected.style.removeProperty('object-position');
-    loadCroppedImageValues();
+    loadImageValues();
     setTimeout(checkRestrictedControls, 0);
 });
 
