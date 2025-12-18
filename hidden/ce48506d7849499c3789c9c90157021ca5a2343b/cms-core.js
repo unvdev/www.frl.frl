@@ -446,13 +446,13 @@ document.addEventListener("keydown", e => {
    }
 
 if (currentlySelected) {
-   if (e.key === 'ArrowUp') {
+   if (e.key === 'ArrowUp' && !currentlySelected.classList.contains('building-column')) {
       e.preventDefault();
       const prev = currentlySelected.previousElementSibling;
       if (prev) {
          currentlySelected.parentElement.insertBefore(currentlySelected, prev);
       }
-   } else if (e.key === 'ArrowDown') {
+   } else if (e.key === 'ArrowDown' && !currentlySelected.classList.contains('building-column')) {
       e.preventDefault();
       const next = currentlySelected.nextElementSibling;
       if (next && !next.classList.contains("placeholder-block") && !next.classList.contains("accordion-content")) {
