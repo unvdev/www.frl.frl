@@ -460,6 +460,9 @@ document.addEventListener("keydown", e => {
          } else {
             currentlySelected.parentElement.insertBefore(currentlySelected, next.nextElementSibling);
          }
+      }  else if (e.key.toLowerCase() === 'd') {
+         e.preventDefault();
+         deleteElement();
       }
    }
 });
