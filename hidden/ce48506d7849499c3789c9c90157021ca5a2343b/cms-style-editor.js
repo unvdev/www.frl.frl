@@ -405,7 +405,6 @@ function loadImageValues() {
             displayHeight = Math.round(parseFloat(computedStyle.height));
             // THE FIX: Add the "px" unit to the number
             inlineStyle.height = displayHeight + "px";
-          }
         }
 
         if (currentlySelected.classList.contains("ratio-image")) {
