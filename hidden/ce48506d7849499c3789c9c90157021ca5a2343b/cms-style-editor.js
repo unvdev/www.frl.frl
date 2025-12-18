@@ -399,16 +399,17 @@ function loadImageValues() {
             inlineStyle.width = displayWidth + "px";
         }
 
+        if (inlineStyle.height && inlineStyle.height.includes("px")) {
+            displayHeight = parseFloat(inlineStyle.height);
+        } else {
+            displayHeight = Math.round(parseFloat(computedStyle.height));
+            // THE FIX: Add the "px" unit to the number
+            inlineStyle.height = displayHeight + "px";
+          }
+        }
+
         if (currentlySelected.classList.contains("ratio-image")) {
             inlineStyle.height = "auto";
-        } else {
-            if (inlineStyle.height && inlineStyle.height.includes("px")) {
-                displayHeight = parseFloat(inlineStyle.height);
-            } else {
-                displayHeight = Math.round(parseFloat(computedStyle.height));
-                // THE FIX: Add the "px" unit to the number
-                inlineStyle.height = displayHeight + "px";
-            }
         }
 
         imageRatioWidthInput.value = displayWidth;
