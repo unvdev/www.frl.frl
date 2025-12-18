@@ -281,8 +281,8 @@ imageCrop.addEventListener("click", wrapWithHighlight(() => {
 imageDefault.addEventListener("click", wrapWithHighlight(() => {
   if (currentlySelected) {
     currentlySelected.classList.add("custom-styles");
-    currentlySelected.classList.remove("crop-image");
     currentlySelected.classList.remove("ratio-image");
+    currentlySelected.classList.remove("crop-image");
     currentlySelected.classList.add("default-image");
   }
 }));
@@ -487,16 +487,16 @@ function checkRestrictedControls() {
     imageControls.classList.add("content-hide");
   }
 
-  if (currentlySelected?.classList.contains("crop-image")) {
-    imageCropControls.classList.remove("content-hide");
-  } else {
-    imageCropControls.classList.add("content-hide");
-  }
-
   if (currentlySelected?.classList.contains("ratio-image")) {
     imageRatioControls.classList.remove("content-hide");
   } else {
     imageRatioControls.classList.add("content-hide");
+  }
+
+  if (currentlySelected?.classList.contains("crop-image")) {
+    imageCropControls.classList.remove("content-hide");
+  } else {
+    imageCropControls.classList.add("content-hide");
   }
 }
 
