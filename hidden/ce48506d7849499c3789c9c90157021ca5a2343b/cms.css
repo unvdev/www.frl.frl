@@ -743,7 +743,7 @@
             margin-bottom: 1rem;
         }
 
-        .sidebar-control-group label {
+        .sidebar-control-group .sidebar-control-label {
             display: block;
             font-size: 0.85rem;
             margin-bottom: 0.5rem;
@@ -824,7 +824,6 @@
 
         .sidebar .sidebar-segmented-control button:hover {
             background: magenta;
-            border-color: #7f8c8d;
             color: #fff;
         }
 
