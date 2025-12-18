@@ -381,6 +381,7 @@ function cleanWidth() {
 
 //Helper: Load the cropped image styles
 function loadImageValues() {
+  console.log("Image Value Debug");
     if (currentlySelected.classList.contains("image-element")) {
         const computedStyle = window.getComputedStyle(currentlySelected);
         const inlineStyle = currentlySelected.style;
