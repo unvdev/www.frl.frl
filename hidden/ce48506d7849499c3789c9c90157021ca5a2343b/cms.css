@@ -829,7 +829,7 @@
 
         .sidebar .sidebar-segmented-control .active {
             background: magenta;
-            border-color: magenta;
+            border-color: #7f8c8d;
             color: #fff;
         }
 
