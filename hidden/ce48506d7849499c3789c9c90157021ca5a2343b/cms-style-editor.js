@@ -193,13 +193,15 @@ function highlightActiveControls() {
 
   // Image
   if (currentlySelected.classList.contains("ratio-image")) {
-    imageCrop.classList.add("active");
+    imageRatio.classList.add("active");
   } else if (currentlySelected.classList.contains("crop-image")) {
-    imageDefault.classList.add("active");
+    imageCrop.classList.add("active");
   } else if (currentlySelected.classList.contains("default-image")) {
     imageDefault.classList.add("active");
   }
 }
+
+
 
 // Wrap existing button handlers so they also highlight
 function wrapWithHighlight(fn) {
