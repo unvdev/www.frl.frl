@@ -12,10 +12,12 @@ function invokeStyleMenu() {
 // Background color input
 const backgroundColorInput = document.getElementById("style-editor-bg-color-input");
 const backgroundColorValueSpan = document.getElementById("style-editor-bg-color-input-value");
+const backgroundColorRemove = document.getElementById("style-editor-bg-color-remove");
 
 // Border inputs
 const borderColorInput = document.getElementById("style-editor-border-color-input");
 const borderColorValueSpan = document.getElementById("style-editor-border-color-input-value");
+const borderColorRemove = document.getElementById("style-editor-border-color-remove");
 const borderWidthInput = document.getElementById("style-editor-border-width-input");
 const borderRadiusInput = document.getElementById("style-editor-border-radius-input");
 
@@ -512,7 +514,7 @@ function checkRestrictedControls() {
   }
 }
 
-// Custom Event Listeners
+// Misc Event Listeners
 imageDefault.addEventListener("click", () => {
     currentlySelected.style.removeProperty('width');
     currentlySelected.style.removeProperty('height');
@@ -534,6 +536,18 @@ imageCrop.addEventListener("click", () => {
     currentlySelected.style.removeProperty('object-position');
     loadImageValues();
     setTimeout(checkRestrictedControls, 0);
+});
+
+backgroundColorRemove.addEventListener("click", function() {
+  if (currentlySelected) {
+    const computedStyle = window.getComputedStyle(element);
+    const bgColor = computedStyle.getPropertyValue("background-color");
+    if (currentlySelected.bgColor) {
+      currentlySelected.backgroundColor = '';
+    } else {
+      return;
+    }
+  }
 });
 
 // Open Styles Menu
