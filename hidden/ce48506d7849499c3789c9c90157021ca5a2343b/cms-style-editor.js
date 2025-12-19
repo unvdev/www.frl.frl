@@ -17,7 +17,6 @@ const backgroundColorRemove = document.getElementById("style-editor-bg-color-rem
 // Border inputs
 const borderColorInput = document.getElementById("style-editor-border-color-input");
 const borderColorValueSpan = document.getElementById("style-editor-border-color-input-value");
-const borderColorRemove = document.getElementById("style-editor-border-color-remove");
 const borderWidthInput = document.getElementById("style-editor-border-width-input");
 const borderRadiusInput = document.getElementById("style-editor-border-radius-input");
 
@@ -542,17 +541,6 @@ backgroundColorRemove.addEventListener("click", function() {
   if (currentlySelected) {
     if (currentlySelected.style.backgroundColor !== '') {
       currentlySelected.style.backgroundColor = 'transparent';
-      loadStylesFromSelected();
-    } else {
-      return;
-    }
-  }
-});
-
-borderColorRemove.addEventListener("click", function() {
-  if (currentlySelected) {
-    if (currentlySelected.style.borderColor !== '') {
-      currentlySelected.style.borderColor = 'transparent';
       loadStylesFromSelected();
     } else {
       return;
