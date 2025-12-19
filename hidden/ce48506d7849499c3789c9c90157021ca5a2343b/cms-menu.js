@@ -16,6 +16,8 @@ const layoutElementFiveColumnButton = document.getElementById("layout-element-fi
 const layoutElementSixColumnButton = document.getElementById("layout-element-six-column-button");
 const layoutElementAsymmLeftColumnButton = document.getElementById("layout-element-asymm-left-column-button");
 const layoutElementAsymmRightColumnButton = document.getElementById("layout-element-asymm-right-column-button");
+const layoutElementInstanceCheckbox = document.getElementById("layout-element-instance-checkbox");
+//Cleanup Element Buttons
 const layoutElementSpacerButton = document.getElementById("layout-element-spacer-button");
 const layoutElementDividerButton = document.getElementById("layout-element-divider-button");
 const layoutElementAccordionButton = document.getElementById("layout-element-accordion-button");
