@@ -93,6 +93,7 @@ function insertLayoutElement(htmlContent) {
         deselectAll();
     } else {
         currentlySelected.insertAdjacentHTML("beforebegin", htmlContent);
+        layoutElementInstanceCheckbox.checked = true;
         deselectAll();
     }
 }
