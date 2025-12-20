@@ -1,4 +1,4 @@
-function init() {
+function initHelpers() {
     const params = new URLSearchParams(window.location.search);
 
 	// Recursive function to get the first non-default color
@@ -73,7 +73,7 @@ function init() {
 }
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', initHelpers);
 } else {
-    init();
+    initHelpers();
 }
