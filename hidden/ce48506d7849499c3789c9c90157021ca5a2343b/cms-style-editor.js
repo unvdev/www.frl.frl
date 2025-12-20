@@ -489,7 +489,7 @@ if (currentlySelected.classList.contains("hide-on-mobile")) {
   hideOnMobile.checked = false;
 }
 
-if (currentlySelected.firstElementChild.classList.contains("unresponsive-collpase")) {
+if (currentlySelected.firstElementChild.classList.contains("unresponsive-collapse")) {
   responsiveCollapse.checked = false;
 } else {
   responsiveCollapse.checked = true;
