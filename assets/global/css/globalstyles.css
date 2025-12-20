@@ -462,9 +462,8 @@ a:focus {
   border: none;
 } */
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 640px) {
     .custom-styles {
-        padding: 0px !important;
         max-width: 100% !important;
     }
 }
@@ -733,17 +732,6 @@ footer {
 
 .building-block-align-right {
     justify-self: end;
-}
-
-/* Stretch / grow adjustments */
-.building-column-stretch {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
-
-.building-column-grow {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
 }
 
 .building-column {
