@@ -489,15 +489,27 @@ if (currentlySelected.classList.contains("hide-on-mobile")) {
   hideOnMobile.checked = false;
 }
 
+if (currentlySelected.classList.contains("building-container-static")) {
+  responsiveCollapse.checked;
+} else {
+  responsiveCollapse.checked = false;
+}
+
 highlightActiveControls();
 }
 
 function checkRestrictedControls() {
+  const containerResponsiveControls = document.getElementById("style-editor-building-container-responsive-controls");
   const verticalAlignControls = document.getElementById("style-editor-vertical-align-controls");
   const imageControls = document.getElementById("style-editor-image-controls");
   const imageRatioControls = document.getElementById("style-editor-image-ratio-controls");
   const imageCropControls = document.getElementById("style-editor-image-crop-controls");
-  if (!verticalAlignControls || !imageControls) return;
+
+  if (currentlySelected?.classList.contains("building-container")) {
+    containerResponsiveControls.classList.remove("content-hide");
+  } else {
+    containerResponsiveControls.classList.add("content-hide");
+  }
 
   if (currentlySelected?.classList.contains("building-column")) {
     verticalAlignControls.classList.remove("content-hide");
@@ -569,6 +581,14 @@ hideOnDesktop.addEventListener("change", function() {
       currentlySelected.classList.add("hide-on-mobile");
     } else {
       currentlySelected.classList.remove("hide-on-mobile");
+    }
+  });
+
+  responsiveCollapse.addEventListener("change", function() {
+  if (currentlySelected && responsiveCollapse.checked) {
+      //code
+    } else {
+      //code
     }
   });
 
