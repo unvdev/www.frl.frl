@@ -696,7 +696,16 @@ footer {
     align-self: end;
 }
 
-/* Block alignment */
+.building-column {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+
+.building-block {
+    width: 100%;
+}
+
 .building-block-align-left {
     justify-self: start;
 }
@@ -709,11 +718,6 @@ footer {
     justify-self: end;
 }
 
-.building-column {
-    display: block;
-    position: relative;
-    width: 100%;
-}
 
 /*Accordion*/
 
