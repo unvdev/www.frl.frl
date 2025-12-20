@@ -229,6 +229,11 @@ function enableCMS() {
     cmsEnvElement.style.display = ''; 
     console.log('CMS Environment element visible.');
   }
+
+   const url = new URL(window.location.href);
+
+   url.searchParams.set('mode', 'editing');
+   window.history.pushState({}, '', url.toString());
 }
 
 previewPage.addEventListener('click', checkCMSVisibilityState);
