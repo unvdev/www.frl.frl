@@ -586,9 +586,9 @@ hideOnDesktop.addEventListener("change", function() {
 
   responsiveCollapse.addEventListener("change", function() {
   if (currentlySelected && responsiveCollapse.checked) {
-      currentlySelected.nextElementSibling.classList.add("unresponsive-collpase");
-    } else {
       currentlySelected.nextElementSibling.classList.remove("unresponsive-collpase");
+    } else {
+      currentlySelected.nextElementSibling.classList.add("unresponsive-collpase");
     }
   });
 
