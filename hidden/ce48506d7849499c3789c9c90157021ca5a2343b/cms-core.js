@@ -204,6 +204,8 @@ function disableCMS() {
 
    url.searchParams.set('mode', 'preview');
    window.history.pushState({}, '', url.toString());
+
+   initHelpers();
 }
 
 function enableCMS() {
@@ -234,6 +236,8 @@ function enableCMS() {
 
    url.searchParams.set('mode', 'editing');
    window.history.pushState({}, '', url.toString());
+
+   initHelpers();
 }
 
 previewPage.addEventListener('click', checkCMSVisibilityState);
