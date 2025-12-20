@@ -656,6 +656,11 @@ footer {
     .building-column-span-three:not(.unresponsive-collapse) .building-column:nth-child(3) {
         grid-column: span 2;
     }
+
+    .custom-styles {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
 }
 
 /* --- Mobile (640px) --- */
@@ -675,11 +680,6 @@ footer {
     .building-column-span-five:not(.unresponsive-collapse) .building-column:nth-child(5),
     .building-column-span-three:not(.unresponsive-collapse) .building-column:nth-child(3) {
         grid-column: auto;
-    }
-
-    .custom-styles {
-        margin-left: auto !important;
-        margin-right: auto !important;
     }
 }
 
