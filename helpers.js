@@ -78,6 +78,7 @@ function initHelpers() {
   mobileMediaQuery.addEventListener('change', handleMobileChange);
   handleMobileChange(mobileMediaQuery);
 
+  if (params.get('mode') !== 'editing') {
     // Register the ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
 
@@ -198,7 +199,7 @@ function initHelpers() {
       // Apply the animation
       gsap.from(el, settings);
     });
-
+  }
 }
 
 if (document.readyState === 'loading') {
