@@ -43,4 +43,25 @@
                 }
             };
         }
+
+        const mediaQuery = window.matchMedia('(min-width: 640px)');
+
+function handleTabletChange(e) {
+  const myDiv = document.querySelector('.my-element');
+  
+  // Check if the media query is true
+  if (e.matches) {
+    // Screen is wide: Remove the class
+    myDiv.classList.remove('mobile-only-class');
+  } else {
+    // Screen is narrow: Add the class back
+    myDiv.classList.add('mobile-only-class');
+  }
+}
+
+// Register event listener
+mediaQuery.addListener(handleTabletChange);
+
+// Initial check
+handleTabletChange(mediaQuery);
     });
