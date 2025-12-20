@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+function init() {
 	// Recursive function to get the first non-default color
 	function getEffectiveColor(el) {
 		if(!el) return null;
@@ -58,4 +58,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 	mobileMediaQuery.addListener(handleMobileChange);
 	handleMobileChange(mobileMediaQuery);
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
