@@ -570,20 +570,16 @@ imageCrop.addEventListener("click", () => {
 
 hideOnDesktop.addEventListener("change", function() {
   if (currentlySelected && hideOnDesktop.checked) {
-      currentlySelected.classList.add("hide-on-desktop-toggle");
       currentlySelected.classList.add("hide-on-desktop");
     } else {
-      currentlySelected.classList.remove("hide-on-desktop-toggle");
       currentlySelected.classList.remove("hide-on-desktop");
     }
   });
 
   hideOnMobile.addEventListener("change", function() {
   if (currentlySelected && hideOnMobile.checked) {
-      currentlySelected.classList.add("hide-on-mobile-toggle");
       currentlySelected.classList.add("hide-on-mobile");
     } else {
-      currentlySelected.classList.remove("hide-on-mobile-toggle");
       currentlySelected.classList.remove("hide-on-mobile");
     }
   });
