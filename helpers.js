@@ -78,7 +78,6 @@ function initHelpers() {
   mobileMediaQuery.addEventListener('change', handleMobileChange);
   handleMobileChange(mobileMediaQuery);
 
-  document.addEventListener("DOMContentLoaded", () => {
     // Register the ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
 
@@ -199,7 +198,6 @@ function initHelpers() {
       // Apply the animation
       gsap.from(el, settings);
     });
-  });
 
 }
 
