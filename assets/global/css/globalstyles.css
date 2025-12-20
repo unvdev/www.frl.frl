@@ -462,11 +462,11 @@ a:focus {
   border: none;
 } */
 
-@media screen and (max-width: 640px) {
+/* @media screen and (max-width: 640px) {
     .custom-styles {
         max-width: 100% !important;
     }
-}
+} */
 
 header {
     display: block;
