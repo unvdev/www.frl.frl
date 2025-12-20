@@ -68,7 +68,7 @@ function initHelpers() {
 		});
 	}
   
-	mobileMediaQuery.addListener(handleMobileChange);
+	mobileMediaQuery.addEventListener('change', handleMobileChange);
 	handleMobileChange(mobileMediaQuery);
 }
 
