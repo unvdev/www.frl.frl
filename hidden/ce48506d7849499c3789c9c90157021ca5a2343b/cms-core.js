@@ -199,8 +199,6 @@ function disableCMS() {
     cmsEnvElement.style.display = 'none';
     console.log('CMS Environment element hidden.');
   }
-
-   reloadScripts('scriptToReload');
 }
 
 function enableCMS() {
@@ -229,21 +227,6 @@ function enableCMS() {
 }
 
 previewPage.addEventListener('click', checkCMSVisibilityState);
-
-function reloadScripts(id) {
-    const oldScript = document.getElementById(id);
-    const src = oldScript.src.split('?')[0]; // Get clean URL (remove old timestamp)
-    
-    // Create new script tag
-    const newScript = document.createElement('script');
-    newScript.id = id;
-    // Add timestamp to force browser to download again
-    newScript.src = src + '?v=' + new Date().getTime(); 
-    
-    // Replace old with new
-    oldScript.parentNode.replaceChild(newScript, oldScript);
-    console.log('Script reloaded:', newScript.src);
-}
 
 // NEW, CORRECTED HELPER FUNCTION
 function formatHtml(node, level = 0, indentChar = '  ') {
