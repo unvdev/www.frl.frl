@@ -529,8 +529,6 @@ footer {
 .building-container {
     display: grid;
     position: relative;
-    margin-left: auto;
-    margin-right: auto;
     width: 100%;
     gap: 1rem;
 }
@@ -709,14 +707,20 @@ footer {
 }
 
 .building-block-align-left {
+    margin-left: 0;
+    margin-right: auto;
     justify-self: start;
 }
 
 .building-block-align-center {
+    margin-left: auto;
+    margin-right: auto;
     justify-self: center;
 }
 
 .building-block-align-right {
+    margin-left: auto;
+    margin-right: 0;
     justify-self: end;
 }
 
