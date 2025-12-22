@@ -636,6 +636,7 @@ backgroundImageLink.addEventListener("click", function() {
 backgroundImageUpload.addEventListener("click", async function() {
   if (currentlySelected) {
     const imageUpload = await grabImageUpload();
+    console.log(imageUpload);
     if (imageUpload) {
       currentlySelected.style.backgroundImage = imageUpload;
     }
