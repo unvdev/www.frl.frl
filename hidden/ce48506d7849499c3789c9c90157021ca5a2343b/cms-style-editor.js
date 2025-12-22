@@ -537,7 +537,7 @@ function checkRestrictedControls() {
     backgroundImageControls.classList.add("content-hide");
   }
 
-  if (currentlySelected?.classList.contains("building-container") && !currentlySelected?.firstElementChild.matches(".building-column-span-one, .building-column-span-two")) {
+  if (currentlySelected?.classList.contains("building-container") && !currentlySelected?.firstElementChild?.matches(".building-column-span-one, .building-column-span-two")) {
     containerResponsiveControls.classList.remove("content-hide");
   } else {
     containerResponsiveControls.classList.add("content-hide");
