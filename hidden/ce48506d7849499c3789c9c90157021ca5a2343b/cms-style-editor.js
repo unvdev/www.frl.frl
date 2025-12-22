@@ -14,7 +14,9 @@ const hideOnDesktop = document.getElementById("style-editor-hide-on-desktop-chec
 const hideOnMobile = document.getElementById("style-editor-hide-on-mobile-checkbox");
 const responsiveCollapse = document.getElementById("style-editor-responsive-collapse-checkbox");
 
-// Background color input
+// Background input
+const backgroundImageAdd = document.getElementById("style-editor-bg-image-add");
+const backgroundImageRemove = document.getElementById("style-editor-bg-image-remove");
 const backgroundColorInput = document.getElementById("style-editor-bg-color-input");
 const backgroundColorValueSpan = document.getElementById("style-editor-bg-color-input-value");
 const backgroundColorRemove = document.getElementById("style-editor-bg-color-remove");
@@ -521,11 +523,18 @@ highlightActiveControls();
 }
 
 function checkRestrictedControls() {
+  const backgroundImageControls = document.getElementById("style-editor-background-image-controls");
   const containerResponsiveControls = document.getElementById("style-editor-building-container-responsive-controls");
   const verticalAlignControls = document.getElementById("style-editor-vertical-align-controls");
   const imageControls = document.getElementById("style-editor-image-controls");
   const imageRatioControls = document.getElementById("style-editor-image-ratio-controls");
   const imageCropControls = document.getElementById("style-editor-image-crop-controls");
+
+  if (currentlySelected?.classList.contains("building-container") || currentlySelected?.classList.contains("building-column")) {
+    backgroundImageControls.classList.remove("content-hide");
+  } else {
+    backgroundImageControls.classList.add("content-hide");
+  }
 
   if (currentlySelected?.classList.contains("building-container") && !currentlySelected?.firstElementChild.matches(".building-column-span-one, .building-column-span-two")) {
     containerResponsiveControls.classList.remove("content-hide");
