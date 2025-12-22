@@ -15,7 +15,8 @@ const hideOnMobile = document.getElementById("style-editor-hide-on-mobile-checkb
 const responsiveCollapse = document.getElementById("style-editor-responsive-collapse-checkbox");
 
 // Background input
-const backgroundImageAdd = document.getElementById("style-editor-bg-image-add");
+const backgroundImageLink = document.getElementById("style-editor-bg-image-link");
+const backgroundImageUpload = document.getElementById("style-editor-bg-image-upload");
 const backgroundImageRemove = document.getElementById("style-editor-bg-image-remove");
 const backgroundColorInput = document.getElementById("style-editor-bg-color-input");
 const backgroundColorValueSpan = document.getElementById("style-editor-bg-color-input-value");
@@ -623,19 +624,22 @@ hideOnDesktop.addEventListener("change", function() {
     }
   });
 
-backgroundImageAdd.addEventListener("click", function() {
+backgroundImageLink.addEventListener("click", function() {
   if (currentlySelected) {
-  const link = prompt("Enter a photo link:");
-  const imageRegex = /\.(jpe?g|png|gif|webp|svg)(\?.*)?(#.*)?$/i;
-
-  if (link && imageRegex.test(link)) {
-    currentlySelected.style.backgroundImage = `url(${link})`;
-  } else if (link) {
-    alert("Please enter a valid image URL (jpg, png, gif, webp, svg).");
-return;
-  }
-  return null;
+    const imageLink = grabImageLink();
+    currentlySelected.style.backgroundImage = imageLink;
     } else {
+      return;
+    }
+});
+
+backgroundImageUpload.addEventListener("click", function() {
+  if (currentlySelected) {
+    const imageUpload = await grabImageUpload();
+    if (imageUpload) {
+      currentlySelected.style.backgroundImage = imageUpload;
+    }
+  } else {
       return;
     }
 });
