@@ -152,7 +152,7 @@ function pasteElement() {
 
          if (currentlySelected.classList.contains('building-column')) {
          parentColumn = currentlySelected.closest('.building-column');
-         const placeholder = parentColumn.querySelector('.placeholder-block');
+         const placeholder = parentColumn.querySelector(':scope > .placeholder-block');
          if (placeholder) {
             placeholder.insertAdjacentHTML('beforebegin', clipboard.html);
             return;
