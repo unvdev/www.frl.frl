@@ -14,9 +14,9 @@ const hideOnDesktop = document.getElementById("style-editor-hide-on-desktop-chec
 const hideOnMobile = document.getElementById("style-editor-hide-on-mobile-checkbox");
 const responsiveCollapse = document.getElementById("style-editor-responsive-collapse-checkbox");
 const stretchToScreen = document.getElementById("style-editor-stretch-to-screen-checkbox");
-const matchAdjacentHeight = document.getElementById("style-editor-match-adjacent-height-checkbox");
 
 // Background input
+const matchAdjacentHeight = document.getElementById("style-editor-match-adjacent-height-checkbox");
 const backgroundImageLink = document.getElementById("style-editor-bg-image-link");
 const backgroundImageUpload = document.getElementById("style-editor-bg-image-upload");
 const backgroundImageRemove = document.getElementById("style-editor-bg-image-remove");
@@ -672,6 +672,7 @@ backgroundImageLink.addEventListener("click", function() {
   if (currentlySelected) {
     const imageLink = grabImageLink();
     currentlySelected.style.backgroundImage = imageLink;
+    checkRestrictedControls();
   } else {
     return;
   }
@@ -682,6 +683,7 @@ backgroundImageUpload.addEventListener("click", async function() {
     const imageUpload = await grabImageUpload();
     if (imageUpload) {
       currentlySelected.style.backgroundImage = `url(${imageUpload})`;
+      checkRestrictedControls();
     }
   } else {
     return;
