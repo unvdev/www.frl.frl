@@ -13,6 +13,7 @@ function invokeStyleMenu() {
 const hideOnDesktop = document.getElementById("style-editor-hide-on-desktop-checkbox");
 const hideOnMobile = document.getElementById("style-editor-hide-on-mobile-checkbox");
 const responsiveCollapse = document.getElementById("style-editor-responsive-collapse-checkbox");
+const stretchToScreen = document.getElementById("style-editor-stretch-to-screen-checkbox");
 
 // Background input
 const backgroundImageLink = document.getElementById("style-editor-bg-image-link");
