@@ -14,6 +14,7 @@ const hideOnDesktop = document.getElementById("style-editor-hide-on-desktop-chec
 const hideOnMobile = document.getElementById("style-editor-hide-on-mobile-checkbox");
 const responsiveCollapse = document.getElementById("style-editor-responsive-collapse-checkbox");
 const stretchToScreen = document.getElementById("style-editor-stretch-to-screen-checkbox");
+const matchAdjacentHeight = document.getElementById("style-editor-match-adjacent-height-checkbox");
 
 // Background input
 const backgroundImageLink = document.getElementById("style-editor-bg-image-link");
@@ -527,6 +528,12 @@ function loadStylesFromSelected() {
     stretchToScreen.checked = false;
   }
 
+  if (currentlySelected.classList.contains("match-adjacent-height")) {
+    matchAdjacentHeight.checked = true;
+  } else {
+    matchAdjacentHeight.checked = false;
+  }
+
   highlightActiveControls();
 }
 
@@ -534,6 +541,7 @@ function checkRestrictedControls() {
   const backgroundImageControls = document.getElementById("style-editor-background-image-controls");
   const containerResponsiveControls = document.getElementById("style-editor-building-container-responsive-controls");
   const containerScreenControls = document.getElementById("style-editor-building-container-screen-controls");
+  const columnMatchControls = document.getElementById("style-editor-building-column-match-controls");
   const verticalAlignControls = document.getElementById("style-editor-vertical-align-controls");
   const imageControls = document.getElementById("style-editor-image-controls");
   const imageRatioControls = document.getElementById("style-editor-image-ratio-controls");
@@ -558,8 +566,10 @@ function checkRestrictedControls() {
   }
 
   if (currentlySelected?.classList.contains("building-column")) {
+    columnMatchControls.classList.remove("content-hide");
     verticalAlignControls.classList.remove("content-hide");
   } else {
+    columnMatchControls.classList.add("content-hide");
     verticalAlignControls.classList.add("content-hide");
   }
 
@@ -643,6 +653,14 @@ stretchToScreen.addEventListener("change", function() {
     currentlySelected.classList.add("stretch-to-screen");
   } else {
     currentlySelected.classList.remove("stretch-to-screen");
+  }
+});
+
+matchAdjacentHeight.addEventListener("change", function() {
+  if (currentlySelected && matchAdjacentHeight.checked) {
+    currentlySelected.classList.add("match-adjacent-height");
+  } else {
+    currentlySelected.classList.remove("match-adjacent-height");
   }
 });
 
