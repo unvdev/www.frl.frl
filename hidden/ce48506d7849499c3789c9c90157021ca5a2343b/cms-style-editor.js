@@ -640,9 +640,9 @@ responsiveCollapse.addEventListener("change", function() {
 
 stretchToScreen.addEventListener("change", function() {
   if (currentlySelected && stretchToScreen.checked) {
-    currentlySelected.style.height = '100vh';
+    currentlySelected.classList.add("stretch-to-screen");
   } else {
-    currentlySelected.style.height = '';
+    currentlySelected.classList.remove("stretch-to-screen");
   }
 });
 
