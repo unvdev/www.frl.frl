@@ -571,7 +571,7 @@ function checkRestrictedControls() {
     verticalAlignControls.classList.add("content-hide");
   }
 
-  if (currentlySelected?.classList.contains("building-column") && !currentlySelected?.parentElement?.matches(".building-column-span-one")) { {
+  if (currentlySelected?.classList.contains("building-column") && !currentlySelected?.parentElement?.matches(".building-column-span-one")) {
     columnMatchControls.classList.remove("content-hide");
   } else {
     columnMatchControls.classList.add("content-hide");
