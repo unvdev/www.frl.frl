@@ -99,7 +99,7 @@ function pasteElement() {
 
       if (copiedElement) {
          if (currentlySelected.classList.contains('placeholder-block')) {
-            alert('Paste canceled. Please select a valid building container, column, or block, not the placeholder.');
+            alert('Paste canceled. Please select a building container, column, or block, not the placeholder.');
             return;
          }
       }
@@ -153,7 +153,9 @@ function pasteElement() {
             currentlySelected.insertAdjacentHTML('beforeend', clipboard.html);
             return;
          }
-      } else {
+      } 
+      
+      if (!currentlySelected?.matches('building-container', 'building-column')) {
          parentColumn = currentlySelected.closest('.building-column');
          if (parentColumn) {
             currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
