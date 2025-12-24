@@ -461,7 +461,7 @@ function loadImageValues() {
 //Helper: Grab the link
 function grabLink() {
   let link = prompt("Enter a URL:");
-  
+
   link = link.trim();
 
   if (link.startsWith('.')) {
@@ -565,14 +565,16 @@ function loadStylesFromSelected() {
 }
 
 function checkRestrictedControls() {
-  const backgroundImageControls = document.getElementById("style-editor-background-image-controls");
   const containerResponsiveControls = document.getElementById("style-editor-building-container-responsive-controls");
   const containerScreenControls = document.getElementById("style-editor-building-container-screen-controls");
   const columnMatchControls = document.getElementById("style-editor-building-column-match-controls");
-  const verticalAlignControls = document.getElementById("style-editor-vertical-align-controls");
   const imageControls = document.getElementById("style-editor-image-controls");
   const imageRatioControls = document.getElementById("style-editor-image-ratio-controls");
   const imageCropControls = document.getElementById("style-editor-image-crop-controls");
+  const linkControls = document.getElementById("style-editor-link-controls");
+  const linkOptionControls = document.getElementById("style-editor-link-option-controls");
+  const backgroundImageControls = document.getElementById("style-editor-background-image-controls");
+  const verticalAlignControls = document.getElementById("style-editor-vertical-align-controls");
 
   if (currentlySelected?.classList.contains("building-container") || currentlySelected?.classList.contains("building-column")) {
     backgroundImageControls.classList.remove("content-hide");
@@ -628,6 +630,18 @@ function checkRestrictedControls() {
   } else {
     widthInput.disabled = false;
     widthInput.style.opacity = "1.0";
+  }
+
+  if (currentlySelected?.classList.contains("image-element") || currentlySelected?.classList.contains("button")) {
+    linkControls.classList.remove("content-hide");
+  } else {
+    linkControls.classList.add("content-hide");
+  }
+
+  if (currentlySelected?.parentElement.classList.contains("building-block-link")) {
+    linkOptionControls.classList.remove("content-hide");
+  } else {
+    linkOptionControls.classList.add("content-hide");
   }
 
   if (currentlySelected?.classList.contains("accordion-label") || currentlySelected?.classList.contains("button")) {
