@@ -1,749 +1,524 @@
 // ==========================================
-// 1. VARIABLES & SELECTION
+// 1. DOM ELEMENTS & STATE
 // ==========================================
 
-// Behavior Options
-const hideOnDesktop = document.getElementById("style-editor-hide-on-desktop-checkbox");
-const hideOnMobile = document.getElementById("style-editor-hide-on-mobile-checkbox");
-const responsiveCollapse = document.getElementById("style-editor-responsive-collapse-checkbox");
-const stretchToScreen = document.getElementById("style-editor-stretch-to-screen-checkbox");
-const matchAdjacentHeight = document.getElementById("style-editor-match-adjacent-height-checkbox");
+const cms = document.querySelector(".cms-menu");
+const cmsMenuBar = document.querySelector(".cms-menu-bar");
+const selectedElementLabel = document.getElementById("selected-element-label");
+const styles = document.getElementById("style-editor-sidebar");
+const loadedPage = document.getElementById("loaded-page");
 
-// Background & Borders
-const backgroundImageLink = document.getElementById("style-editor-bg-image-link");
-const backgroundImageUpload = document.getElementById("style-editor-bg-image-upload");
-const backgroundImageRemove = document.getElementById("style-editor-bg-image-remove");
-const backgroundColorInput = document.getElementById("style-editor-bg-color-input");
-const backgroundColorValueSpan = document.getElementById("style-editor-bg-color-input-value");
-const backgroundColorRemove = document.getElementById("style-editor-bg-color-remove");
+// Buttons
+const styleButton = document.getElementById("style-element");
+const deleteButton = document.getElementById("delete-element");
+const moveUp = document.getElementById("move-element-up");
+const moveDown = document.getElementById("move-element-down");
+const publishPage = document.getElementById("publish-page");
+const previewPage = document.getElementById("preview-page");
 
-const borderColorInput = document.getElementById("style-editor-border-color-input");
-const borderColorValueSpan = document.getElementById("style-editor-border-color-input-value");
-const borderWidthInput = document.getElementById("style-editor-border-width-input");
-const borderRadiusInput = document.getElementById("style-editor-border-radius-input");
-
-// Sizing & Alignment
-const widthInput = document.getElementById("style-editor-width-input");
-const alignLeft = document.getElementById("style-editor-align-left-button");
-const alignCenter = document.getElementById("style-editor-align-center-button");
-const alignRight = document.getElementById("style-editor-align-right-button");
-const alignTop = document.getElementById("style-editor-align-top-button");
-const alignMiddle = document.getElementById("style-editor-align-middle-button");
-const alignBottom = document.getElementById("style-editor-align-bottom-button");
-
-// Padding
-const paddingTopInput = document.getElementById("style-editor-padding-top-input");
-const paddingLeftInput = document.getElementById("style-editor-padding-left-input");
-const paddingRightInput = document.getElementById("style-editor-padding-right-input");
-const paddingBottomInput = document.getElementById("style-editor-padding-bottom-input");
-
-// Images
-const imageDefault = document.getElementById("style-editor-image-default-button");
-const imageCrop = document.getElementById("style-editor-image-crop-button");
-const imageRatio = document.getElementById("style-editor-image-ratio-button");
-const imageRatioWidthInput = document.getElementById("style-editor-ratio-width-input");
-const imageCropWidthInput = document.getElementById("style-editor-crop-width-input");
-const imageCropHeightInput = document.getElementById("style-editor-crop-height-input");
-const imageCropPositionInput = document.getElementById("style-editor-crop-position-input");
-
-// Links
-const linkAdd = document.getElementById("style-editor-link-add");
-const linkRemove = document.getElementById("style-editor-link-remove");
-const linkOpenInNewTab = document.getElementById("style-editor-link-open-in-new-tab-checkbox");
+// State
+let currentlySelected = null;
+let clipboard = {
+    html: null,
+    sourceElement: null
+};
+let cmsPreviewCounter = 0;
 
 
 // ==========================================
-// 2. HELPER FUNCTIONS
+// 2. SELECTION LOGIC
 // ==========================================
 
-function invokeStyleMenu() {
-  if (currentlySelected) {
-    styles.classList.remove('content-hide');
-    loadedPage.classList.add("sidebar-active");
-    checkRestrictedControls();
-    loadStylesFromSelected();
-  }
-}
-
-function parsePercent(value, fallback = 100) {
-  const match = value.match(/([\d.]+)%/);
-  return match ? parseFloat(match[1]) : fallback;
-}
-
-function parsePx(value, fallback = 0) {
-  const match = value.match(/([\d.]+)px/);
-  return match ? parseFloat(match[1]) : fallback;
-}
-
-function rgbToHex(rgb) {
-  if (!rgb || rgb === "none" || rgb === "transparent") return "#FFFFFF";
-  const result = rgb.match(/\d+/g);
-  if (!result) return "#000000";
-  let [r, g, b] = result.slice(0, 3);
-  r = parseInt(r).toString(16).padStart(2, "0");
-  g = parseInt(g).toString(16).padStart(2, "0");
-  b = parseInt(b).toString(16).padStart(2, "0");
-  return `#${r}${g}${b}`;
-}
-
-function getRealWidthPercent() {
-  if (!currentlySelected) return 100;
-  const styleWidth = currentlySelected.style.width;
-  if (!styleWidth) return 100;
-
-  const calcMatch = styleWidth.match(/calc\((\d*\.?\d+)%/);
-  if (calcMatch && calcMatch[1]) {
-    return parseFloat(calcMatch[1]);
-  }
-  if (styleWidth.includes("%")) {
-    return parseFloat(styleWidth);
-  }
-  return 100;
-}
-
-function findWidth() {
-  const blocksWithWidth = [];
-  const allBlocks = document.querySelectorAll('.building-block');
-  allBlocks.forEach(block => {
-    if (block.style.width) {
-      blocksWithWidth.push({
-        element: block,
-        width: block.style.width
-      });
+function deselectAll() {
+    if (currentlySelected) {
+        currentlySelected.classList.remove('selected');
+        currentlySelected = null;
+        cms.classList.add("content-hide");
+        styles.classList.add("content-hide");
+        loadedPage.classList.remove("sidebar-active");
     }
-  });
-  return blocksWithWidth;
 }
 
-function cleanWidth() {
-  const foundBlocks = findWidth();
-  if (foundBlocks && foundBlocks.length > 0) {
-    foundBlocks.forEach(item => {
-      const element = item.element;
-      const dirtyWidth = item.width;
-      let realPercent = null;
+function selectBuildingBlock(blockToSelect, originalTarget) {
+    if (originalTarget.closest('.placeholder-block')) {
+        deselectAll();
+        currentlySelected = originalTarget;
+        invokeCMSMenu();
+        return;
+    }
+    deselectAll();
+    currentlySelected = blockToSelect;
+    currentlySelected.classList.add('selected');
+}
 
-      if (dirtyWidth.includes("calc")) {
-        const calcMatch = dirtyWidth.match(/calc\((\d*\.?\d+)%/);
-        if (calcMatch && calcMatch[1]) {
-          realPercent = parseFloat(calcMatch[1]);
+function updateSelectedLabel() {
+    if (currentlySelected) {
+        if (currentlySelected.dataset.name === undefined) {
+            selectedElementLabel.innerText = 'Building Block:';
+            return;
         }
-      }
-
-      if (realPercent !== null) {
-        const cleanStyle = `${realPercent}%`;
-        element.style.width = cleanStyle;
-      }
-    });
-  }
-}
-
-function loadImageValues() {
-  if (currentlySelected.classList.contains("image-element")) {
-    const computedStyle = window.getComputedStyle(currentlySelected);
-    const inlineStyle = currentlySelected.style;
-
-    if (inlineStyle.width && inlineStyle.width.includes('%')) return;
-
-    let displayWidth, displayHeight;
-
-    if (inlineStyle.width && inlineStyle.width.includes("px")) {
-      displayWidth = parseFloat(inlineStyle.width);
+        selectedElementLabel.innerText = currentlySelected.dataset.name;
     } else {
-      displayWidth = Math.round(parseFloat(computedStyle.width));
-      inlineStyle.width = displayWidth + "px";
+        selectedElementLabel.innerText = 'Building Block:';
     }
-
-    if (inlineStyle.height && inlineStyle.height.includes("px")) {
-      displayHeight = parseFloat(inlineStyle.height);
-    } else {
-      displayHeight = Math.round(parseFloat(computedStyle.height));
-      inlineStyle.height = displayHeight + "px";
-    }
-
-    if (currentlySelected.classList.contains("ratio-image")) {
-      inlineStyle.height = "auto";
-    }
-
-    imageRatioWidthInput.value = displayWidth;
-    imageCropWidthInput.value = displayWidth;
-    imageCropHeightInput.value = displayHeight;
-
-    const objectPositionValue = computedStyle.objectPosition;
-    const positionX = objectPositionValue.split(' ')[0];
-    imageCropPositionInput.value = parseFloat(positionX) || 50;
-  }
 }
 
-function grabLink() {
-  let link = prompt("Enter a URL:");
-  
-  if (link === null) return null;
-
-  link = link.trim();
-
-  if (link.startsWith('.')) {
-     alert("URL cannot start with a dot.");
-     return grabLink();
-  }
-
-  const linkRegex = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,10}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/i;
-
-  if (link && linkRegex.test(link)) {
-    return link;
-  } else {
-    alert("Please enter a valid URL.");
-    return grabLink();
-  }
-}
-
-function highlightActiveControls() {
-  if (!currentlySelected) return;
-
-  [alignLeft, alignCenter, alignRight, alignTop, alignMiddle, alignBottom, imageDefault, imageRatio, imageCrop]
-  .forEach(btn => btn.classList.remove("active"));
-
-  if (currentlySelected.classList.contains("building-block-align-left")) {
-    alignLeft.classList.add("active");
-  } else if (currentlySelected.classList.contains("building-block-align-center")) {
-    alignCenter.classList.add("active");
-  } else if (currentlySelected.classList.contains("building-block-align-right")) {
-    alignRight.classList.add("active");
-  }
-
-  if (currentlySelected.classList.contains("building-column-content-top")) {
-    alignTop.classList.add("active");
-  } else if (currentlySelected.classList.contains("building-column-content-center")) {
-    alignMiddle.classList.add("active");
-  } else if (currentlySelected.classList.contains("building-column-content-bottom")) {
-    alignBottom.classList.add("active");
-  }
-
-  if (currentlySelected.classList.contains("ratio-image")) {
-    imageRatio.classList.add("active");
-  } else if (currentlySelected.classList.contains("crop-image")) {
-    imageCrop.classList.add("active");
-  } else if (currentlySelected.classList.contains("default-image")) {
-    imageDefault.classList.add("active");
-  }
-}
-
-function wrapWithHighlight(fn) {
-  return () => {
-    fn();
-    highlightActiveControls();
-  };
-}
-
-
-// ==========================================
-// 3. MAIN LOGIC (LOAD & CHECK)
-// ==========================================
-
-function loadStylesFromSelected() {
-  if (!currentlySelected) return;
-  const computed = window.getComputedStyle(currentlySelected);
-
-  // Background
-  backgroundColorInput.value = rgbToHex(computed.backgroundColor);
-  if (backgroundColorValueSpan) backgroundColorValueSpan.textContent = rgbToHex(computed.backgroundColor).toUpperCase();
-
-  // Width & Images
-  if (currentlySelected.style.width && currentlySelected.style.width.includes("px")) {
-    loadImageValues();
-  } else {
-    const realPercent = getRealWidthPercent();
-    widthInput.value = realPercent;
-    if (realPercent >= 100) {
-      currentlySelected.style.width = "";
-    } else {
-      currentlySelected.style.width = `calc(${realPercent}% - 2rem)`;
-    }
-  }
-
-  // Padding
-  paddingTopInput.value = parseInt(computed.paddingTop) || 0;
-  paddingLeftInput.value = parseInt(computed.paddingLeft) || 0;
-  paddingRightInput.value = parseInt(computed.paddingRight) || 0;
-  paddingBottomInput.value = parseInt(computed.paddingBottom) || 0;
-
-  // Border
-  const borderWidth = parseInt(computed.borderWidth) || 0;
-  if (borderWidthInput) borderWidthInput.value = borderWidth;
-  if (borderRadiusInput) borderRadiusInput.value = parseInt(computed.borderRadius) || 0;
-
-  let finalBorderColor = '#000000';
-  if (currentlySelected.style.borderColor) {
-    finalBorderColor = rgbToHex(currentlySelected.style.borderColor);
-  } else if (borderWidth > 0) {
-    finalBorderColor = rgbToHex(computed.borderColor);
-  }
-  if (borderColorInput) borderColorInput.value = finalBorderColor;
-  if (borderColorValueSpan) borderColorValueSpan.textContent = finalBorderColor.toUpperCase();
-
-  // Checkboxes
-  hideOnDesktop.checked = currentlySelected.classList.contains("hide-on-desktop");
-  hideOnMobile.checked = currentlySelected.classList.contains("hide-on-mobile");
-  
-  if (currentlySelected.firstElementChild) {
-    responsiveCollapse.checked = !currentlySelected.firstElementChild.classList.contains("unresponsive-collapse");
-  }
-
-  stretchToScreen.checked = currentlySelected.classList.contains("stretch-to-screen");
-  matchAdjacentHeight.checked = currentlySelected.classList.contains("match-adjacent-height");
-
-  if (currentlySelected.parentElement) {
-    if (currentlySelected.parentElement.classList.contains("building-block-link") && currentlySelected.parentElement.target === "_blank") {
-      linkOpenInNewTab.checked = true;
-    } else {
-      linkOpenInNewTab.checked = false;
-    }
-  }
-
-  highlightActiveControls();
-}
-
-function checkRestrictedControls() {
-  const containerResponsiveControls = document.getElementById("style-editor-building-container-responsive-controls");
-  const containerScreenControls = document.getElementById("style-editor-building-container-screen-controls");
-  const columnMatchControls = document.getElementById("style-editor-building-column-match-controls");
-  const imageControls = document.getElementById("style-editor-image-controls");
-  const imageRatioControls = document.getElementById("style-editor-image-ratio-controls");
-  const imageCropControls = document.getElementById("style-editor-image-crop-controls");
-  const linkControls = document.getElementById("style-editor-link-controls");
-  const linkOptionControls = document.getElementById("style-editor-link-option-controls");
-  const backgroundImageControls = document.getElementById("style-editor-background-image-controls");
-  const verticalAlignControls = document.getElementById("style-editor-vertical-align-controls");
-
-  if (currentlySelected?.classList.contains("building-container") || currentlySelected?.classList.contains("building-column")) {
-    backgroundImageControls.classList.remove("content-hide");
-  } else {
-    backgroundImageControls.classList.add("content-hide");
-  }
-
-  if (currentlySelected?.classList.contains("building-container") && !currentlySelected?.firstElementChild?.matches(".building-column-span-one, .building-column-span-two")) {
-    containerResponsiveControls.classList.remove("content-hide");
-  } else {
-    containerResponsiveControls.classList.add("content-hide");
-  }
-
-  if (currentlySelected?.classList.contains("building-container") && !currentlySelected?.parentElement.matches(".building-column")) {
-    containerScreenControls.classList.remove("content-hide");
-  } else {
-    containerScreenControls.classList.add("content-hide");
-  }
-
-  if (currentlySelected?.classList.contains("building-column")) {
-    verticalAlignControls.classList.remove("content-hide");
-  } else {
-    verticalAlignControls.classList.add("content-hide");
-  }
-
-  if (currentlySelected?.classList.contains("building-column") && !currentlySelected?.parentElement?.matches(".building-column-span-one") && currentlySelected?.style.backgroundImage !== '') {
-    columnMatchControls.classList.remove("content-hide");
-  } else {
-    columnMatchControls.classList.add("content-hide");
-  }
-
-  if (currentlySelected?.classList.contains("image-element")) {
-    imageControls.classList.remove("content-hide");
-  } else {
-    imageControls.classList.add("content-hide");
-  }
-
-  if (currentlySelected?.classList.contains("ratio-image")) {
-    imageRatioControls.classList.remove("content-hide");
-  } else {
-    imageRatioControls.classList.add("content-hide");
-  }
-
-  if (currentlySelected?.classList.contains("crop-image")) {
-    imageCropControls.classList.remove("content-hide");
-  } else {
-    imageCropControls.classList.add("content-hide");
-  }
-
-  if (currentlySelected?.classList.contains("ratio-image") || currentlySelected?.classList.contains("crop-image")) {
-    widthInput.disabled = true;
-    widthInput.style.opacity = "0.5";
-  } else {
-    widthInput.disabled = false;
-    widthInput.style.opacity = "1.0";
-  }
-
-  if (currentlySelected?.classList.contains("image-element") || currentlySelected?.classList.contains("button")) {
-    linkControls.classList.remove("content-hide");
-  } else {
-    linkControls.classList.add("content-hide");
-  }
-
-  if (currentlySelected?.parentElement.classList.contains("building-block-link")) {
-    linkOptionControls.classList.remove("content-hide");
-  } else {
-    linkOptionControls.classList.add("content-hide");
-  }
-
-  if (currentlySelected?.classList.contains("accordion-label") || currentlySelected?.classList.contains("button")) {
-    paddingLeftInput.disabled = true;
-    paddingRightInput.disabled = true;
-    paddingLeftInput.style.opacity = "0.5";
-    paddingRightInput.style.opacity = "0.5";
-  } else {
-    paddingLeftInput.disabled = false;
-    paddingRightInput.disabled = false;
-    paddingLeftInput.style.opacity = "0.5";
-    paddingRightInput.style.opacity = "0.5";
-  }
-}
-
-
-// ==========================================
-// 4. EVENT LISTENERS
-// ==========================================
-
-// --- Background ---
-backgroundColorInput.addEventListener("input", () => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    currentlySelected.style.backgroundColor = backgroundColorInput.value;
-  }
-  if (backgroundColorValueSpan) {
-    backgroundColorValueSpan.textContent = backgroundColorInput.value.toUpperCase();
-  }
-});
-
-backgroundColorRemove.addEventListener("click", function() {
-  if (currentlySelected) {
-    if (currentlySelected.style.backgroundColor !== '') {
-      currentlySelected.style.backgroundColor = '';
-      loadStylesFromSelected();
-    }
-  }
-});
-
-backgroundImageLink.addEventListener("click", function() {
-  if (currentlySelected) {
-    const imageLink = grabImageLink();
-    currentlySelected.style.backgroundImage = imageLink;
-    checkRestrictedControls();
-  }
-});
-
-backgroundImageUpload.addEventListener("click", async function() {
-  if (currentlySelected) {
-    const imageUpload = await grabImageUpload();
-    if (imageUpload) {
-      currentlySelected.style.backgroundImage = `url(${imageUpload})`;
-      checkRestrictedControls();
-    }
-  }
-});
-
-backgroundImageRemove.addEventListener("click", function() {
-  if (currentlySelected && currentlySelected.style.backgroundImage !== '') {
-    currentlySelected.style.backgroundImage = '';
-    checkRestrictedControls();
-  }
-});
-
-// --- Borders ---
-borderColorInput?.addEventListener("input", () => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    currentlySelected.style.borderColor = borderColorInput.value;
-  }
-  if (borderColorValueSpan) {
-    borderColorValueSpan.textContent = borderColorInput.value.toUpperCase();
-  }
-});
-
-borderWidthInput?.addEventListener("input", () => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    let value = parseInt(borderWidthInput.value) || 0;
-    currentlySelected.style.borderWidth = value + "px";
-    currentlySelected.style.borderStyle = value > 0 ? "solid" : "none";
-  }
-});
-
-borderRadiusInput?.addEventListener("input", () => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    let value = parseInt(borderRadiusInput.value) || 0;
-    currentlySelected.style.borderRadius = value + "px";
-  }
-});
-
-// --- Width ---
-widthInput.addEventListener("input", () => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    let uiPercent = parseFloat(widthInput.value);
-    if (isNaN(uiPercent)) uiPercent = 5;
-    uiPercent = Math.max(5, Math.min(100, uiPercent));
-
-    if (uiPercent >= 100) {
-      currentlySelected.style.width = "";
-    } else {
-      currentlySelected.style.width = `calc(${uiPercent}% - 2rem)`;
-    }
-  }
-});
-
-widthInput.addEventListener("change", () => {
-  let finalValue = parseFloat(widthInput.value) || 5;
-  finalValue = Math.max(5, Math.min(100, finalValue));
-  widthInput.value = finalValue;
-
-  if (currentlySelected) {
-    if (finalValue >= 100) {
-      currentlySelected.style.width = "";
-    } else {
-      currentlySelected.style.width = `calc(${finalValue}% - 2rem)`;
-    }
-  }
-});
-
-// --- Images ---
-imageRatioWidthInput.addEventListener("input", () => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    let width = parseFloat(imageRatioWidthInput.value) || 100;
-    width = Math.max(10, Math.min(9999, width));
-    currentlySelected.style.width = width + "px";
-  }
-});
-
-imageCropWidthInput.addEventListener("input", () => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    let width = parseFloat(imageCropWidthInput.value) || 100;
-    width = Math.max(10, Math.min(9999, width));
-    currentlySelected.style.width = width + "px";
-  }
-});
-
-imageCropHeightInput.addEventListener("input", () => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    let height = parseFloat(imageCropHeightInput.value) || 100;
-    height = Math.max(10, Math.min(9999, height));
-    currentlySelected.style.height = height + "px";
-  }
-});
-
-imageCropPositionInput.addEventListener("input", () => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    let position = parseFloat(imageCropPositionInput.value) || 100;
-    position = Math.max(5, Math.min(100, position));
-    currentlySelected.style.objectPosition = position + "%";
-  }
-});
-
-imageDefault.addEventListener("click", wrapWithHighlight(() => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    currentlySelected.classList.remove("ratio-image", "crop-image");
-    currentlySelected.classList.add("default-image");
-    currentlySelected.style.removeProperty('width');
-    currentlySelected.style.removeProperty('height');
-    currentlySelected.style.removeProperty('object-position');
-    setTimeout(checkRestrictedControls, 0);
-  }
-}));
-
-imageRatio.addEventListener("click", wrapWithHighlight(() => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    currentlySelected.classList.remove("default-image", "crop-image");
-    currentlySelected.classList.add("ratio-image");
-    currentlySelected.style.removeProperty('width');
-    currentlySelected.style.removeProperty('height');
-    currentlySelected.style.removeProperty('object-position');
-    loadImageValues();
-    setTimeout(checkRestrictedControls, 0);
-  }
-}));
-
-imageCrop.addEventListener("click", wrapWithHighlight(() => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    currentlySelected.classList.remove("default-image", "ratio-image");
-    currentlySelected.classList.add("crop-image");
-    currentlySelected.style.removeProperty('width');
-    currentlySelected.style.removeProperty('height');
-    currentlySelected.style.removeProperty('object-position');
-    loadImageValues();
-    setTimeout(checkRestrictedControls, 0);
-  }
-}));
-
-// --- Alignment ---
-alignLeft.addEventListener("click", wrapWithHighlight(() => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    currentlySelected.classList.remove("building-block-align-center", "building-block-align-right");
-    currentlySelected.classList.add("building-block-align-left");
-  }
-}));
-
-alignCenter.addEventListener("click", wrapWithHighlight(() => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    currentlySelected.classList.remove("building-block-align-left", "building-block-align-right");
-    currentlySelected.classList.add("building-block-align-center");
-  }
-}));
-
-alignRight.addEventListener("click", wrapWithHighlight(() => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    currentlySelected.classList.remove("building-block-align-left", "building-block-align-center");
-    currentlySelected.classList.add("building-block-align-right");
-  }
-}));
-
-alignTop.addEventListener("click", wrapWithHighlight(() => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    currentlySelected.classList.remove("building-column-content-center", "building-column-content-bottom");
-    currentlySelected.classList.add("building-column-content-top");
-  }
-}));
-
-alignMiddle.addEventListener("click", wrapWithHighlight(() => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    currentlySelected.classList.remove("building-column-content-top", "building-column-content-bottom");
-    currentlySelected.classList.add("building-column-content-center");
-  }
-}));
-
-alignBottom.addEventListener("click", wrapWithHighlight(() => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    currentlySelected.classList.remove("building-column-content-top", "building-column-content-center");
-    currentlySelected.classList.add("building-column-content-bottom");
-  }
-}));
-
-// --- Padding ---
-function updatePaddingInput(side, inputEl) {
-  inputEl.addEventListener("input", () => {
+function updateMovementArrows() {
     if (currentlySelected) {
-      currentlySelected.classList.add("custom-styles");
-      let value = parseInt(inputEl.value) || 0;
-      currentlySelected.style[`padding${side}`] = Math.max(0, value) + "px";
-    }
-  });
-}
-updatePaddingInput("Top", paddingTopInput);
-updatePaddingInput("Left", paddingLeftInput);
-updatePaddingInput("Right", paddingRightInput);
-updatePaddingInput("Bottom", paddingBottomInput);
-
-// --- Behavior ---
-hideOnDesktop.addEventListener("change", function() {
-  if (currentlySelected && hideOnDesktop.checked) {
-    currentlySelected.classList.add("hide-on-desktop");
-  } else {
-    currentlySelected.classList.remove("hide-on-desktop");
-  }
-});
-
-hideOnMobile.addEventListener("change", function() {
-  if (currentlySelected && hideOnMobile.checked) {
-    currentlySelected.classList.add("hide-on-mobile");
-  } else {
-    currentlySelected.classList.remove("hide-on-mobile");
-  }
-});
-
-responsiveCollapse.addEventListener("change", function() {
-  if (currentlySelected && responsiveCollapse.checked) {
-    currentlySelected.firstElementChild.classList.remove("unresponsive-collapse");
-  } else {
-    currentlySelected.firstElementChild.classList.add("unresponsive-collapse");
-  }
-});
-
-stretchToScreen.addEventListener("change", function() {
-  if (currentlySelected && stretchToScreen.checked) {
-    currentlySelected.classList.add("stretch-to-screen");
-  } else {
-    currentlySelected.classList.remove("stretch-to-screen");
-  }
-});
-
-matchAdjacentHeight.addEventListener("change", function() {
-  if (currentlySelected && matchAdjacentHeight.checked) {
-    currentlySelected.classList.add("match-adjacent-height");
-  } else {
-    currentlySelected.classList.remove("match-adjacent-height");
-  }
-});
-
-// --- Links ---
-linkAdd.addEventListener("click", function() {
-  if (currentlySelected) {
-    const url = grabLink();
-    if (url === null) return;
-
-    if (currentlySelected && currentlySelected.parentNode) {
-      const linkWrapper = document.createElement('a');
-      linkWrapper.classList.add('building-block-link');
-      linkWrapper.href = url;
-      currentlySelected.parentNode.insertBefore(linkWrapper, currentlySelected);
-      linkWrapper.appendChild(currentlySelected);
-      checkRestrictedControls();
-    }
-  }
-});
-
-linkRemove.addEventListener("click", function() {
-  if (currentlySelected && currentlySelected.parentNode) {
-    const parentLink = currentlySelected.parentNode;
-    if (parentLink.tagName === 'A' && parentLink.classList.contains('building-block-link')) {
-      parentLink.parentNode.insertBefore(currentlySelected, parentLink);
-      parentLink.remove();
-      checkRestrictedControls();
-    }
-  }
-});
-
-linkOpenInNewTab.addEventListener("change", function() {
-  if (currentlySelected && currentlySelected.parentElement.tagName === 'A') {
-    if (linkOpenInNewTab.checked) {
-      currentlySelected.parentElement.target = "_blank";
+        if (currentlySelected.classList.contains('building-column')) {
+            moveUp.innerHTML = 'Move Left';
+            moveDown.innerHTML = 'Move Right';
+        } else {
+            moveUp.innerHTML = 'Move Up';
+            moveDown.innerHTML = 'Move Down';
+        }
     } else {
-      currentlySelected.parentElement.removeAttribute("target");
+        moveUp.innerHTML = 'Move Up';
+        moveDown.innerHTML = 'Move Down';
     }
-  }
-});
+}
 
 
 // ==========================================
-// 5. GLOBAL TRIGGERS
+// 3. ELEMENT MANIPULATION (Copy, Paste, Delete)
 // ==========================================
 
-styleButton.addEventListener("click", () => {
-  if (currentlySelected) {
-    currentlySelected.classList.add("custom-styles");
-    invokeStyleMenu();
-  }
-});
-
-document.addEventListener("keydown", (e) => {
-  const isStyleEditorVisible = window.getComputedStyle(styles).display !== "none";
-  const isTextEditorVisible = window.getComputedStyle(editorPop).display !== "none";
-  if (isTextEditorVisible || isStyleEditorVisible) return;
-  
-  if (e.key === 's') {
-    e.preventDefault();
+function deleteElement() {
     if (currentlySelected) {
-      currentlySelected.classList.add("custom-styles");
-      invokeStyleMenu();
+        if (currentlySelected?.matches('.building-column, .placeholder-block, .accordion-label')) {
+            alert("Cannot delete the current selection. Please select another element to delete.");
+            deselectAll();
+            return;
+        }
+
+        if (confirm('Are you sure you want to delete this element?')) {
+            currentlySelected.remove();
+            deselectAll();
+        }
     }
-  }
+}
+
+function copyElement() {
+    if (currentlySelected) {
+        currentlySelected.classList.remove('selected');
+        clipboard.html = currentlySelected.outerHTML;
+        currentlySelected.classList.add('selected');
+        clipboard.sourceElement = currentlySelected;
+    }
+}
+
+function pasteElement() {
+    if (!currentlySelected || !clipboard.html) {
+        deselectAll();
+        return;
+    }
+
+    try {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = clipboard.html;
+        const copiedElement = tempDiv.firstElementChild;
+        let parentColumn = null;
+
+        if (copiedElement) {
+            if (currentlySelected.classList.contains('placeholder-block')) {
+                alert('Paste canceled. Please select a building container, column, or block, not the placeholder.');
+                return;
+            }
+        }
+
+        if (copiedElement.classList.contains('building-column')) {
+            if (!currentlySelected.classList.contains('building-column')) {
+                alert('A building column can only be pasted to overwrite another building column. Please select a building column.');
+                return;
+            }
+            if (currentlySelected === clipboard.sourceElement) {
+                alert('Cannot overwrite the same building column. Please select a different building column to replace.');
+                return;
+            }
+
+            currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
+            const newElement = currentlySelected.nextElementSibling;
+            currentlySelected.remove();
+            selectBuildingBlock(newElement, newElement);
+            return;
+        }
+
+        if (copiedElement.classList.contains('building-container')) {
+            if (currentlySelected.classList.contains('building-container')) {
+                currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
+                return;
+            }
+            if (currentlySelected.classList.contains('building-column')) {
+                parentColumn = currentlySelected;
+                const placeholder = parentColumn.querySelector('.placeholder-block');
+                if (placeholder) {
+                    placeholder.insertAdjacentHTML('beforebegin', clipboard.html);
+                    return;
+                } else {
+                    currentlySelected.insertAdjacentHTML('beforeend', clipboard.html);
+                    return;
+                }
+            } else {
+                currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
+                return;
+            }
+        }
+
+        if (!copiedElement?.matches('.building-container', '.building-column')) {
+            if (currentlySelected.classList.contains('building-container')) {
+                alert('Content blocks can only be pasted inside a "building column".');
+                return;
+            }
+
+            if (currentlySelected.classList.contains('building-column')) {
+                parentColumn = currentlySelected.closest('.building-column');
+                const placeholder = parentColumn.querySelector(':scope > .placeholder-block');
+                if (placeholder) {
+                    placeholder.insertAdjacentHTML('beforebegin', clipboard.html);
+                    return;
+                } else {
+                    currentlySelected.insertAdjacentHTML('beforeend', clipboard.html);
+                    return;
+                }
+            }
+
+            if (!currentlySelected?.matches('.building-container, .building-column')) {
+                currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
+                return;
+            }
+        }
+    } finally {
+        deselectAll();
+    }
+}
+
+
+// ==========================================
+// 4. CMS SYSTEM & PREVIEW MODE
+// ==========================================
+
+function checkCMSVisibilityState() {
+    if (cmsPreviewCounter == 0) {
+        disableCMS();
+        setTimeout(() => {
+            cmsPreviewCounter = 1;
+        }, 0);
+    } else {
+        enableCMS();
+        setTimeout(() => {
+            cmsPreviewCounter = 0;
+        }, 0);
+    }
+}
+
+function disableCMS() {
+    // 1. Unload the CSS file
+    const stylesheet = document.querySelector('link[href="cms.css"][data-name="cms stylesheet"]');
+    if (stylesheet) {
+        stylesheet.remove();
+        console.log('CMS Stylesheet unloaded.');
+    }
+
+    // 2. Hide the element with data-name "cms environment"
+    const cmsEnvElement = document.querySelector('[data-name="cms environment"]');
+    if (cmsEnvElement) {
+        cmsEnvElement.style.display = 'none';
+        console.log('CMS Environment element hidden.');
+    }
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('mode', 'preview');
+    window.history.pushState({}, '', url.toString());
+
+    initHelpers();
+}
+
+function enableCMS() {
+    // 1. Reload the CSS file
+    if (!document.querySelector('link[href="cms.css"][data-name="cms stylesheet"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'cms.css';
+        link.setAttribute('data-name', 'cms stylesheet');
+        document.head.appendChild(link);
+        console.log('CMS Stylesheet restored.');
+    }
+
+    // 2. Show the data-name 'cms environment' element
+    const cmsEnvElement = document.querySelector('[data-name="cms environment"]');
+    if (cmsEnvElement) {
+        cmsEnvElement.style.display = '';
+        console.log('CMS Environment element visible.');
+    }
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('mode', 'editing');
+    window.history.pushState({}, '', url.toString());
+
+    initHelpers();
+}
+
+
+// ==========================================
+// 5. PUBLISHING & EXPORT
+// ==========================================
+
+function formatHtml(node, level = 0, indentChar = '  ') {
+    const inlineTags = new Set(['a', 'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'dfn', 'em', 'i', 'kbd', 'mark', 'q', 's', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'time', 'u', 'var', 'wbr']);
+    const voidTags = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
+
+    let result = '';
+
+    switch (node.nodeType) {
+        case Node.ELEMENT_NODE:
+            const tagName = node.nodeName.toLowerCase();
+            const isInline = inlineTags.has(tagName);
+            const indent = indentChar.repeat(level);
+
+            // Add newline and indentation before block-level tags
+            if (!isInline && level > 0) {
+                result += '\n' + indent;
+            }
+
+            result += `<${tagName}`;
+            for (const attr of node.attributes) {
+                result += ` ${attr.name}="${attr.value}"`;
+            }
+            result += '>';
+
+            if (!voidTags.has(tagName)) {
+                let isEffectivelyEmpty = true;
+                // Check if the element contains any non-whitespace children
+                if (node.hasChildNodes()) {
+                    for (const child of node.childNodes) {
+                        if ((child.nodeType === Node.TEXT_NODE && child.nodeValue.trim() !== '') || child.nodeType === Node.ELEMENT_NODE) {
+                            isEffectivelyEmpty = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (!isEffectivelyEmpty) {
+                    for (const child of node.childNodes) {
+                        result += formatHtml(child, level + 1, indentChar);
+                    }
+                    if (!isInline) {
+                        result += '\n' + indent;
+                    }
+                }
+                result += `</${tagName}>`;
+            }
+            break;
+
+        case Node.TEXT_NODE:
+            const trimmedValue = node.nodeValue.trim();
+            if (trimmedValue) {
+                result += trimmedValue;
+            }
+            break;
+
+        case Node.COMMENT_NODE:
+            result += ``;
+            break;
+    }
+
+    return result;
+}
+
+async function publishPageCode() {
+    deselectAll();
+    cleanWidth();
+
+    const liveWrapper = document.querySelector('#loaded-page');
+    if (!liveWrapper) {
+        alert('Could not find #loaded-page.');
+        return;
+    }
+
+    const wrapperParent = liveWrapper.parentNode;
+    const wrapperNextSibling = liveWrapper.nextSibling;
+
+    // ----- Step 1: Unwrap the live wrapper -----
+    const liveChildren = Array.from(liveWrapper.childNodes);
+    liveChildren.forEach(child => wrapperParent.insertBefore(child, liveWrapper));
+    wrapperParent.removeChild(liveWrapper);
+
+    try {
+        // ----- Step 2: Clone the live DOM -----
+        const tempDoc = document.cloneNode(true);
+
+        // ----- Step 3: Remove unwanted CMS/extension elements -----
+        const unwantedSelectors = [
+            '[data-name="cms menu bar"]',
+            '[data-name="cms environment"]',
+            '[data-name="cms stylesheet"]',
+            '[data-name="cms javascript"]',
+            '[id^="fa-"]',
+            'link[href^="chrome-extension://"]'
+        ].join(', ');
+
+        tempDoc.querySelectorAll(unwantedSelectors).forEach(el => el.remove());
+
+        // ----- Step 4: Unwrap #loaded-page in the tempDoc -----
+        const tempWrapper = tempDoc.querySelector('#loaded-page');
+        if (tempWrapper) {
+            tempWrapper.replaceWith(...tempWrapper.childNodes);
+        }
+
+        // ----- Step 5: Format and copy HTML -----
+        const formattedHtml = formatHtml(tempDoc.documentElement);
+        const cleanedHtml = '<!DOCTYPE html>\n' + formattedHtml;
+        await navigator.clipboard.writeText(cleanedHtml);
+
+        console.log('Formatted page HTML copied to clipboard!');
+        alert('Page HTML copied!');
+
+    } catch (err) {
+        console.error('Failed to copy HTML to clipboard:', err);
+        alert('Could not copy HTML.');
+    } finally {
+        // ----- Step 6: Safely rewrap the live DOM -----
+        const newWrapper = document.createElement('div');
+        newWrapper.id = 'loaded-page';
+        newWrapper.className = liveWrapper.className;
+
+        // Move all children back into the wrapper
+        Array.from(wrapperParent.childNodes).forEach(child => newWrapper.appendChild(child));
+
+        // Insert wrapper in original spot if possible
+        if (wrapperNextSibling && wrapperParent.contains(wrapperNextSibling)) {
+            wrapperParent.insertBefore(newWrapper, wrapperNextSibling);
+        } else {
+            wrapperParent.appendChild(newWrapper);
+        }
+    }
+}
+
+
+// ==========================================
+// 6. EVENT LISTENERS
+// ==========================================
+
+// Global Click (Selection & UI Logic)
+document.addEventListener("click", (e) => {
+    const target = e.target;
+
+    // Define the primary UI containers that should not trigger selection changes.
+    const isInsideQuillUI = target.closest('.text-editor-pop');
+    const isInsideCmsUI = target.closest('.cms-menu');
+    const isInsideCmsMenuBar = target.closest('.cms-menu-bar');
+    const isInsideStyleEditor = target.closest('#style-editor-sidebar');
+
+    if (isInsideQuillUI || isInsideCmsUI || isInsideStyleEditor) {
+        return;
+    }
+
+    if (isInsideCmsMenuBar) {
+        if (target !== moveUp && target !== moveDown) {
+            return;
+        } else {
+            if (currentlySelected) {
+                if (target === moveUp) {
+                    const prev = currentlySelected.previousElementSibling;
+                    if (prev) {
+                        currentlySelected.parentElement.insertBefore(currentlySelected, prev);
+                    }
+                } else if (target === moveDown) {
+                    const next = currentlySelected.nextElementSibling;
+                    if (next.classList.contains("placeholder-block") || next.classList.contains("accordion-content")) {
+                        return;
+                    } else {
+                        currentlySelected.parentElement.insertBefore(currentlySelected, next.nextElementSibling);
+                    }
+                }
+            }
+            return;
+        }
+    }
+
+    // Building Block Selection
+    const targetBuildingBlock = target.closest('.building-block');
+    if (targetBuildingBlock) {
+        selectBuildingBlock(targetBuildingBlock, target);
+    } else {
+        deselectAll();
+    }
+
+    // Prevent link navigation
+    const link = e.target.closest('a');
+    if (link) {
+        e.preventDefault();
+    }
+
+    updateSelectedLabel();
+    updateMovementArrows();
 });
+
+// Global Keydown (Shortcuts & Nudging)
+document.addEventListener("keydown", e => {
+    const target = e.target;
+
+    // Ignore keystrokes inside editors OR form fields
+    if (
+        target.closest('.text-editor-pop') ||
+        target.closest('.style-editor-sidebar') ||
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+    ) {
+        return;
+    }
+
+    const isCtrl = e.ctrlKey || e.metaKey;
+
+    // Copy: Ctrl+C
+    if (isCtrl && e.key.toLowerCase() === 'c') {
+        e.preventDefault();
+        copyElement();
+        return;
+    }
+
+    // Paste: Ctrl+V
+    if (isCtrl && e.key.toLowerCase() === 'v') {
+        e.preventDefault();
+        pasteElement();
+        return;
+    }
+
+    // Arrows (Nudge) & Delete
+    if (currentlySelected) {
+        if (e.key === 'ArrowUp' && !currentlySelected.classList.contains('building-column')) {
+            e.preventDefault();
+            const prev = currentlySelected.previousElementSibling;
+            if (prev) {
+                currentlySelected.parentElement.insertBefore(currentlySelected, prev);
+            }
+        } else if (e.key === 'ArrowDown' && !currentlySelected.classList.contains('building-column')) {
+            e.preventDefault();
+            const next = currentlySelected.nextElementSibling;
+            if (next && !next.classList.contains("placeholder-block") && !next.classList.contains("accordion-content")) {
+                currentlySelected.parentElement.insertBefore(currentlySelected, next.nextElementSibling);
+            }
+        } else if (e.key === 'ArrowLeft' && currentlySelected.classList.contains("building-column")) {
+            e.preventDefault();
+            const prev = currentlySelected.previousElementSibling;
+            if (prev && !prev.classList.contains("placeholder-block") && !prev.classList.contains("accordion-content")) {
+                currentlySelected.parentElement.insertBefore(currentlySelected, prev);
+            }
+        } else if (e.key === 'ArrowRight' && currentlySelected.classList.contains("building-column")) {
+            e.preventDefault();
+            const next = currentlySelected.nextElementSibling;
+            if (next && !next.classList.contains("placeholder-block") && !next.classList.contains("accordion-content")) {
+                currentlySelected.parentElement.insertBefore(currentlySelected, next.nextElementSibling);
+            }
+        } else if (e.key.toLowerCase() === 'd') {
+            e.preventDefault();
+            deleteElement();
+        }
+    }
+});
+
+// Toolbar Listeners
+deleteButton.addEventListener("click", deleteElement);
+publishPage.addEventListener("click", publishPageCode);
+previewPage.addEventListener('click', checkCMSVisibilityState);
