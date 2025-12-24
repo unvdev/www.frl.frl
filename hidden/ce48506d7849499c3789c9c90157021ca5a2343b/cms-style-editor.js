@@ -544,10 +544,12 @@ function loadStylesFromSelected() {
     hideOnMobile.checked = false;
   }
 
-  if (currentlySelected.firstElementChild.classList.contains("unresponsive-collapse")) {
-    responsiveCollapse.checked = false;
-  } else {
-    responsiveCollapse.checked = true;
+  if (currentlySelected.firstElementChild) {
+    if (currentlySelected.firstElementChild.classList.contains("unresponsive-collapse")) {
+      responsiveCollapse.checked = false;
+    } else {
+      responsiveCollapse.checked = true;
+    }
   }
 
   if (currentlySelected.classList.contains("stretch-to-screen")) {
@@ -562,12 +564,13 @@ function loadStylesFromSelected() {
     matchAdjacentHeight.checked = false;
   }
 
-  if (currentlySelected.parentElement.target === "_blank") {
-    linkOpenInNewTab.checked = true;
-  } else {
-    linkOpenInNewTab.checked = false;
+  if (currentlySelected.parentElement) {
+    if (currentlySelected.parentElement.classList.contains("building-block-link") && currentlySelected.parentElement.target === "_blank") {
+      linkOpenInNewTab.checked = true;
+    } else {
+      linkOpenInNewTab.checked = false;
+    }
   }
-
 
   highlightActiveControls();
 }
