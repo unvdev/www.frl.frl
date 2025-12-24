@@ -17,14 +17,6 @@ let clipboard = {
 };
 let cmsPreviewCounter = 0;
 
-document.addEventListener('click', function(e) {
-  const link = e.target.closest('a');
-
-  if (link) {
-      e.preventDefault();
-   }
-});
-
 function deselectAll() {
     if (currentlySelected) {
         currentlySelected.classList.remove('selected');
@@ -434,6 +426,11 @@ document.addEventListener("click", (e) => {
     } else {
         deselectAll();
     }
+
+   const link = e.target.closest('a');
+   if (link) {
+      e.preventDefault();
+   }
 
     updateSelectedLabel();
     updateMovementArrows();
