@@ -1,4 +1,8 @@
-//Text Element Buttons
+// ==========================================
+// 1. DOM ELEMENTS
+// ==========================================
+
+// Text Elements
 const textElementHeadingOneButton = document.getElementById("text-element-heading-one-button");
 const textElementHeadingTwoButton = document.getElementById("text-element-heading-two-button");
 const textElementHeadingThreeButton = document.getElementById("text-element-heading-three-button");
@@ -8,7 +12,8 @@ const textElementParagraphButton = document.getElementById("text-element-paragra
 const textElementUnorderedButton = document.getElementById("text-element-unordered-button");
 const textElementOrderedButton = document.getElementById("text-element-ordered-button");
 const textElementButtonButton = document.getElementById("text-element-button-button");
-//Layout Element Buttons
+
+// Layout Elements
 const layoutElementOneColumnButton = document.getElementById("layout-element-one-column-button");
 const layoutElementTwoColumnButton = document.getElementById("layout-element-two-column-button");
 const layoutElementThreeColumnButton = document.getElementById("layout-element-three-column-button");
@@ -18,97 +23,33 @@ const layoutElementSixColumnButton = document.getElementById("layout-element-six
 const layoutElementAsymmLeftColumnButton = document.getElementById("layout-element-asymm-left-column-button");
 const layoutElementAsymmRightColumnButton = document.getElementById("layout-element-asymm-right-column-button");
 const layoutElementInstanceCheckbox = document.getElementById("layout-element-instance-checkbox");
-//Cleanup Element Buttons
+
+// Cleanup & Structure Elements
 const layoutElementSpacerButton = document.getElementById("layout-element-spacer-button");
 const layoutElementDividerButton = document.getElementById("layout-element-divider-button");
 const layoutElementAccordionButton = document.getElementById("layout-element-accordion-button");
-//Image Element Buttons
+
+// Image Elements
 const imageElementLinkButton = document.getElementById("image-element-link-button");
 const imageElementUploadButton = document.getElementById("image-element-upload-button");
 
-//Element Functions
-function insertElement(htmlContent) {
-    if (currentlySelected) {
-        currentlySelected.insertAdjacentHTML('beforebegin', htmlContent);
-        deselectAll();
-    }
-}
 
-function insertImageLink(htmlContent) {
-  if (currentlySelected) {
-    const imageLink = grabImageLink();
+// ==========================================
+// 2. HELPER FUNCTIONS (INPUTS & UPLOADS)
+// ==========================================
 
-    if (imageLink === null) {
-      return;
-    }
-    
-    currentlySelected.insertAdjacentHTML('beforebegin', htmlContent);
-
-    const insertedImage = currentlySelected.previousElementSibling;
-
-    if (imageLink && insertedImage) {
-      insertedImage.src = imageLink;
-    }
-
-    deselectAll();
-  }
-}
-
-async function insertImageUpload(htmlContent) {
-  if (currentlySelected) {
-    currentlySelected.insertAdjacentHTML("beforebegin", htmlContent);
-
-    const insertedImage = currentlySelected.previousElementSibling;
-    const imageUpload = await grabImageUpload();
-
-    if (imageUpload && insertedImage) {
-      insertedImage.src = imageUpload;
-    }
-
-    deselectAll();
-  }
-}
-
-function insertLayoutElement(htmlContent) {
-    if (currentlySelected && layoutElementInstanceCheckbox.checked) {
-        // The '>' ensures we ignore any containers nested inside columns
-        const topLevelContainers = document.querySelectorAll(".building-environment > .building-container");
-
-        if (topLevelContainers.length > 0) {
-            // Case A: We have existing containers, put this after the last one
-            const lastContainer = topLevelContainers[topLevelContainers.length - 1];
-            lastContainer.insertAdjacentHTML('afterend', htmlContent);
-        } else {
-            // Case B: The environment is empty (no containers yet)
-            // We need to append the content directly into the environment wrapper
-            const environment = document.querySelector(".building-environment");
-            
-            if (environment) {
-                environment.insertAdjacentHTML('beforeend', htmlContent);
-            } else {
-                console.warn("Parent container '.building-environment' not found.");
-                return;
-            }
-        }
-
-        deselectAll();
-    } else {
-        currentlySelected.insertAdjacentHTML("beforebegin", htmlContent);
-        layoutElementInstanceCheckbox.checked = true;
-        deselectAll();
-    }
-}
-
-// Utilities
 function grabImageLink() {
   const link = prompt("Enter a photo link:");
+  
+  if (link === null) return null; // Handle cancel
+
   const imageRegex = /\.(jpe?g|png|gif|webp|svg)(\?.*)?(#.*)?$/i;
 
   if (link && imageRegex.test(link)) {
     return link;
   } else if (link) {
     alert("Please enter a valid image URL (jpg, png, gif, webp, svg).");
-    grabImageLink();
+    return grabImageLink(); // Added return to ensure recursive result bubbles up
   }
 
   return null;
@@ -185,7 +126,93 @@ function grabImageUpload() {
   });
 }
 
-//Text Element Event Listeners
+
+// ==========================================
+// 3. INSERTION LOGIC
+// ==========================================
+
+function insertElement(htmlContent) {
+    if (currentlySelected) {
+        currentlySelected.insertAdjacentHTML('beforebegin', htmlContent);
+        deselectAll();
+    }
+}
+
+function insertLayoutElement(htmlContent) {
+    if (currentlySelected && layoutElementInstanceCheckbox.checked) {
+        // The '>' ensures we ignore any containers nested inside columns
+        const topLevelContainers = document.querySelectorAll(".building-environment > .building-container");
+
+        if (topLevelContainers.length > 0) {
+            // Case A: We have existing containers, put this after the last one
+            const lastContainer = topLevelContainers[topLevelContainers.length - 1];
+            lastContainer.insertAdjacentHTML('afterend', htmlContent);
+        } else {
+            // Case B: The environment is empty (no containers yet)
+            const environment = document.querySelector(".building-environment");
+            if (environment) {
+                environment.insertAdjacentHTML('beforeend', htmlContent);
+            } else {
+                console.warn("Parent container '.building-environment' not found.");
+                return;
+            }
+        }
+
+        deselectAll();
+    } else {
+        // Insert directly before selection
+        currentlySelected.insertAdjacentHTML("beforebegin", htmlContent);
+        layoutElementInstanceCheckbox.checked = true; // Reset checkbox
+        deselectAll();
+    }
+}
+
+function insertImageLink(htmlContent) {
+  if (currentlySelected) {
+    const imageLink = grabImageLink();
+
+    if (imageLink === null) {
+      return;
+    }
+    
+    currentlySelected.insertAdjacentHTML('beforebegin', htmlContent);
+    const insertedImage = currentlySelected.previousElementSibling;
+
+    if (imageLink && insertedImage) {
+      insertedImage.src = imageLink;
+    }
+
+    deselectAll();
+  }
+}
+
+async function insertImageUpload(htmlContent) {
+  if (currentlySelected) {
+    // 1. Insert the HTML structure first
+    currentlySelected.insertAdjacentHTML("beforebegin", htmlContent);
+    const insertedImage = currentlySelected.previousElementSibling;
+
+    // 2. Process the file
+    const imageUpload = await grabImageUpload();
+
+    // 3. Apply the source or remove if failed
+    if (imageUpload && insertedImage) {
+      insertedImage.src = imageUpload;
+    } else if (!imageUpload && insertedImage) {
+       // Optional: Remove the empty image tag if the user cancelled upload
+       // insertedImage.remove(); 
+    }
+
+    deselectAll();
+  }
+}
+
+
+// ==========================================
+// 4. EVENT LISTENERS
+// ==========================================
+
+// Text
 textElementHeadingOneButton.addEventListener('click', () => insertElement(headingOne));
 textElementHeadingTwoButton.addEventListener('click', () => insertElement(headingTwo));
 textElementHeadingThreeButton.addEventListener('click', () => insertElement(headingThree));
@@ -195,8 +222,8 @@ textElementParagraphButton.addEventListener('click', () => insertElement(paragra
 textElementUnorderedButton.addEventListener('click', () => insertElement(unorderedList));
 textElementOrderedButton.addEventListener('click', () => insertElement(orderedList));
 textElementButtonButton.addEventListener('click', () => insertElement(button));
-//Layout Element Event Listeners
-layoutElementAccordionButton.addEventListener('click', () => insertElement(accordion));
+
+// Layout
 layoutElementOneColumnButton.addEventListener('click', () => insertLayoutElement(oneColumn));
 layoutElementTwoColumnButton.addEventListener('click', () => insertLayoutElement(twoColumns));
 layoutElementThreeColumnButton.addEventListener('click', () => insertLayoutElement(threeColumns));
@@ -205,14 +232,21 @@ layoutElementFiveColumnButton.addEventListener('click', () => insertLayoutElemen
 layoutElementSixColumnButton.addEventListener('click', () => insertLayoutElement(sixColumns));
 layoutElementAsymmLeftColumnButton.addEventListener('click', () => insertLayoutElement(asymmLeftColumn));
 layoutElementAsymmRightColumnButton.addEventListener('click', () => insertLayoutElement(asymmRightColumn));
+
+// Cleanup & Structure
 layoutElementSpacerButton.addEventListener('click', () => insertElement(spacer));
 layoutElementDividerButton.addEventListener('click', () => insertElement(divider));
 layoutElementAccordionButton.addEventListener('click', () => insertElement(accordion));
-//Image Element Event Listeners
+
+// Images
 imageElementLinkButton.addEventListener('click', () => insertImageLink(image));
 imageElementUploadButton.addEventListener('click', () => insertImageUpload(image));
 
-//Open The CMS Menu
+
+// ==========================================
+// 5. GLOBAL TRIGGERS
+// ==========================================
+
 function invokeCMSMenu() {
     if (currentlySelected && currentlySelected.classList.contains('placeholder-block')) {
         cms.classList.remove('content-hide');
