@@ -87,7 +87,7 @@ function initHelpers() {
       duration: 0.8,
       ease: "power2.out",
       toggleActions: "play none none reverse", // Play on enter, reverse on leave
-      start: "top 85%", // Trigger when top of element hits 85% of viewport height
+      start: "top 66%", // Trigger when top of element hits 85% of viewport height
     };
 
     // Select all elements with the data-anim attribute
