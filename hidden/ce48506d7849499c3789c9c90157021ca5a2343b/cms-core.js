@@ -434,10 +434,10 @@ document.addEventListener("click", (e) => {
         deselectAll();
     }
 
-   const link = e.target.closest('a');
-   if (link) {
-      e.preventDefault();
-   }
+    const link = e.target.closest('a');
+    if (link) {
+        e.preventDefault();
+    }
 
     updateSelectedLabel();
     updateMovementArrows();
