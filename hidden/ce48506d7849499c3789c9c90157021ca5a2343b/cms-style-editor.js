@@ -606,11 +606,13 @@ function checkRestrictedControls() {
   if (currentlySelected?.classList.contains("accordion-label") || currentlySelected?.classList.contains("button")) {
     paddingLeftInput.disabled = true;
     paddingRightInput.disabled = true;
-    widthInput.style.opacity = "0.5";
+    paddingLeftInput.style.opacity = "0.5";
+    paddingRightInput.style.opacity = "0.5";
   } else {
     paddingLeftInput.disabled = false;
     paddingRightInput.disabled = false;
-    widthInput.style.opacity = "1.0";
+    paddingLeftInput.style.opacity = "0.5";
+    paddingRightInput.style.opacity = "0.5";
   }
 }
 
