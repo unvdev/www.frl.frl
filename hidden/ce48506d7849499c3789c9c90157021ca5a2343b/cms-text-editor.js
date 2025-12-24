@@ -21,7 +21,6 @@ const Delta = Quill.import('delta');
 const Size = Quill.import('attributors/style/size');
 
 // --- ICON DATA ---
-// PASTE THE FULL faIcons ARRAY HERE
 const faIcons = [
             "fa-solid fa-0", "fa-solid fa-1", "fa-solid fa-2", "fa-solid fa-3", "fa-solid fa-4", "fa-solid fa-5", "fa-solid fa-6", "fa-solid fa-7", "fa-solid fa-8", "fa-solid fa-9", "fa-solid fa-a", "fa-solid fa-address-book", "fa-regular fa-address-book", "fa-solid fa-address-card", "fa-regular fa-address-card",
             "fa-solid fa-align-center", "fa-solid fa-align-justify", "fa-solid fa-align-left", "fa-solid fa-align-right", "fa-solid fa-anchor", "fa-solid fa-angle-down", "fa-solid fa-angle-left", "fa-solid fa-angle-right", "fa-solid fa-angle-up", "fa-solid fa-angles-down", "fa-solid fa-angles-left",
