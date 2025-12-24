@@ -458,6 +458,21 @@ function loadImageValues() {
   }
 }
 
+//Helper: Grab the link
+function grabLink() {
+  const link = prompt("Enter a URL:");
+  const linkRegex = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,10}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/i;
+
+  if (link && linkRegex.test(link)) {
+    return link;
+  } else if (link) {
+    alert("Please enter a valid URL.");
+    grabLink();
+  }
+
+  return null;  
+}
+
 // ===============================
 // LOAD STYLES FROM SELECTED ELEMENT
 // ===============================
@@ -728,7 +743,7 @@ backgroundColorRemove.addEventListener("click", function() {
 
 linkAdd.addEventListener("click", function() {
   if (currentlySelected) {
-    const url = "https://www.google.com";
+    const url = grabLink();
     if (currentlySelected && currentlySelected.parentNode) {
       const linkWrapper = document.createElement('a');
       linkWrapper.classList.add('building-block-link');
