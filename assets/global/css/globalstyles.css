@@ -400,11 +400,11 @@ a:focus {
     text-align: right;
 }
 
-.ql-align-center {
+.ql-align-center:not(.accordion-label> :first-child)  {
     text-align: center;
 }
 
-.ql-align-justify {
+.ql-align-justify:not(.accordion-label> :first-child) {
     text-align: justify;
 }
 
