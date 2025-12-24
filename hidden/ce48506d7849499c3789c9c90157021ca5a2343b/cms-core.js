@@ -69,6 +69,11 @@ function updateMovementArrows() {
 
 function deleteElement() {
     if (currentlySelected) {
+
+        if (currentlySelected?.matches('.building-column, .placeholder-block, .accordion-label')) {
+            return;
+        }
+
         if (confirm('Are you sure you want to delete this element?')) {
             currentlySelected.remove();
             currentlySelected = null;
