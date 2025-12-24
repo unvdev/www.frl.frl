@@ -1,235 +1,27 @@
-// const editorPop = document.querySelector(".text-editor-pop");
-// const editorContainer = document.querySelector("#quill-editor");
-// let activeTextElement = null;
-// let quillEditor = null; 
-// let isEditorLoading = false;
+// ==========================================
+// 1. DOM ELEMENTS & STATE
+// ==========================================
 
-// const Inline = Quill.import("blots/inline");
-
-// class CustomFont extends Inline {
-//   static blotName = "font";
-//   static tagName = "SPAN";
-//   static classPrefix = "ql-font-";
-
-//   static whitelist = [
-//     "agbalumo", "alumni-sans-pinstripe", "baskervville", "baskervville-sc",
-//     "bebas-neue", "borel", "cal-sans", "caveat-brush", "chewy", "cinzel",
-//     "comfortaa", "coming-soon", "delius", "dynapuff", "fugaz-one",
-//     "funnel-display", "germania-one", "google-sans-code", "host-grotesk",
-//     "lato", "lexend", "libre-bodoni", "lobster", "lora", "marck-script",
-//     "meow-script", "merriweather-sans", "michroma", "montecarlo",
-//     "newsreader", "noto-sans", "pacifico", "pixelify-sans", "playwrite-za",
-//     "poller-one", "quintessential", "roboto", "short-stack", "sono", "suse",
-//     "twinkle-star", "ultra", "unifrakturmaguntia",
-//   ];
-
-//   static sanitize(value) {
-//     if (!value) return value;
-//     return value.replace(/['"]/g, "").replace(/\s+/g, "-").toLowerCase();
-//   }
-
-//   static create(value) {
-//     const node = super.create();
-//     const normalized = this.sanitize(value);
-//     if (this.whitelist && !this.whitelist.includes(normalized)) return node;
-//     node.setAttribute("class", this.classPrefix + normalized);
-//     return node;
-//   }
-
-//   static formats(node) {
-//     const className = node.getAttribute("class") || "";
-//     const match = className.match(new RegExp(this.classPrefix + "([a-z0-9-]+)"));
-//     return match ? match[1] : null;
-//   }
-
-//   format(name, value) {
-//     if (name === CustomFont.blotName) {
-//       if (value) {
-//         const normalized = CustomFont.sanitize(value);
-//         if (CustomFont.whitelist.includes(normalized)) {
-//           this.domNode.setAttribute("class", CustomFont.classPrefix + normalized);
-//         }
-//       } else {
-//         this.domNode.removeAttribute("class");
-//       }
-//     } else {
-//       super.format(name, value);
-//     }
-//   }
-// }
-
-// Quill.register(CustomFont, true);
-
-// // Custom color picker
-// function customColorPicker() {
-//   const color = prompt("Enter a hex color code (e.g., #ff00ff):");
-//   if (color && /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
-//     quillEditor.format("color", color);
-//   } else if (color) {
-//     alert("Invalid hex code.");
-//   }
-// }
-
-// // Update the font picker label to match the current font
-// function updateFontPickerLabel(quill) {
-//   const pickerLabel = document.querySelector(".ql-font .ql-picker-label");
-//   if (!pickerLabel) return;
-
-//   const format = quill.getFormat();
-//   let currentFont = format.font || ''; // Empty string if none
-//   let displayName = 'Font Family';
-
-//   if (currentFont) {
-//     // Convert hyphenated names back to readable words
-//     displayName = currentFont
-//       .split('-')
-//       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-//       .join(' ');
-
-//     // Wrap multi-word names in quotes for CSS
-//     if (currentFont.includes('-') || currentFont.includes(' ')) {
-//       pickerLabel.style.fontFamily = `"${displayName}"`;
-//     } else {
-//       pickerLabel.style.fontFamily = displayName;
-//     }
-//   } else {
-//     pickerLabel.style.fontFamily = 'inherit';
-//   }
-
-//   pickerLabel.setAttribute('data-value', currentFont);
-//   pickerLabel.textContent = displayName;
-// }
-
-// // Initialize Quill
-// function initializeQuill() {
-//   quillEditor = new Quill(editorContainer, {
-//     theme: "snow",
-//     modules: {
-//       toolbar: {
-//         container: [
-//           [{ font: CustomFont.whitelist }],
-//           [{ header: [1, 2, 3, 4, 5, false] }, { align: [] }],
-//           ["bold", "italic", "underline", "strike"],
-//           [{ list: "ordered" }, { list: "bullet" }],
-//           [{ color: [] }, "custom-color"],
-//           ["link"],
-//           ["clean"],
-//           ["day-mode", "night-mode"]
-//         ],
-//         handlers: {
-//           "custom-color": customColorPicker,
-//           "day-mode": () => editorPop.style.backgroundColor = "whitesmoke",
-//           "night-mode": () => editorPop.style.backgroundColor = "#222222",
-//         },
-//       },
-//     },
-//   });
-
-//   document.querySelector(".ql-custom-color").innerHTML =
-//     '<i class="fa-solid fa-palette"></i>';
-//   document.querySelector(".ql-day-mode").innerHTML =
-//     '<i class="fa-solid fa-sun"></i>';
-//   document.querySelector(".ql-night-mode").innerHTML =
-//     '<i class="fa-solid fa-moon"></i>';
-
-//   // Update the font picker whenever selection changes
-//   quillEditor.on('editor-change', () => updateFontPickerLabel(quillEditor));
-//   updateFontPickerLabel(quillEditor); // Initial label set
-// }
-
-// // Open editor
-// function openTextEditor(target) {
-//   isEditorLoading = true;
-//   activeTextElement = target;
-//   editorPop.classList.remove("content-hide");
-//   editorPop.classList.add("content-show");
-
-//   if (!quillEditor) initializeQuill();
-
-//   requestAnimationFrame(() => {
-//     const content = target.innerHTML.trim();
-//     quillEditor.setContents([], "silent");
-//     quillEditor.clipboard.dangerouslyPasteHTML(0, content, "silent");
-
-//     quillEditor.enable(true);
-//     const length = quillEditor.getLength();
-//     quillEditor.setSelection(length, 0, "silent");
-//     quillEditor.focus();
-    
-//     isEditorLoading = false;
-//   });
-// }
-
-// // Utility: remove empty tags
-// function cleanHtml(html) {
-//   const trimmed = html.trim();
-//   const noEmptyTags = trimmed.replace(
-//     /<(\w+)(?:\s[^>]*)?>\s*(<br\s*\/?>)?\s*<\/\1>/gi,
-//     ""
-//   );
-//   return noEmptyTags.trim();
-// }
-
-// // Utility: normalize Quill lists into proper ul/ol
-// function normalizeLists(html) {
-//   return html.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (match, inner) => {
-//     if (/data-list="bullet"/.test(match)) {
-//       return `<ul>${inner.replace(/ data-list="bullet"/g, "")}</ul>`;
-//     }
-//     return `<ol>${inner.replace(/ data-list="ordered"/g, "")}</ol>`;
-//   });
-// }
-
-// // Close editor
-// function closeTextEditor(save = true) {
-//   if (!activeTextElement || !quillEditor) return;
-
-//   if (save) {
-//     let newContent = quillEditor.root.innerHTML;
-//     newContent = normalizeLists(newContent);
-//     const cleaned = cleanHtml(newContent);
-
-//     if (cleaned) activeTextElement.innerHTML = cleaned;
-//   }
-
-//   editorPop.classList.remove("content-show");
-//   editorPop.classList.add("content-hide");
-//   activeTextElement = null;
-// }
-
-// // Double-click to open editor
-// document.addEventListener("dblclick", (e) => {
-//   const target = e.target.closest(".text-element");
-//   if (target) openTextEditor(target);
-// });
-
-// // Click outside to save & close
-// document.addEventListener("click", (e) => {
-//   const isEditorVisible = window.getComputedStyle(editorPop).display !== "none";
-
-//   if (isEditorVisible && !isEditorLoading) {
-//     const isClickInsideEditor = e.target.closest(".text-editor-pop");
-//     const isClickInsideQuillUI = e.target.closest(".ql-picker, .ql-tooltip");
-
-//     if (!isClickInsideEditor && !isClickInsideQuillUI) {
-//       closeTextEditor(true);
-//     }
-//   }
-// });
 const editorPop = document.querySelector(".text-editor-pop");
 const editorContainer = document.querySelector("#quill-editor");
+
 let activeTextElement = null;
 let quillEditor = null;
 let isEditorLoading = false;
 let iconSearchRange = null;
 
-// --- QUILL IMPORTS ---
+
+// ==========================================
+// 2. QUILL IMPORTS & CONFIGURATION
+// ==========================================
+
 const Inline = Quill.import("blots/inline");
 const Embed = Quill.import('blots/embed');
 const Delta = Quill.import('delta');
 const Size = Quill.import('attributors/style/size');
 
 // --- ICON DATA ---
+// PASTE THE FULL faIcons ARRAY HERE
 const faIcons = [
             "fa-solid fa-0", "fa-solid fa-1", "fa-solid fa-2", "fa-solid fa-3", "fa-solid fa-4", "fa-solid fa-5", "fa-solid fa-6", "fa-solid fa-7", "fa-solid fa-8", "fa-solid fa-9", "fa-solid fa-a", "fa-solid fa-address-book", "fa-regular fa-address-book", "fa-solid fa-address-card", "fa-regular fa-address-card",
             "fa-solid fa-align-center", "fa-solid fa-align-justify", "fa-solid fa-align-left", "fa-solid fa-align-right", "fa-solid fa-anchor", "fa-solid fa-angle-down", "fa-solid fa-angle-left", "fa-solid fa-angle-right", "fa-solid fa-angle-up", "fa-solid fa-angles-down", "fa-solid fa-angles-left",
@@ -405,9 +197,14 @@ const faIcons = [
             "fa-brands fa-vimeo", "fa-brands fa-vimeo-v", "fa-brands fa-vine", "fa-brands fa-vk", "fa-brands fa-vnv", "fa-brands fa-vuejs", "fa-brands fa-watchman-monitoring", "fa-brands fa-waze", "fa-brands fa-weebly", "fa-brands fa-weibo", "fa-brands fa-weixin", "fa-brands fa-whatsapp", "fa-brands fa-whmcs",
             "fa-brands fa-wikipedia-w", "fa-brands fa-windows", "fa-brands fa-wirsindhandwerk", "fa-brands fa-wix", "fa-brands fa-wizards-of-the-coast", "fa-brands fa-wodu", "fa-brands fa-wolf-pack-battalion", "fa-brands fa-wordpress", "fa-brands fa-wordpress-simple", "fa-brands fa-wpbeginner", "fa-brands fa-wpexplorer",
             "fa-brands fa-wpforms", "fa-brands fa-wpressr", "fa-brands fa-xbox", "fa-brands fa-xing", "fa-brands fa-y-combinator", "fa-brands fa-yahoo", "fa-brands fa-yammer", "fa-brands fa-yandex", "fa-brands fa-yandex-international", "fa-brands fa-yarn", "fa-brands fa-yelp", "fa-brands fa-yoast", "fa-brands fa-youtube", "fa-brands fa-zhihu",
-        ];
+];
 
-// --- FONT AWESOME ICON BLOT ---
+
+// ==========================================
+// 3. CUSTOM BLOTS & REGISTRATIONS
+// ==========================================
+
+// --- Font Awesome Icon Blot ---
 class FontAwesomeBlot extends Embed {
     static create(className) {
         const node = super.create();
@@ -426,8 +223,133 @@ class FontAwesomeBlot extends Embed {
 }
 FontAwesomeBlot.blotName = "font-awesome";
 FontAwesomeBlot.tagName = "I";
+Quill.register(FontAwesomeBlot);
 
-// --- ICON SEARCH TOOLTIP FUNCTIONS ---
+// --- Custom Font Blot ---
+class CustomFont extends Inline {
+    static blotName = "font";
+    static tagName = "SPAN";
+    static classPrefix = "ql-font-";
+    static whitelist = [
+        false, "agbalumo", "alumni-sans-pinstripe", "baskervville", "baskervville-sc",
+        "bebas-neue", "borel", "cal-sans", "caveat-brush", "chewy", "cinzel",
+        "comfortaa", "coming-soon", "delius", "dynapuff", "fugaz-one",
+        "funnel-display", "germania-one", "google-sans-code", "host-grotesk",
+        "lato", "lexend", "libre-bodoni", "lobster", "lora", "marck-script",
+        "meow-script", "merriweather-sans", "michroma", "montecarlo",
+        "newsreader", "noto-sans", "pacifico", "pixelify-sans", "playwrite-za",
+        "poller-one", "quintessential", "roboto", "short-stack", "sono", "suse",
+        "twinkle-star", "ultra", "unifrakturmaguntia",
+    ];
+    static sanitize(value) {
+        if (!value) return value;
+        return value.replace(/['"]/g, "").replace(/\s+/g, "-").toLowerCase();
+    }
+    static create(value) {
+        const node = super.create();
+        const normalized = this.sanitize(value);
+        if (this.whitelist && !this.whitelist.includes(normalized)) return node;
+        node.setAttribute("class", this.classPrefix + normalized);
+        return node;
+    }
+    static formats(node) {
+        const className = node.getAttribute("class") || "";
+        const match = className.match(new RegExp(this.classPrefix + "([a-z0-9-]+)"));
+        return match ? match[1] : null;
+    }
+    format(name, value) {
+        if (name === CustomFont.blotName) {
+            if (value) {
+                const normalized = CustomFont.sanitize(value);
+                if (CustomFont.whitelist.includes(normalized)) {
+                    this.domNode.setAttribute("class", CustomFont.classPrefix + normalized);
+                }
+            } else {
+                this.domNode.removeAttribute("class");
+            }
+        } else {
+            super.format(name, value);
+        }
+    }
+}
+Quill.register(CustomFont, true);
+
+// --- Font Size Configuration ---
+Size.whitelist = [
+    false, '9px', '12px', '14px', '16px', '20px', '24px', 
+    '28px', '32px', '36px', '40px', '50px', '60px', '70px', 
+    '80px', '90px', '100px'
+];
+Quill.register(Size, true);
+
+
+// ==========================================
+// 4. UI HELPER FUNCTIONS
+// ==========================================
+
+function customColorPicker() {
+    const color = prompt("Enter a hex color code (e.g., #ff00ff):");
+    if (color && /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
+        quillEditor.format("color", color);
+    } else if (color) {
+        alert("Invalid hex code.");
+    }
+}
+
+function updateFontPickerLabel(quill) {
+    const pickerLabel = document.querySelector(".ql-font .ql-picker-label");
+    if (!pickerLabel) return;
+    const format = quill.getFormat();
+    let currentFont = format.font || '';
+    let displayName = 'Font Family';
+    if (currentFont) {
+        displayName = currentFont.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        pickerLabel.style.fontFamily = currentFont.includes('-') || currentFont.includes(' ') ? `"${displayName}"` : displayName;
+    } else {
+        pickerLabel.style.fontFamily = 'inherit';
+    }
+    pickerLabel.setAttribute('data-value', currentFont);
+    pickerLabel.textContent = displayName;
+}
+
+function updateSizePickerLabel(quill) {
+    const pickerLabel = document.querySelector(".ql-size .ql-picker-label");
+    if (!pickerLabel) return;
+    const format = quill.getFormat();
+    let currentSize = format.size || '';
+    let displayName = 'Font Size';
+    if (currentSize) {
+        displayName = currentSize;
+    } else {
+        displayName = 'Font Size';
+    }
+    pickerLabel.setAttribute('data-value', currentSize);
+    pickerLabel.textContent = displayName;
+}
+
+const headerNameMap = {
+    '1': 'Title',
+    '2': 'Subtitle',
+    '3': 'Section',
+    '4': 'Subsection',
+    '5': 'Detail',
+    'false': 'Paragraph'
+};
+
+function updateHeaderPickerLabel(quill) {
+    const pickerLabel = document.querySelector(".ql-header .ql-picker-label");
+    if (!pickerLabel) return;
+    const format = quill.getFormat();
+    const currentHeaderValue = String(format.header || false);
+    const displayName = headerNameMap[currentHeaderValue] || 'Font Style';
+    pickerLabel.textContent = displayName;
+    pickerLabel.setAttribute('data-value', currentHeaderValue);
+};
+
+
+// ==========================================
+// 5. ICON SEARCH LOGIC
+// ==========================================
 
 function setupIconSearch(quill) {
     const tooltipHTML = `
@@ -482,118 +404,6 @@ function setupIconSearch(quill) {
     });
 }
 
-// --- CUSTOM FONT BLOT ---
-class CustomFont extends Inline {
-    static blotName = "font";
-    static tagName = "SPAN";
-    static classPrefix = "ql-font-";
-    static whitelist = [
-        false, "agbalumo", "alumni-sans-pinstripe", "baskervville", "baskervville-sc",
-        "bebas-neue", "borel", "cal-sans", "caveat-brush", "chewy", "cinzel",
-        "comfortaa", "coming-soon", "delius", "dynapuff", "fugaz-one",
-        "funnel-display", "germania-one", "google-sans-code", "host-grotesk",
-        "lato", "lexend", "libre-bodoni", "lobster", "lora", "marck-script",
-        "meow-script", "merriweather-sans", "michroma", "montecarlo",
-        "newsreader", "noto-sans", "pacifico", "pixelify-sans", "playwrite-za",
-        "poller-one", "quintessential", "roboto", "short-stack", "sono", "suse",
-        "twinkle-star", "ultra", "unifrakturmaguntia",
-    ];
-    static sanitize(value) {
-        if (!value) return value;
-        return value.replace(/['"]/g, "").replace(/\s+/g, "-").toLowerCase();
-    }
-    static create(value) {
-        const node = super.create();
-        const normalized = this.sanitize(value);
-        if (this.whitelist && !this.whitelist.includes(normalized)) return node;
-        node.setAttribute("class", this.classPrefix + normalized);
-        return node;
-    }
-    static formats(node) {
-        const className = node.getAttribute("class") || "";
-        const match = className.match(new RegExp(this.classPrefix + "([a-z0-9-]+)"));
-        return match ? match[1] : null;
-    }
-    format(name, value) {
-        if (name === CustomFont.blotName) {
-            if (value) {
-                const normalized = CustomFont.sanitize(value);
-                if (CustomFont.whitelist.includes(normalized)) {
-                    this.domNode.setAttribute("class", CustomFont.classPrefix + normalized);
-                }
-            } else {
-                this.domNode.removeAttribute("class");
-            }
-        } else {
-            super.format(name, value);
-        }
-    }
-}
-Quill.register(CustomFont, true);
-
-Size.whitelist = [false, '9px', '12px', '14px', '16px', '20px', '24px', '28px', '32px', '36px', '40px', '50px', '60px', '70px', '80px', '90px', '100px'];
-Quill.register(Size, true);
-
-// --- QUILL HELPER FUNCTIONS ---
-function customColorPicker() {
-    const color = prompt("Enter a hex color code (e.g., #ff00ff):");
-    if (color && /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
-        quillEditor.format("color", color);
-    } else if (color) {
-        alert("Invalid hex code.");
-    }
-}
-
-function updateFontPickerLabel(quill) {
-    const pickerLabel = document.querySelector(".ql-font .ql-picker-label");
-    if (!pickerLabel) return;
-    const format = quill.getFormat();
-    let currentFont = format.font || '';
-    let displayName = 'Font Family';
-    if (currentFont) {
-        displayName = currentFont.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-        pickerLabel.style.fontFamily = currentFont.includes('-') || currentFont.includes(' ') ? `"${displayName}"` : displayName;
-    } else {
-        pickerLabel.style.fontFamily = 'inherit';
-    }
-    pickerLabel.setAttribute('data-value', currentFont);
-    pickerLabel.textContent = displayName;
-}
-
-function updateSizePickerLabel(quill) {
-    const pickerLabel = document.querySelector(".ql-size .ql-picker-label");
-    if (!pickerLabel) return;
-    const format = quill.getFormat();
-    let currentSize = format.size || '';
-    let displayName = 'Font Size';
-    if (currentSize) {
-        displayName = currentSize;
-    } else {
-        displayName = 'Font Size';
-    }
-    pickerLabel.setAttribute('data-value', currentSize);
-    pickerLabel.textContent = displayName;
-}
-
-const headerNameMap = {
-  '1': 'Title',
-  '2': 'Subtitle',
-  '3': 'Section',
-  '4': 'Subsection',
-  '5': 'Detail',
-  'false': 'Paragraph' // The value for "Normal" text
-};
-
-function updateHeaderPickerLabel(quill) {
-  const pickerLabel = document.querySelector(".ql-header .ql-picker-label");
-  if (!pickerLabel) return;
-  const format = quill.getFormat();
-  const currentHeaderValue = String(format.header || false);
-  const displayName = headerNameMap[currentHeaderValue] || 'Font Style';
-  pickerLabel.textContent = displayName;
-  pickerLabel.setAttribute('data-value', currentHeaderValue);
-};
-
 function iconSearchHandler() {
     const tooltip = document.querySelector('.ql-icon-search-tooltip');
     if (!tooltip) return;
@@ -615,9 +425,13 @@ function iconSearchHandler() {
     }
 };
 
-// --- INITIALIZE QUILL ---
+
+// ==========================================
+// 6. INITIALIZATION
+// ==========================================
+
 function initializeQuill() {
-    Quill.register(FontAwesomeBlot);
+    // Note: Blots are registered in Section 3
 
     const toolbarOptions = [
         [{ header: [1, 2, 3, 4, 5, false] }, { font: CustomFont.whitelist }, { size: Size.whitelist }],
@@ -644,6 +458,7 @@ function initializeQuill() {
         },
     });
 
+    // Matcher to handle pasting of icon tags
     quillEditor.clipboard.addMatcher('I', (node, delta) => {
         const classes = node.getAttribute('class') || '';
         if (/fa-(solid|regular|brands)/.test(classes)) {
@@ -652,51 +467,55 @@ function initializeQuill() {
         return delta;
     });
 
+    // Custom Toolbar Icons
     document.querySelector(".ql-custom-color").innerHTML = '<i class="fa-solid fa-palette"></i>';
     document.querySelector(".ql-day-mode").innerHTML = '<i class="fa-solid fa-sun"></i>';
     document.querySelector(".ql-night-mode").innerHTML = '<i class="fa-solid fa-moon"></i>';
     document.querySelector(".ql-icon-search").innerHTML = '<i class="fa-solid fa-icons"></i>';
 
+    // Update pickers on mouse interaction
     editorContainer.addEventListener("mousedown", (e) => {
-      const activeTooltip = e.target.closest('.ql-tooltip.ql-editing');
-      if (activeTooltip) return;
-      setTimeout(() => {
-        updateFontPickerLabel(quillEditor);
-        updateSizePickerLabel(quillEditor);
-        updateHeaderPickerLabel(quillEditor);
-      }, 0);
+        const activeTooltip = e.target.closest('.ql-tooltip.ql-editing');
+        if (activeTooltip) return;
+        setTimeout(() => {
+            updateFontPickerLabel(quillEditor);
+            updateSizePickerLabel(quillEditor);
+            updateHeaderPickerLabel(quillEditor);
+        }, 0);
     });
 
+    // Update labels when selecting from toolbar dropdowns
     const toolbar = quillEditor.getModule('toolbar');
     toolbar.container.addEventListener('click', (e) => {
         if (e.target.closest('.ql-font .ql-picker-item')) {
-            setTimeout(() => {
-                updateFontPickerLabel(quillEditor);
-        }, 0);
+            setTimeout(() => { updateFontPickerLabel(quillEditor); }, 0);
         } else if (e.target.closest('.ql-size .ql-picker-item')) {
-            setTimeout(() => {
-                updateSizePickerLabel(quillEditor);
-            }, 0);
+            setTimeout(() => { updateSizePickerLabel(quillEditor); }, 0);
         } else if (e.target.closest('.ql-header .ql-picker-item')) {
-            setTimeout(() => {
-                updateHeaderPickerLabel(quillEditor);
-            }, 0);
+            setTimeout(() => { updateHeaderPickerLabel(quillEditor); }, 0);
         }
     });
 
+    // Initial labels
     updateFontPickerLabel(quillEditor);
     updateSizePickerLabel(quillEditor);
     updateHeaderPickerLabel(quillEditor);
     setupIconSearch(quillEditor);
 }
 
-// --- EDITOR MANAGEMENT FUNCTIONS ---
+
+// ==========================================
+// 7. EDITOR LIFECYCLE (OPEN/CLOSE/SAVE)
+// ==========================================
+
 function openTextEditor(target) {
     isEditorLoading = true;
     activeTextElement = target;
     editorPop.classList.remove("content-hide");
     editorPop.classList.add("content-show");
+    
     if (!quillEditor) initializeQuill();
+    
     requestAnimationFrame(() => {
         const content = target.innerHTML.trim();
         quillEditor.setContents([], "silent");
@@ -708,10 +527,12 @@ function openTextEditor(target) {
         isEditorLoading = false;
     });
 }
+
 function cleanHtml(html) {
     const trimmed = html.trim();
     return trimmed.replace(/<(\w+)(?:\s[^>]*)?>\s*(<br\s*\/?>)?\s*<\/\1>/gi, "").trim();
 }
+
 function normalizeLists(html) {
     return html.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (match, inner) => {
         if (/data-list="bullet"/.test(match)) {
@@ -720,28 +541,36 @@ function normalizeLists(html) {
         return `<ol>${inner.replace(/ data-list="ordered"/g, "")}</ol>`;
     });
 }
+
 function closeTextEditor(save = true) {
     if (!activeTextElement || !quillEditor) return;
+    
     if (save) {
         let newContent = quillEditor.root.innerHTML;
         newContent = normalizeLists(newContent);
         const cleaned = cleanHtml(newContent);
         if (cleaned) activeTextElement.innerHTML = cleaned;
     }
+    
     editorPop.classList.remove("content-show");
     editorPop.classList.add("content-hide");
     activeTextElement = null;
 }
 
-// --- GLOBAL EVENT LISTENERS ---
+
+// ==========================================
+// 8. GLOBAL EVENT LISTENERS
+// ==========================================
+
+// Double click to open
 document.addEventListener("dblclick", (e) => {
     const target = e.target.closest(".text-element");
     if (target) openTextEditor(target);
 });
 
-// **MODIFIED: Integrated the "click outside" logic for the icon search tooltip**
+// Click outside to close/save
 document.addEventListener("click", (e) => {
-    // First, handle the icon search tooltip closing
+    // 1. Handle icon search tooltip closing
     const iconTooltip = document.querySelector('.ql-icon-search-tooltip');
     if (iconTooltip && iconTooltip.style.display !== 'none') {
         const isClickOnButton = e.target.closest('.ql-icon-search');
@@ -751,15 +580,14 @@ document.addEventListener("click", (e) => {
         }
     }
 
-    // Second, handle the main editor closing
+    // 2. Handle main editor closing
     const isEditorVisible = window.getComputedStyle(editorPop).display !== "none";
     if (!isEditorVisible || isEditorLoading) return;
 
     const isClickInsideEditorZone = e.target.closest(
         ".text-editor-pop, .ql-picker, .ql-tooltip"
     );
-    // Note: .ql-icon-search-tooltip is intentionally left out here now,
-    // because its closing is handled above. A click on it is still "inside" the editor pop.
+
     if (!isClickInsideEditorZone) {
         closeTextEditor(true);
     }
