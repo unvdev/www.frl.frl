@@ -749,11 +749,6 @@ footer {
     width: 100%;
 }
 
-.accordion:hover {
-    opacity: 70%;
-    cursor: pointer;
-}
-
 .accordion-label {
     display: block;
     position: relative;
@@ -783,6 +778,29 @@ footer {
     content: "\25B2";
 }
 
+.accordion-label:hover {
+    opacity: 70%;
+    cursor: pointer;
+}
+
 .accordion-content {
     display: none;
+}
+
+/*Button*/
+
+.button {
+    display: block;
+    position: relative;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+    padding-left: 60px !important;
+    padding-right: 20px !important;
+    width: 100%;
+    background-color: #eeeeee;
+}
+
+.button:hover {
+    opacity: 70%;
+    cursor: pointer;
 }
