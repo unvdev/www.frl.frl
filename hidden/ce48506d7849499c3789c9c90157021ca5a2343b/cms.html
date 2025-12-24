@@ -82,6 +82,66 @@
                 </div>
             </div>
 
+            <div id="style-editor-link-controls" class="content-show">
+                <div class="sidebar-section">
+                    <h4 class="sidebar-section-title">Link</h4>
+                    <div class="sidebar-control-group">
+                        <div class="sidebar-control-label">Manage</div>
+                        <div id="style-editor-link-add" class="sidebar-button sidebar-spacer">Add Link</div>
+                        <div id="style-editor-link-remove" class="sidebar-button sidebar-spacer">Remove Link</div>
+                    </div>
+                </div>
+            </div>  
+
+            <div id="style-editor-image-controls" class="content-hide">
+                <div class="sidebar-section">
+                    <h4 class="sidebar-section-title">Image Options</h4>
+                    <div class="sidebar-control-group">
+                        <div class="sidebar-control-label">Image Style</div>
+                        <div class="sidebar-segmented-control">
+                            <button id="style-editor-image-default-button" class="active" title="image default">
+                                <i class="fa-solid fa-up-right-and-down-left-from-center" style="transform: rotate(45deg)"></i>
+                            </button>
+                            <button id="style-editor-image-ratio-button" title="image ratio">
+                                <i class="fa-solid fa-lock"></i>
+                            </button>
+                            <button id="style-editor-image-crop-button" title="image crop">
+                                <i class="fa-solid fa-crop"></i>
+                            </button>
+                        </div>
+                        <div id="style-editor-image-ratio-controls" class="content-hide">
+                            <div class="sidebar-control-group">
+                                <div class="sidebar-control-label">Image Width</div>
+                                <div class="input-with-unit">
+                                    <input type="number" id="style-editor-ratio-width-input" value="0" min="10">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="style-editor-image-crop-controls" class="content-hide">
+                            <div class="sidebar-control-group">
+                                <div class="sidebar-control-label">Image Width</div>
+                                <div class="input-with-unit">
+                                    <input type="number" id="style-editor-crop-width-input" value="0" min="10">
+                                </div>
+                            </div>
+                            <div class="sidebar-control-group">
+                                <div class="sidebar-control-label">Image Height</div>
+                                <div class="input-with-unit">
+                                    <input type="number" id="style-editor-crop-height-input" value="0" min="10">
+                                </div>
+                            </div>
+                            <div class="sidebar-control-group">
+                                <div class="sidebar-control-label">Frame Position</div>
+                                <div class="input-with-unit">
+                                    <input type="number" id="style-editor-crop-position-input" value="0" min="1" max="100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="sidebar-section">
                 <h4 class="sidebar-section-title">Appearance</h4>
                 <div class="sidebar-control-group">
@@ -168,66 +228,6 @@
                     </div>
                     <input type="number" id="style-editor-padding-right-input" class="quad-right" value="0" min="0" title="Right Padding">
                     <input type="number" id="style-editor-padding-bottom-input" class="quad-bottom" value="0" min="0" title="Bottom Padding">
-                </div>
-            </div>
-            
-            <div id="style-editor-link-controls" class="content-show">
-                <div class="sidebar-section">
-                    <h4 class="sidebar-section-title">Link</h4>
-                    <div class="sidebar-control-group">
-                        <div class="sidebar-control-label">Manage</div>
-                        <div id="style-editor-link-add" class="sidebar-button sidebar-spacer">Add Link</div>
-                        <div id="style-editor-link-remove" class="sidebar-button sidebar-spacer">Remove Link</div>
-                    </div>
-                </div>
-            </div>  
-
-            <div id="style-editor-image-controls" class="content-hide">
-                <div class="sidebar-section">
-                    <h4 class="sidebar-section-title">Image Options</h4>
-                    <div class="sidebar-control-group">
-                        <div class="sidebar-control-label">Image Style</div>
-                        <div class="sidebar-segmented-control">
-                            <button id="style-editor-image-default-button" class="active" title="image default">
-                                <i class="fa-solid fa-up-right-and-down-left-from-center" style="transform: rotate(45deg)"></i>
-                            </button>
-                            <button id="style-editor-image-ratio-button" title="image ratio">
-                                <i class="fa-solid fa-lock"></i>
-                            </button>
-                            <button id="style-editor-image-crop-button" title="image crop">
-                                <i class="fa-solid fa-crop"></i>
-                            </button>
-                        </div>
-                        <div id="style-editor-image-ratio-controls" class="content-hide">
-                            <div class="sidebar-control-group">
-                                <div class="sidebar-control-label">Image Width</div>
-                                <div class="input-with-unit">
-                                    <input type="number" id="style-editor-ratio-width-input" value="0" min="10">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="style-editor-image-crop-controls" class="content-hide">
-                            <div class="sidebar-control-group">
-                                <div class="sidebar-control-label">Image Width</div>
-                                <div class="input-with-unit">
-                                    <input type="number" id="style-editor-crop-width-input" value="0" min="10">
-                                </div>
-                            </div>
-                            <div class="sidebar-control-group">
-                                <div class="sidebar-control-label">Image Height</div>
-                                <div class="input-with-unit">
-                                    <input type="number" id="style-editor-crop-height-input" value="0" min="10">
-                                </div>
-                            </div>
-                            <div class="sidebar-control-group">
-                                <div class="sidebar-control-label">Frame Position</div>
-                                <div class="input-with-unit">
-                                    <input type="number" id="style-editor-crop-position-input" value="0" min="1" max="100">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
