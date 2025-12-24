@@ -663,8 +663,10 @@ stretchToScreen.addEventListener("change", function() {
 matchAdjacentHeight.addEventListener("change", function() {
   if (currentlySelected && matchAdjacentHeight.checked) {
     currentlySelected.classList.add("match-adjacent-height");
+    currentlySelected.querySelector(':scope > .placeholder-block').style.display = 'none';
   } else {
     currentlySelected.classList.remove("match-adjacent-height");
+    currentlySelected.querySelector(':scope > .placeholder-block').style.display = '';
   }
 });
 
