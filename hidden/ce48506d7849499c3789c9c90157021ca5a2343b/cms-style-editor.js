@@ -391,8 +391,8 @@ function checkRestrictedControls() {
   } else {
     paddingLeftInput.disabled = false;
     paddingRightInput.disabled = false;
-    paddingLeftInput.style.opacity = "0.5";
-    paddingRightInput.style.opacity = "0.5";
+    paddingLeftInput.style.opacity = "1.0";
+    paddingRightInput.style.opacity = "1.0";
   }
 }
 
