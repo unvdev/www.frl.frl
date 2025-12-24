@@ -461,17 +461,8 @@ function loadImageValues() {
 //Helper: Grab the link
 function grabLink() {
   let link = prompt("Enter a URL:");
-
-  if (link === null) {
-    return null;
-  }
-
+  
   link = link.trim();
-
-  if (link === "") {
-    alert("URL cannot be empty.");
-    return grabLink();
-  }
 
   if (link.startsWith('.')) {
      alert("URL cannot start with a dot.");
@@ -761,6 +752,11 @@ backgroundColorRemove.addEventListener("click", function() {
 linkAdd.addEventListener("click", function() {
   if (currentlySelected) {
     const url = grabLink();
+
+    if (url === null) {
+      return;
+    }
+
     if (currentlySelected && currentlySelected.parentNode) {
       const linkWrapper = document.createElement('a');
       linkWrapper.classList.add('building-block-link');
