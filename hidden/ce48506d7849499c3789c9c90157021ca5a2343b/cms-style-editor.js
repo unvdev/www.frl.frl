@@ -59,6 +59,7 @@ const imageCropPositionInput = document.getElementById("style-editor-crop-positi
 // Link Opions
 const linkAdd = document.getElementById("style-editor-link-add");
 const linkRemove = document.getElementById("style-editor-link-remove");
+const linkOpenInNewTab = document.getElementById("style-editor-link-open-in-new-tab-checkbox");
 
 // ===============================
 // HELPERS
@@ -561,6 +562,13 @@ function loadStylesFromSelected() {
     matchAdjacentHeight.checked = false;
   }
 
+  if (currentlySelected.parentElement.target === "_blank") {
+    linkOpenInNewTab.checked = true;
+  } else {
+    linkOpenInNewTab.checked = false;
+  }
+
+
   highlightActiveControls();
 }
 
@@ -777,6 +785,7 @@ linkAdd.addEventListener("click", function() {
       linkWrapper.href = url;
       currentlySelected.parentNode.insertBefore(linkWrapper, currentlySelected);
       linkWrapper.appendChild(currentlySelected);
+      checkRestrictedControls();
     } else {
       return;
     }
@@ -789,6 +798,7 @@ linkRemove.addEventListener("click", function() {
     if (parentLink.tagName === 'A' && parentLink.classList.contains('building-block-link')) {
       parentLink.parentNode.insertBefore(currentlySelected, parentLink);
       parentLink.remove();
+      checkRestrictedControls();
     }
   }
 });
