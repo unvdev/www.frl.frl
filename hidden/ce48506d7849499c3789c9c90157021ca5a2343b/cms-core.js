@@ -71,6 +71,7 @@ function deleteElement() {
     if (currentlySelected) {
 
         if (currentlySelected?.matches('.building-column, .placeholder-block, .accordion-label')) {
+            alert("Cannot delete the current selection. Please select another element to delete.");
             return;
         }
 
