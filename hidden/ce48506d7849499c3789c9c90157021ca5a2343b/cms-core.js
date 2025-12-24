@@ -12,301 +12,300 @@ const loadedPage = document.getElementById("loaded-page");
 
 let currentlySelected = null;
 let clipboard = {
-   html: null,
-   sourceElement: null
+    html: null,
+    sourceElement: null
 };
 let cmsPreviewCounter = 0;
 
 function deselectAll() {
-   if (currentlySelected) {
-      currentlySelected.classList.remove('selected');
-      currentlySelected = null;
-      cms.classList.add("content-hide");
-      styles.classList.add("content-hide");
-      loadedPage.classList.remove("sidebar-active");
-   }
+    if (currentlySelected) {
+        currentlySelected.classList.remove('selected');
+        currentlySelected = null;
+        cms.classList.add("content-hide");
+        styles.classList.add("content-hide");
+        loadedPage.classList.remove("sidebar-active");
+    }
 }
 
 function selectBuildingBlock(blockToSelect, originalTarget) {
-   if (originalTarget.closest('.placeholder-block')) {
-      deselectAll();
-      currentlySelected = originalTarget;
-      invokeCMSMenu();
-      return;
-   }
-   deselectAll();
-   currentlySelected = blockToSelect;
-   currentlySelected.classList.add('selected');
+    if (originalTarget.closest('.placeholder-block')) {
+        deselectAll();
+        currentlySelected = originalTarget;
+        invokeCMSMenu();
+        return;
+    }
+    deselectAll();
+    currentlySelected = blockToSelect;
+    currentlySelected.classList.add('selected');
 }
 
 function updateSelectedLabel() {
-   if (currentlySelected) {
-      if (currentlySelected.dataset.name === undefined) {
-         selectedElementLabel.innerText = 'Building Block:';
-         return;
-      }
+    if (currentlySelected) {
+        if (currentlySelected.dataset.name === undefined) {
+            selectedElementLabel.innerText = 'Building Block:';
+            return;
+        }
 
-      selectedElementLabel.innerText = currentlySelected.dataset.name;
-   }  else {
-      selectedElementLabel.innerText = 'Building Block:';
-   }
+        selectedElementLabel.innerText = currentlySelected.dataset.name;
+    } else {
+        selectedElementLabel.innerText = 'Building Block:';
+    }
 }
 
 function updateMovementArrows() {
-   if (currentlySelected) {
-      if (currentlySelected.classList.contains('building-column')) {
-         moveUp.innerHTML = 'Move Left';
-         moveDown.innerHTML = 'Move Right';
-      } else {
-         moveUp.innerHTML = 'Move Up';
-         moveDown.innerHTML = 'Move Down';
-      }
-   } else {
-      moveUp.innerHTML = 'Move Up';
-      moveDown.innerHTML = 'Move Down';
-   }
+    if (currentlySelected) {
+        if (currentlySelected.classList.contains('building-column')) {
+            moveUp.innerHTML = 'Move Left';
+            moveDown.innerHTML = 'Move Right';
+        } else {
+            moveUp.innerHTML = 'Move Up';
+            moveDown.innerHTML = 'Move Down';
+        }
+    } else {
+        moveUp.innerHTML = 'Move Up';
+        moveDown.innerHTML = 'Move Down';
+    }
 }
 
 function deleteElement() {
-   if (currentlySelected) {
-      if (confirm('Are you sure you want to delete this element?')) {
-         currentlySelected.remove();
-         currentlySelected = null;
-      }
-   }
+    if (currentlySelected) {
+        if (confirm('Are you sure you want to delete this element?')) {
+            currentlySelected.remove();
+            currentlySelected = null;
+        }
+    }
 }
 
 function copyElement() {
-   if (currentlySelected) {
-      currentlySelected.classList.remove('selected');
-      clipboard.html = currentlySelected.outerHTML;
-      currentlySelected.classList.add('selected');
-      clipboard.sourceElement = currentlySelected;
-   }
+    if (currentlySelected) {
+        currentlySelected.classList.remove('selected');
+        clipboard.html = currentlySelected.outerHTML;
+        currentlySelected.classList.add('selected');
+        clipboard.sourceElement = currentlySelected;
+    }
 }
 
 function pasteElement() {
-   if (!currentlySelected || !clipboard.html) {
-      deselectAll();
-      return;
-   }
+    if (!currentlySelected || !clipboard.html) {
+        deselectAll();
+        return;
+    }
 
-   try {
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = clipboard.html;
-      const copiedElement = tempDiv.firstElementChild;
-      let parentColumn = null;
+    try {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = clipboard.html;
+        const copiedElement = tempDiv.firstElementChild;
+        let parentColumn = null;
 
-      if (copiedElement) {
-         if (currentlySelected.classList.contains('placeholder-block')) {
-            alert('Paste canceled. Please select a building container, column, or block, not the placeholder.');
-            return;
-         }
-      }
-
-      if (copiedElement.classList.contains('building-column')) {
-         if (!currentlySelected.classList.contains('building-column')) {
-            alert('A building column can only be pasted to overwrite another building column. Please select a building column.');
-            return;
-         }
-         if (currentlySelected === clipboard.sourceElement) {
-            alert('Cannot overwrite the same building column. Please select a different building column to replace.');
-            return;
-         }
-
-         currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
-         const newElement = currentlySelected.nextElementSibling;
-         currentlySelected.remove();
-         selectBuildingBlock(newElement, newElement);
-         return;
-      }
-
-      if (copiedElement.classList.contains('building-container')) {
-         if (currentlySelected.classList.contains('building-container')) {
-            currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
-            return;
-         }
-         if (currentlySelected.classList.contains('building-column')) {
-            parentColumn = currentlySelected;
-            const placeholder = parentColumn.querySelector('.placeholder-block');
-            if (placeholder) {
-               placeholder.insertAdjacentHTML('beforebegin', clipboard.html);
-               return;
-            } else {
-               currentlySelected.insertAdjacentHTML('beforeend', clipboard.html);
-               return;
+        if (copiedElement) {
+            if (currentlySelected.classList.contains('placeholder-block')) {
+                alert('Paste canceled. Please select a building container, column, or block, not the placeholder.');
+                return;
             }
-         }
-         else {
-            currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
-            return;
-         }
-      }
-      
-      if (!copiedElement?.matches('.building-container', '.building-column')) {
+        }
 
-         if (currentlySelected.classList.contains('building-container')) {
-            alert('Content blocks can only be pasted inside a "building column".');
-            return;
-         }
+        if (copiedElement.classList.contains('building-column')) {
+            if (!currentlySelected.classList.contains('building-column')) {
+                alert('A building column can only be pasted to overwrite another building column. Please select a building column.');
+                return;
+            }
+            if (currentlySelected === clipboard.sourceElement) {
+                alert('Cannot overwrite the same building column. Please select a different building column to replace.');
+                return;
+            }
 
-         if (currentlySelected.classList.contains('building-column')) {
-         parentColumn = currentlySelected.closest('.building-column');
-         const placeholder = parentColumn.querySelector(':scope > .placeholder-block');
-         if (placeholder) {
-            placeholder.insertAdjacentHTML('beforebegin', clipboard.html);
-            return;
-         } else {
-            currentlySelected.insertAdjacentHTML('beforeend', clipboard.html);
-            return;
-         }
-      } 
-      
-      if (!currentlySelected?.matches('.building-container, .building-column')) {
             currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
+            const newElement = currentlySelected.nextElementSibling;
+            currentlySelected.remove();
+            selectBuildingBlock(newElement, newElement);
             return;
-         }
-      }
-   } finally {
-      deselectAll();
-   }
+        }
+
+        if (copiedElement.classList.contains('building-container')) {
+            if (currentlySelected.classList.contains('building-container')) {
+                currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
+                return;
+            }
+            if (currentlySelected.classList.contains('building-column')) {
+                parentColumn = currentlySelected;
+                const placeholder = parentColumn.querySelector('.placeholder-block');
+                if (placeholder) {
+                    placeholder.insertAdjacentHTML('beforebegin', clipboard.html);
+                    return;
+                } else {
+                    currentlySelected.insertAdjacentHTML('beforeend', clipboard.html);
+                    return;
+                }
+            } else {
+                currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
+                return;
+            }
+        }
+
+        if (!copiedElement?.matches('.building-container', '.building-column')) {
+
+            if (currentlySelected.classList.contains('building-container')) {
+                alert('Content blocks can only be pasted inside a "building column".');
+                return;
+            }
+
+            if (currentlySelected.classList.contains('building-column')) {
+                parentColumn = currentlySelected.closest('.building-column');
+                const placeholder = parentColumn.querySelector(':scope > .placeholder-block');
+                if (placeholder) {
+                    placeholder.insertAdjacentHTML('beforebegin', clipboard.html);
+                    return;
+                } else {
+                    currentlySelected.insertAdjacentHTML('beforeend', clipboard.html);
+                    return;
+                }
+            }
+
+            if (!currentlySelected?.matches('.building-container, .building-column')) {
+                currentlySelected.insertAdjacentHTML('afterend', clipboard.html);
+                return;
+            }
+        }
+    } finally {
+        deselectAll();
+    }
 }
 
 function checkCMSVisibilityState() {
-   if (cmsPreviewCounter == 0) {
-      disableCMS();
-      setTimeout(() => {
-         cmsPreviewCounter = 1;
-      }, 0);
-   } else {
-      enableCMS();
-      setTimeout(() => {
-         cmsPreviewCounter = 0;
-      }, 0);
-   }
+    if (cmsPreviewCounter == 0) {
+        disableCMS();
+        setTimeout(() => {
+            cmsPreviewCounter = 1;
+        }, 0);
+    } else {
+        enableCMS();
+        setTimeout(() => {
+            cmsPreviewCounter = 0;
+        }, 0);
+    }
 }
 
 function disableCMS() {
-  // 1. Unload the CSS file
-  // We target the link tag with the specific href and data-name
-  const stylesheet = document.querySelector('link[href="cms.css"][data-name="cms stylesheet"]');
-  
-  if (stylesheet) {
-    stylesheet.remove();
-    console.log('CMS Stylesheet unloaded.');
-  }
+    // 1. Unload the CSS file
+    // We target the link tag with the specific href and data-name
+    const stylesheet = document.querySelector('link[href="cms.css"][data-name="cms stylesheet"]');
 
-  // 2. Hide the element with data-name "cms environment"
-  const cmsEnvElement = document.querySelector('[data-name="cms environment"]');
-  
-  if (cmsEnvElement) {
-    cmsEnvElement.style.display = 'none';
-    console.log('CMS Environment element hidden.');
-  }
+    if (stylesheet) {
+        stylesheet.remove();
+        console.log('CMS Stylesheet unloaded.');
+    }
 
-   const url = new URL(window.location.href);
+    // 2. Hide the element with data-name "cms environment"
+    const cmsEnvElement = document.querySelector('[data-name="cms environment"]');
 
-   url.searchParams.set('mode', 'preview');
-   window.history.pushState({}, '', url.toString());
+    if (cmsEnvElement) {
+        cmsEnvElement.style.display = 'none';
+        console.log('CMS Environment element hidden.');
+    }
 
-   initHelpers();
+    const url = new URL(window.location.href);
+
+    url.searchParams.set('mode', 'preview');
+    window.history.pushState({}, '', url.toString());
+
+    initHelpers();
 }
 
 function enableCMS() {
-  // 1. Reload the CSS file
-  // First, check if it already exists to prevent adding duplicates
-  if (!document.querySelector('link[href="cms.css"][data-name="cms stylesheet"]')) {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'cms.css';
-    link.setAttribute('data-name', 'cms stylesheet'); // Restore the data attribute
-    
-    // Append it back to the <head>
-    document.head.appendChild(link);
-    console.log('CMS Stylesheet restored.');
-  }
+    // 1. Reload the CSS file
+    // First, check if it already exists to prevent adding duplicates
+    if (!document.querySelector('link[href="cms.css"][data-name="cms stylesheet"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'cms.css';
+        link.setAttribute('data-name', 'cms stylesheet'); // Restore the data attribute
 
-  // 2. Show the data-name 'cms environment' element
-  const cmsEnvElement = document.querySelector('[data-name="cms environment"]');
-  
-  if (cmsEnvElement) {
-    // Setting display to an empty string removes the inline 'display: none',
-    // allowing the element's default CSS (block, flex, grid, etc.) to take over.
-    cmsEnvElement.style.display = ''; 
-    console.log('CMS Environment element visible.');
-  }
+        // Append it back to the <head>
+        document.head.appendChild(link);
+        console.log('CMS Stylesheet restored.');
+    }
 
-   const url = new URL(window.location.href);
+    // 2. Show the data-name 'cms environment' element
+    const cmsEnvElement = document.querySelector('[data-name="cms environment"]');
 
-   url.searchParams.set('mode', 'editing');
-   window.history.pushState({}, '', url.toString());
+    if (cmsEnvElement) {
+        // Setting display to an empty string removes the inline 'display: none',
+        // allowing the element's default CSS (block, flex, grid, etc.) to take over.
+        cmsEnvElement.style.display = '';
+        console.log('CMS Environment element visible.');
+    }
 
-   initHelpers();
+    const url = new URL(window.location.href);
+
+    url.searchParams.set('mode', 'editing');
+    window.history.pushState({}, '', url.toString());
+
+    initHelpers();
 }
 
 previewPage.addEventListener('click', checkCMSVisibilityState);
 
 // NEW, CORRECTED HELPER FUNCTION
 function formatHtml(node, level = 0, indentChar = '  ') {
-   const inlineTags = new Set(['a', 'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'dfn', 'em', 'i', 'kbd', 'mark', 'q', 's', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'time', 'u', 'var', 'wbr']);
-   const voidTags = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
+    const inlineTags = new Set(['a', 'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'dfn', 'em', 'i', 'kbd', 'mark', 'q', 's', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'time', 'u', 'var', 'wbr']);
+    const voidTags = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
 
-   let result = '';
+    let result = '';
 
-   switch (node.nodeType) {
-      case Node.ELEMENT_NODE:
-         const tagName = node.nodeName.toLowerCase();
-         const isInline = inlineTags.has(tagName);
-         const indent = indentChar.repeat(level);
+    switch (node.nodeType) {
+        case Node.ELEMENT_NODE:
+            const tagName = node.nodeName.toLowerCase();
+            const isInline = inlineTags.has(tagName);
+            const indent = indentChar.repeat(level);
 
-         // Add newline and indentation before block-level tags
-         if (!isInline && level > 0) {
-            result += '\n' + indent;
-         }
-
-         result += `<${tagName}`;
-         for (const attr of node.attributes) {
-            result += ` ${attr.name}="${attr.value}"`;
-         }
-         result += '>';
-
-         if (!voidTags.has(tagName)) {
-            let isEffectivelyEmpty = true;
-            // Check if the element contains any non-whitespace children
-            if (node.hasChildNodes()) {
-               for (const child of node.childNodes) {
-                  if ((child.nodeType === Node.TEXT_NODE && child.nodeValue.trim() !== '') || child.nodeType === Node.ELEMENT_NODE) {
-                     isEffectivelyEmpty = false;
-                     break;
-                  }
-               }
+            // Add newline and indentation before block-level tags
+            if (!isInline && level > 0) {
+                result += '\n' + indent;
             }
 
-            if (!isEffectivelyEmpty) {
-               for (const child of node.childNodes) {
-                  result += formatHtml(child, level + 1, indentChar);
-               }
-               if (!isInline) {
-                  result += '\n' + indent;
-               }
+            result += `<${tagName}`;
+            for (const attr of node.attributes) {
+                result += ` ${attr.name}="${attr.value}"`;
             }
-            result += `</${tagName}>`;
-         }
-         break;
+            result += '>';
 
-      case Node.TEXT_NODE:
-         const trimmedValue = node.nodeValue.trim();
-         if (trimmedValue) {
-            result += trimmedValue;
-         }
-         break;
+            if (!voidTags.has(tagName)) {
+                let isEffectivelyEmpty = true;
+                // Check if the element contains any non-whitespace children
+                if (node.hasChildNodes()) {
+                    for (const child of node.childNodes) {
+                        if ((child.nodeType === Node.TEXT_NODE && child.nodeValue.trim() !== '') || child.nodeType === Node.ELEMENT_NODE) {
+                            isEffectivelyEmpty = false;
+                            break;
+                        }
+                    }
+                }
 
-      case Node.COMMENT_NODE:
-         result += ``;
-         break;
-   }
+                if (!isEffectivelyEmpty) {
+                    for (const child of node.childNodes) {
+                        result += formatHtml(child, level + 1, indentChar);
+                    }
+                    if (!isInline) {
+                        result += '\n' + indent;
+                    }
+                }
+                result += `</${tagName}>`;
+            }
+            break;
 
-   return result;
+        case Node.TEXT_NODE:
+            const trimmedValue = node.nodeValue.trim();
+            if (trimmedValue) {
+                result += trimmedValue;
+            }
+            break;
+
+        case Node.COMMENT_NODE:
+            result += ``;
+            break;
+    }
+
+    return result;
 }
 
 async function publishPageCode() {
@@ -379,120 +378,120 @@ async function publishPageCode() {
 }
 
 document.addEventListener("click", (e) => {
-   const target = e.target;
+    const target = e.target;
 
-   // Define the primary UI containers that should not trigger selection changes.
-   // Clicks inside these elements are considered UI interactions and should be ignored here.
-   const isInsideQuillUI = target.closest('.text-editor-pop');
-   const isInsideCmsUI = target.closest('.cms-menu');
-   const isInsideCmsMenuBar = target.closest('.cms-menu-bar');
-   const isInsideStyleEditor = target.closest('#style-editor-sidebar');
+    // Define the primary UI containers that should not trigger selection changes.
+    // Clicks inside these elements are considered UI interactions and should be ignored here.
+    const isInsideQuillUI = target.closest('.text-editor-pop');
+    const isInsideCmsUI = target.closest('.cms-menu');
+    const isInsideCmsMenuBar = target.closest('.cms-menu-bar');
+    const isInsideStyleEditor = target.closest('#style-editor-sidebar');
 
-   // If the click is inside any of our main UI containers, stop further execution.
-   if (isInsideQuillUI || isInsideCmsUI || isInsideStyleEditor) {
-      return;
-   }
+    // If the click is inside any of our main UI containers, stop further execution.
+    if (isInsideQuillUI || isInsideCmsUI || isInsideStyleEditor) {
+        return;
+    }
 
-   if (isInsideCmsMenuBar) {
-      if (target !== moveUp && target !== moveDown) {
-         return;
-      } else {
-         if (currentlySelected) {
-            if (target === moveUp) {
-               const prev = currentlySelected.previousElementSibling;
-               if (prev) {
-                  currentlySelected.parentElement.insertBefore(currentlySelected, prev);
-               }
-            } else if (target === moveDown) {
-               const next = currentlySelected.nextElementSibling;
-               if (next.classList.contains("placeholder-block") || next.classList.contains("accordion-content")) {
-                  return;
-               } else {
-                  currentlySelected.parentElement.insertBefore(currentlySelected, next.nextElementSibling);
-               }
+    if (isInsideCmsMenuBar) {
+        if (target !== moveUp && target !== moveDown) {
+            return;
+        } else {
+            if (currentlySelected) {
+                if (target === moveUp) {
+                    const prev = currentlySelected.previousElementSibling;
+                    if (prev) {
+                        currentlySelected.parentElement.insertBefore(currentlySelected, prev);
+                    }
+                } else if (target === moveDown) {
+                    const next = currentlySelected.nextElementSibling;
+                    if (next.classList.contains("placeholder-block") || next.classList.contains("accordion-content")) {
+                        return;
+                    } else {
+                        currentlySelected.parentElement.insertBefore(currentlySelected, next.nextElementSibling);
+                    }
+                }
             }
-         }
 
-         return;
-      }
-   }
+            return;
+        }
+    }
 
-   // If the click was not in a UI area, check if it was on a building block.
-   const targetBuildingBlock = target.closest('.building-block');
+    // If the click was not in a UI area, check if it was on a building block.
+    const targetBuildingBlock = target.closest('.building-block');
 
-   if (targetBuildingBlock) {
-      // If a building block was clicked, select it.
-      // The `selectBuildingBlock` function handles the specific logic.
-      selectBuildingBlock(targetBuildingBlock, target);
-   } else {
-      deselectAll();
-   }
-   
-   updateSelectedLabel();
-   updateMovementArrows();
+    if (targetBuildingBlock) {
+        // If a building block was clicked, select it.
+        // The `selectBuildingBlock` function handles the specific logic.
+        selectBuildingBlock(targetBuildingBlock, target);
+    } else {
+        deselectAll();
+    }
+
+    updateSelectedLabel();
+    updateMovementArrows();
 });
 
 document.addEventListener("keydown", e => {
 
-   const target = e.target;
+    const target = e.target;
 
-   // Ignore keystrokes inside editors OR form fields
-   if (
-      target.closest('.text-editor-pop') ||
-      target.closest('.style-editor-sidebar') ||
-      target.tagName === 'INPUT' ||
-      target.tagName === 'TEXTAREA' ||
-      target.isContentEditable
-   ) {
-      return; // allow normal typing
-   }
+    // Ignore keystrokes inside editors OR form fields
+    if (
+        target.closest('.text-editor-pop') ||
+        target.closest('.style-editor-sidebar') ||
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+    ) {
+        return; // allow normal typing
+    }
 
-   const isCtrl = e.ctrlKey || e.metaKey; // metaKey for macOS (Command key)
+    const isCtrl = e.ctrlKey || e.metaKey; // metaKey for macOS (Command key)
 
-   // Copy: Ctrl+C or Cmd+C
-   if (isCtrl && e.key.toLowerCase() === 'c') {
-      e.preventDefault();
-      copyElement();
-      return;
-   }
+    // Copy: Ctrl+C or Cmd+C
+    if (isCtrl && e.key.toLowerCase() === 'c') {
+        e.preventDefault();
+        copyElement();
+        return;
+    }
 
-   // Paste: Ctrl+V or Cmd+V
-   if (isCtrl && e.key.toLowerCase() === 'v') {
-      e.preventDefault();
-      pasteElement();
-      return;
-   }
+    // Paste: Ctrl+V or Cmd+V
+    if (isCtrl && e.key.toLowerCase() === 'v') {
+        e.preventDefault();
+        pasteElement();
+        return;
+    }
 
-if (currentlySelected) {
-   if (e.key === 'ArrowUp' && !currentlySelected.classList.contains('building-column')) {
-      e.preventDefault();
-      const prev = currentlySelected.previousElementSibling;
-      if (prev) {
-         currentlySelected.parentElement.insertBefore(currentlySelected, prev);
-      }
-   } else if (e.key === 'ArrowDown' && !currentlySelected.classList.contains('building-column')) {
-      e.preventDefault();
-      const next = currentlySelected.nextElementSibling;
-      if (next && !next.classList.contains("placeholder-block") && !next.classList.contains("accordion-content")) {
-         currentlySelected.parentElement.insertBefore(currentlySelected, next.nextElementSibling);
-      }
-   } else if (e.key === 'ArrowLeft' && currentlySelected.classList.contains("building-column")) {
-      e.preventDefault();
-      const prev = currentlySelected.previousElementSibling;
-      if (prev && !prev.classList.contains("placeholder-block") && !prev.classList.contains("accordion-content")) {
-         currentlySelected.parentElement.insertBefore(currentlySelected, prev);
-      }
-   } else if (e.key === 'ArrowRight' && currentlySelected.classList.contains("building-column")) {
-      e.preventDefault();
-      const next = currentlySelected.nextElementSibling;
-      if (next && !next.classList.contains("placeholder-block") && !next.classList.contains("accordion-content")) {
-         currentlySelected.parentElement.insertBefore(currentlySelected, next.nextElementSibling);
-      }
-   } else if (e.key.toLowerCase() === 'd') {
-      e.preventDefault();
-      deleteElement();
-   }
-}
+    if (currentlySelected) {
+        if (e.key === 'ArrowUp' && !currentlySelected.classList.contains('building-column')) {
+            e.preventDefault();
+            const prev = currentlySelected.previousElementSibling;
+            if (prev) {
+                currentlySelected.parentElement.insertBefore(currentlySelected, prev);
+            }
+        } else if (e.key === 'ArrowDown' && !currentlySelected.classList.contains('building-column')) {
+            e.preventDefault();
+            const next = currentlySelected.nextElementSibling;
+            if (next && !next.classList.contains("placeholder-block") && !next.classList.contains("accordion-content")) {
+                currentlySelected.parentElement.insertBefore(currentlySelected, next.nextElementSibling);
+            }
+        } else if (e.key === 'ArrowLeft' && currentlySelected.classList.contains("building-column")) {
+            e.preventDefault();
+            const prev = currentlySelected.previousElementSibling;
+            if (prev && !prev.classList.contains("placeholder-block") && !prev.classList.contains("accordion-content")) {
+                currentlySelected.parentElement.insertBefore(currentlySelected, prev);
+            }
+        } else if (e.key === 'ArrowRight' && currentlySelected.classList.contains("building-column")) {
+            e.preventDefault();
+            const next = currentlySelected.nextElementSibling;
+            if (next && !next.classList.contains("placeholder-block") && !next.classList.contains("accordion-content")) {
+                currentlySelected.parentElement.insertBefore(currentlySelected, next.nextElementSibling);
+            }
+        } else if (e.key.toLowerCase() === 'd') {
+            e.preventDefault();
+            deleteElement();
+        }
+    }
 });
 
 deleteButton.addEventListener("click", deleteElement);
@@ -826,5 +825,3 @@ publishPage.addEventListener("click", publishPageCode);
 
 
 // deleteButton.addEventListener("click", deleteElement);
-
-
