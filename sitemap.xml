@@ -17,4 +17,9 @@
     <loc>https://www.frl.frl/test.html</loc>
     <title>Testing</title>
   </url>
+  <url>
+    <loc>https://www.frl.frl/testing.html</loc>
+    <title>Freelance by Isaac Archambault</title>
+    <nav>true</nav>
+  </url>
 </urlset>
