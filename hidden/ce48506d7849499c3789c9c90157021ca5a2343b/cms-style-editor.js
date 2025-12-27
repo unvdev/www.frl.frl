@@ -266,7 +266,13 @@ function loadStylesFromSelected() {
 
   // Background
   backgroundColorInput.value = rgbToHex(computed.backgroundColor);
-  backgroundColorOpacityInput.value = getRGBAlpha(currentlySelected * 100);
+  
+  if (getRGBAlpha(currentlySelected) !== null) {
+    backgroundColorOpacityInput.value = getRGBAlpha(currentlySelected * 100);
+  } else {
+    changeRGBAlpha(currentlySelected, backgroundColorOpacityInput.value / 100);
+  }
+
   if (backgroundColorValueSpan) backgroundColorValueSpan.textContent = rgbToHex(computed.backgroundColor).toUpperCase();
 
   // Width & Images
