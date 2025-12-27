@@ -22,6 +22,8 @@ const borderColorValueSpan = document.getElementById("style-editor-border-color-
 const borderWidthInput = document.getElementById("style-editor-border-width-input");
 const borderRadiusInput = document.getElementById("style-editor-border-radius-input");
 
+const dropShadow = document.getElementById("style-editor-drop-shadow-checkbox");
+
 // Sizing & Alignment
 const widthInput = document.getElementById("style-editor-width-input");
 const alignLeft = document.getElementById("style-editor-align-left-button");
@@ -291,6 +293,7 @@ function loadStylesFromSelected() {
 
   stretchToScreen.checked = currentlySelected.classList.contains("stretch-to-screen");
   matchAdjacentHeight.checked = currentlySelected.classList.contains("match-adjacent-height");
+  dropShadow.checked = currentlySelected?.matches('drop-shadow, drop-shadow-text');
 
   if (currentlySelected.parentElement) {
     if (currentlySelected.parentElement.classList.contains("building-block-link") && currentlySelected.parentElement.target === "_blank") {
@@ -473,6 +476,19 @@ borderRadiusInput?.addEventListener("input", () => {
     currentlySelected.classList.add("custom-styles");
     let value = parseInt(borderRadiusInput.value) || 0;
     currentlySelected.style.borderRadius = value + "px";
+  }
+});
+
+// --- Drop Shadow ---
+dropShadow.addEventListener("change", function() {
+  if (currentlySelected && dropShadow.checked) {
+    if (currentlySelected.classList.contains("text-element")) {
+        currentlySelected.classList.add("drop-shadow-text");
+    } else {
+        currentlySelected.classList.add("drop-shadow");
+    }
+  } else {
+    currentlySelected.classList.remove("drop-shadow, drop-shadow-text");
   }
 });
 
