@@ -218,6 +218,11 @@ function grabLink() {
      return grabLink();
   }
 
+  if (!link.match(/^https?:\/\//i)) {
+      alert("URL must start with http:// or https://.");
+      return grabLink();
+  }
+
   const linkRegex = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,10}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/i;
 
   if (link && linkRegex.test(link)) {
