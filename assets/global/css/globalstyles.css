@@ -799,11 +799,6 @@ footer {
     margin: 0;
 }
 
-.button:hover {
-    opacity: 70%;
-    cursor: pointer;
-}
-
 /* Drop Shadows */
 
 .drop-shadow {
