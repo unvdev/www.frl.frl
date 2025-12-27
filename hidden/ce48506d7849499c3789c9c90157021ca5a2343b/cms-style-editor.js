@@ -488,7 +488,7 @@ dropShadow.addEventListener("change", function() {
         currentlySelected.classList.add("drop-shadow");
     }
   } else {
-    currentlySelected.classList.remove("drop-shadow, drop-shadow-text");
+    currentlySelected.classList.remove("drop-shadow", "drop-shadow-text");
   }
 });
 
