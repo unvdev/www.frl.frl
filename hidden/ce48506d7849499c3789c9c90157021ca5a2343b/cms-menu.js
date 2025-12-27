@@ -43,13 +43,17 @@ function grabImageLink() {
   
   if (link === null) return null; // Handle cancel
 
+  if (link.toLowerCase().includes('google')) {
+      return link;
+  }
+
   const imageRegex = /\.(jpe?g|png|gif|webp|svg)(\?.*)?(#.*)?$/i;
 
   if (link && imageRegex.test(link)) {
     return link;
   } else if (link) {
     alert("Please enter a valid image URL (jpg, png, gif, webp, svg).");
-    return grabImageLink(); // Added return to ensure recursive result bubbles up
+    return grabImageLink(); 
   }
 
   return null;
