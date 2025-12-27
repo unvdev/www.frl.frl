@@ -748,6 +748,7 @@ linkAdd.addEventListener("click", function() {
       currentlySelected.parentNode.insertBefore(linkWrapper, currentlySelected);
       linkWrapper.appendChild(currentlySelected);
       checkRestrictedControls();
+      loadStylesFromSelected();
     }
   }
 });
@@ -759,6 +760,7 @@ linkRemove.addEventListener("click", function() {
       parentLink.parentNode.insertBefore(currentlySelected, parentLink);
       parentLink.remove();
       checkRestrictedControls();
+      loadStylesFromSelected();
     }
   }
 });
