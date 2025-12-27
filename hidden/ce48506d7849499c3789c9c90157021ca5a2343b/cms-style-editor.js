@@ -429,6 +429,7 @@ backgroundImageLink.addEventListener("click", function() {
     const imageLink = grabImageLink();
     currentlySelected.style.backgroundImage = imageLink;
     currentlySelected.style.backgroundBlendMode = "overlay";
+    currentlySelected.style.backgroundColor = '';
     checkRestrictedControls();
   }
 });
@@ -439,6 +440,7 @@ backgroundImageUpload.addEventListener("click", async function() {
     if (imageUpload) {
       currentlySelected.style.backgroundImage = `url(${imageUpload})`;
       currentlySelected.style.backgroundBlendMode = "overlay";
+      currentlySelected.style.backgroundColor = '';
       checkRestrictedControls();
     }
   }
