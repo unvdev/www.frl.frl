@@ -102,7 +102,7 @@ function getRGBAlpha(element) {
   if (values && values.length === 4) {
     return parseFloat(values[3]);
   } else {
-    return null;
+    return 1;
   }
 }
 
@@ -268,13 +268,7 @@ function loadStylesFromSelected() {
   backgroundColorInput.value = rgbToHex(computed.backgroundColor);
   if (backgroundColorValueSpan) backgroundColorValueSpan.textContent = rgbToHex(computed.backgroundColor).toUpperCase();
 
-  const currentAlpha = getRGBAlpha(currentlySelected);
-
-  if (currentAlpha !== null) {
-    backgroundColorOpacityInput.value = currentAlpha * 100;
-  } else {
-    changeRGBAlpha(currentlySelected, backgroundColorOpacityInput.value / 100);
-  }
+  backgroundColorOpacityInput.value = getRGBAlpha(currentlySelected) * 100;
 
   // Width & Images
   if (currentlySelected.style.width && currentlySelected.style.width.includes("px")) {
