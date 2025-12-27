@@ -495,24 +495,7 @@ backgroundImageUpload.addEventListener("click", async function() {
 
 backgroundImageRemove.addEventListener("click", function() {
   if (currentlySelected && currentlySelected.style.backgroundImage !== '') {
-    const dummy = document.createElement('div');
-    dummy.style.cssText = currentlySelected.style.cssText;
-    dummy.style.removeProperty('background-image');
-    dummy.style.removeProperty('background');
-    
-    currentlySelected.style.cssText = dummy.style.cssText;
-
-    const childNodes = Array.from(currentlySelected.childNodes);
-    
-    childNodes.forEach(node => {
-        if (node.nodeType === 3) {
-            const text = node.textContent.trim();
-            if (text.startsWith('data:image') || text.includes('base64') || text.startsWith('url(')) {
-                currentlySelected.removeChild(node);
-            }
-        }
-    });
-
+    currentlySelected.style.removeProperty('background-image');
     checkRestrictedControls();
     loadStylesFromSelected();
   }
