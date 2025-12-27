@@ -293,7 +293,7 @@ function loadStylesFromSelected() {
 
   stretchToScreen.checked = currentlySelected.classList.contains("stretch-to-screen");
   matchAdjacentHeight.checked = currentlySelected.classList.contains("match-adjacent-height");
-  dropShadow.checked = currentlySelected?.matches('drop-shadow, drop-shadow-text');
+  dropShadow.checked = currentlySelected?.matches('.drop-shadow, .drop-shadow-text');
 
   if (currentlySelected.parentElement) {
     if (currentlySelected.parentElement.classList.contains("building-block-link") && currentlySelected.parentElement.target === "_blank") {
