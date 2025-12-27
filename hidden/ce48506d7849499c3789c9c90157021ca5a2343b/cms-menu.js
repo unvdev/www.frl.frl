@@ -72,7 +72,6 @@ function grabImageUpload() {
         return;
       }
 
-      // SVG: return as-is
       if (file.type === "image/svg+xml") {
         const reader = new FileReader();
         reader.onload = (e) => resolve(e.target.result);
@@ -88,9 +87,8 @@ function grabImageUpload() {
           const ctx = canvas.getContext("2d");
 
           let { width, height } = img;
-
-          // Scale down if too large
           const maxDimension = 1200;
+          
           if (width > maxDimension || height > maxDimension) {
             if (width > height) {
               height *= maxDimension / width;
@@ -105,17 +103,15 @@ function grabImageUpload() {
           canvas.height = height;
           ctx.drawImage(img, 0, 0, width, height);
 
-          let mimeType = file.type;
+          let outputMime = 'image/webp'; 
           let quality = 0.85;
+          let base64 = canvas.toDataURL(outputMime, quality);
 
-          // Create base64
-          let base64 = canvas.toDataURL(mimeType, quality);
-
-          // Reduce quality silently until under 2MB
-          const maxSizeBytes = 1 * 1024 * 1024;
-          while (base64.length * 0.75 > maxSizeBytes && quality > 0.1) {
-            quality -= 0.05;
-            base64 = canvas.toDataURL(mimeType, quality);
+          const maxSizeBytes = 1 * 1024 * 1024; 
+          
+          while (base64.length > maxSizeBytes && quality > 0.1) {
+            quality -= 0.1;
+            base64 = canvas.toDataURL(outputMime, quality);
           }
 
           resolve(base64);
