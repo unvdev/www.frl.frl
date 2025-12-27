@@ -267,8 +267,12 @@ function loadStylesFromSelected() {
   // Background
   backgroundColorInput.value = rgbToHex(computed.backgroundColor);
   if (backgroundColorValueSpan) backgroundColorValueSpan.textContent = rgbToHex(computed.backgroundColor).toUpperCase();
-
-  backgroundColorOpacityInput.value = getRGBAlpha(currentlySelected) * 100;
+  
+  if (backgroundColorInput !== null) {
+      backgroundColorOpacityInput.value = getRGBAlpha(currentlySelected) * 100;
+  } else {
+      backgroundColorOpacityInput.value = 100;
+  }
 
   // Width & Images
   if (currentlySelected.style.width && currentlySelected.style.width.includes("px")) {
