@@ -80,19 +80,13 @@ function parsePx(value, fallback = 0) {
 
 function rgbToHex(rgb) {
   if (!rgb || rgb === "none" || rgb === "transparent") return "#FFFFFF";
-  const result = rgb.match(/[\d\.]+/g);
-  if (!result || result.length < 3) return "#000000";
-  let [r, g, b, a] = result;
-
+  const result = rgb.match(/\d+/g);
+  if (!result) return "#000000";
+  let [r, g, b, a] = result.slice(0, 4);
   r = parseInt(r).toString(16).padStart(2, "0");
   g = parseInt(g).toString(16).padStart(2, "0");
   b = parseInt(b).toString(16).padStart(2, "0");
-
-  let alphaValue = a ? parseFloat(a) : 1;
-  
-  let alphaHex = Math.round(alphaValue * 255).toString(16).padStart(2, "0");
-
-  return `#${r}${g}${b}${alphaHex}`;
+  return `#${r}${g}${b}`;
 }
 
 function changeRGBAlpha(element, newAlpha) {
