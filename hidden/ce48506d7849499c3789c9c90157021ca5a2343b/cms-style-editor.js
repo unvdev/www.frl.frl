@@ -16,6 +16,7 @@ const backgroundImageRemove = document.getElementById("style-editor-bg-image-rem
 const backgroundColorInput = document.getElementById("style-editor-bg-color-input");
 const backgroundColorValueSpan = document.getElementById("style-editor-bg-color-input-value");
 const backgroundColorRemove = document.getElementById("style-editor-bg-color-remove");
+const backgroundColorOpacityInput = document.getElementById("style-editor-bg-color-opacity-input");
 
 const borderColorInput = document.getElementById("style-editor-border-color-input");
 const borderColorValueSpan = document.getElementById("style-editor-border-color-input-value");
@@ -79,13 +80,25 @@ function parsePx(value, fallback = 0) {
 
 function rgbToHex(rgb) {
   if (!rgb || rgb === "none" || rgb === "transparent") return "#FFFFFF";
-  const result = rgb.match(/\d+/g);
-  if (!result) return "#000000";
-  let [r, g, b] = result.slice(0, 3);
+  const result = rgb.match(/[\d\.]+/g);
+  if (!result || result.length < 3) return "#000000";
+  let [r, g, b, a] = result;
+
   r = parseInt(r).toString(16).padStart(2, "0");
   g = parseInt(g).toString(16).padStart(2, "0");
   b = parseInt(b).toString(16).padStart(2, "0");
-  return `#${r}${g}${b}`;
+
+  let alphaValue = a ? parseFloat(a) : 1;
+  
+  let alphaHex = Math.round(alphaValue * 255).toString(16).padStart(2, "0");
+
+  return `#${r}${g}${b}${alphaHex}`;
+}
+
+function changeRGBAlpha(element, newAlpha) {
+  let color = getComputedStyle(element).backgroundColor;
+  let [r, g, b] = color.match(/\d+(\.\d+)?/g);
+  element.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${newAlpha})`;
 }
 
 function getRealWidthPercent() {
@@ -412,6 +425,12 @@ backgroundColorInput.addEventListener("input", () => {
   }
   if (backgroundColorValueSpan) {
     backgroundColorValueSpan.textContent = backgroundColorInput.value.toUpperCase();
+  }
+});
+
+backgroundColorOpacityInput.addEventListener("input", () => {
+  if (currentlySelected) {
+    changeRGBAlpha(currentlySelected, backgroundColorOpacityInput.value / 100);
   }
 });
 
