@@ -495,8 +495,17 @@ backgroundImageUpload.addEventListener("click", async function() {
 
 backgroundImageRemove.addEventListener("click", function() {
   if (currentlySelected && currentlySelected.style.backgroundImage !== '') {
-    currentlySelected.style.removeProperty('background-image');
-    currentlySelected.style.backgroundImage = 'none';
+    let cssText = currentlySelected.style.cssText;
+
+    let newCssText = cssText.split(';')
+        .filter(style => {
+            let lowerStyle = style.toLowerCase();
+            return !lowerStyle.includes('background-image') && !lowerStyle.includes('url(');
+        })
+        .join(';');
+
+    currentlySelected.style.cssText = newCssText;
+    currentlySelected.style.background = 'none';
     checkRestrictedControls();
     loadStylesFromSelected();
   }
