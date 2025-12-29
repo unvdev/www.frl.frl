@@ -89,6 +89,14 @@
     outline-offset: -1px;
 }
 
+.header-environment {
+    margin-bottom: 1rem;
+}
+
+.footer-environment {
+    margin-top: 1rem;
+}
+
 .building-container {
     margin: 1rem;
     width: 100%;
