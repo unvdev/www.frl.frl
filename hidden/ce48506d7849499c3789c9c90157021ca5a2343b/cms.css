@@ -78,7 +78,9 @@
     white-space: nowrap;
 }
 
-.building-environment,
+.header-environment,
+.content-environment,
+.footer-environment,
 .building-container,
 .building-column,
 .building-block {

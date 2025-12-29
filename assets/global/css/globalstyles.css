@@ -525,7 +525,7 @@ footer {
     justify-items: center;
 }
 
-.building-environment {
+.content-environment {
     display: grid;
     width: 100%;
     margin: 0 auto;
