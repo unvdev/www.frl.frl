@@ -163,7 +163,7 @@ body {
     width: calc(100% - 2rem) !important;
     height: 40px;
     background-color: #34495e;
-    outline: 1px dashed #7f8c8d;
+    outline: 1px solid #7f8c8d;
     outline-offset: -1px;
     cursor: pointer;
 }
