@@ -120,6 +120,11 @@
     margin-top: 0.5rem;
 }
 
+.building-container:only-child {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
 [class*="building-column-span-"]:not(.building-column-span-one) {
     margin: 0.5rem;
     width: 100%;
