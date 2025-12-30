@@ -141,7 +141,7 @@ function insertElement(htmlContent) {
 function insertLayoutElement(htmlContent) {
     if (currentlySelected && layoutElementInstanceCheckbox.checked) {
         // The '>' ensures we ignore any containers nested inside columns
-        const topLevelContainers = document.querySelectorAll(".building-environment > .building-container");
+        const topLevelContainers = document.querySelectorAll(".content-environment > .building-container");
 
         if (topLevelContainers.length > 0) {
             // Case A: We have existing containers, put this after the last one
@@ -149,11 +149,11 @@ function insertLayoutElement(htmlContent) {
             lastContainer.insertAdjacentHTML('afterend', htmlContent);
         } else {
             // Case B: The environment is empty (no containers yet)
-            const environment = document.querySelector(".building-environment");
+            const environment = document.querySelector(".content-environment");
             if (environment) {
                 environment.insertAdjacentHTML('beforeend', htmlContent);
             } else {
-                console.warn("Parent container '.building-environment' not found.");
+                console.warn("Parent container '.content-environment' not found.");
                 return;
             }
         }
