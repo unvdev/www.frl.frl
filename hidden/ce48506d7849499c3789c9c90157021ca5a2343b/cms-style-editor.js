@@ -361,6 +361,7 @@ function checkRestrictedControls() {
   const linkControls = document.getElementById("style-editor-link-controls");
   const linkOptionControls = document.getElementById("style-editor-link-option-controls");
   const backgroundImageControls = document.getElementById("style-editor-background-image-controls");
+  const backgroundColorOpacityControls = document.getElementById("style-editor-background-color-opacity-controls");
   const backgroundColorRemoveControls = document.getElementById("style-editor-bg-color-remove-controls");
   const backgroundColorHoverControls = document.getElementById("style-editor-background-hover-color-controls");
   const borderColorHoverControls = document.getElementById("style-editor-border-hover-color-controls");
@@ -375,11 +376,13 @@ function checkRestrictedControls() {
   }
 
   if (currentlySelected?.classList.contains("button")) {
+    backgroundColorOpacityControls.classList.add("content-hide");
     backgroundColorRemoveControls.classList.add("content-hide");
     backgroundColorHoverControls.classList.remove("content-hide");
     borderColorHoverControls.classList.remove("content-hide");
     textColorHoverControls.classList.remove("content-hide");
   } else {
+    backgroundColorOpacityControls.classList.remove("content-hide");
     backgroundImageControls.classList.remove("content-hide");
     backgroundColorHoverControls.classList.add("content-hide");
     borderColorHoverControls.classList.add("content-hide");
