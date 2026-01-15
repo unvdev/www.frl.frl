@@ -811,10 +811,6 @@ footer {
     background-color: var(--hover-color);
 }
 
-.button> :first-child {
-    margin: 0;
-}
-
 /* Drop Shadows */
 
 .drop-shadow {
