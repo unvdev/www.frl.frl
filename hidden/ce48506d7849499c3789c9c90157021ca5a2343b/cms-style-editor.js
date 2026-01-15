@@ -563,6 +563,10 @@ dropShadow.addEventListener("change", function() {
     } else {
         currentlySelected.classList.add("drop-shadow");
     }
+
+    if (currentlySelected.classList.contains("button")) {
+        currentlySelected.parentElement.classList.add("drop-shadow");
+    }
   } else {
     currentlySelected.classList.remove("drop-shadow", "drop-shadow-text");
   }
