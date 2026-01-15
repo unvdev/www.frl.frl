@@ -498,6 +498,33 @@ backgroundColorRemove.addEventListener("click", function() {
   }
 });
 
+backgroundHoverColorInput.addEventListener("input", () => {
+  if (currentlySelected) {
+    currentlySelected.style.setProperty('--button-hover-background-color', backgroundHoverColorInput.value);
+  }
+  if (backgroundHoverColorValueSpan) {
+    backgroundHoverColorValueSpan.textContent = backgroundHoverColorInput.value.toUpperCase();
+  }
+});
+
+borderHoverColorInput.addEventListener("input", () => {
+  if (currentlySelected) {
+    currentlySelected.style.setProperty('--button-hover-border-color', borderHoverColorInput.value);
+  }
+  if (borderHoverColorValueSpan) {
+    borderHoverColorValueSpan.textContent = borderHoverColorInput.value.toUpperCase();
+  }
+});
+
+textHoverColorInput.addEventListener("input", () => {
+  if (currentlySelected) {
+    currentlySelected.style.setProperty('--button-hover-text-color', textHoverColorInput.value);
+  }
+  if (textHoverColorValueSpan) {
+    textHoverColorValueSpan.textContent = textHoverColorInput.value.toUpperCase();
+  }
+});
+
 backgroundImageLink.addEventListener("click", function() {
   if (currentlySelected) {
     const imageLink = grabImageLink();
