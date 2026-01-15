@@ -292,6 +292,13 @@ function loadStylesFromSelected() {
   // Background
   backgroundColorInput.value = rgbToHex(computed.backgroundColor);
   if (backgroundColorValueSpan) backgroundColorValueSpan.textContent = rgbToHex(computed.backgroundColor).toUpperCase();
+
+  const backgroundHoverColor = computed.getPropertyValue('--button-hover-background-color').trim();
+  backgroundHoverColorInput.value = rgbToHex(backgroundHoverColor);
+
+  if (backgroundHoverColorValueSpan) {
+    backgroundHoverColorValueSpan.textContent = rgbToHex(backgroundHoverColor).toUpperCase();
+  }
   
   backgroundColorOpacityInput.value = getRGBAlpha(currentlySelected) * 100;
 
@@ -327,6 +334,26 @@ function loadStylesFromSelected() {
   }
   if (borderColorInput) borderColorInput.value = finalBorderColor;
   if (borderColorValueSpan) borderColorValueSpan.textContent = finalBorderColor.toUpperCase();
+
+  const borderHoverColor = computed.getPropertyValue('--button-hover-border-color').trim();
+  const finalBorderHoverColor = borderHoverColor ? rgbToHex(borderHoverColor) : '#000000';
+
+  if (borderHoverColorInput) {
+    borderHoverColorInput.value = finalBorderHoverColor;
+  }
+
+  if (borderHoverColorValueSpan) {
+    borderHoverColorValueSpan.textContent = finalBorderHoverColor.toUpperCase();
+  }
+
+  //Text
+
+  const textHoverColor = computed.getPropertyValue('--button-hover-text-color').trim();
+  textHoverColorInput.value = rgbToHex(textHoverColor);
+
+  if (textHoverColorValueSpan) {
+    textHoverColorValueSpan.textContent = rgbToHex(textHoverColor).toUpperCase();
+  }
 
   // Checkboxes
   hideOnDesktop.checked = currentlySelected.classList.contains("hide-on-desktop");
