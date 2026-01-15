@@ -807,12 +807,12 @@ footer {
 }
 
 .button:hover {
-    background-color: var(--button-hover-color) !important;
+    background-color: var(--button-hover-color, #000000) !important;
 }
 
 .button:hover> :first-child,
 .button:hover> :first-child * {
-    color: var(--button-hover-text-color) !important;
+    color: var(--button-hover-text-color, #ffffff) !important;
 }
 
 /* Drop Shadows */
