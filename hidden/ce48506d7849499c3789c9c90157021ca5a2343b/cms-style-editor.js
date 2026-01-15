@@ -361,7 +361,12 @@ function checkRestrictedControls() {
   const linkControls = document.getElementById("style-editor-link-controls");
   const linkOptionControls = document.getElementById("style-editor-link-option-controls");
   const backgroundImageControls = document.getElementById("style-editor-background-image-controls");
+  const backgroundColorRemoveControls = document.getElementById("style-editor-bg-color-remove-controls");
+  const backgroundColorHoverControls = document.getElementById("style-editor-background-hover-color-controls");
+  const borderColorHoverControls = document.getElementById("style-editor-border-hover-color-controls");
+  const textColorHoverControls = document.getElementById("style-editor-text-hover-color-controls");
   const verticalAlignControls = document.getElementById("style-editor-vertical-align-controls");
+
 
   if (currentlySelected?.classList.contains("building-container") || currentlySelected?.classList.contains("building-column")) {
     backgroundImageControls.classList.remove("content-hide");
