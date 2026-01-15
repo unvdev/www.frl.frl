@@ -811,7 +811,8 @@ footer {
     background-color: var(--button-hover-color) !important;
 }
 
-.button:hover> :first-child {
+.button:hover> :first-child,
+.button:hover> :first-child * {
     color: var(--button-hover-text-color) !important;
 }
 
