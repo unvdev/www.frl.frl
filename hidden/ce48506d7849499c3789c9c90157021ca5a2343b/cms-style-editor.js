@@ -429,20 +429,20 @@ function checkRestrictedControls() {
   const textColorHoverControls = document.getElementById("style-editor-text-hover-color-controls");
   const verticalAlignControls = document.getElementById("style-editor-vertical-align-controls");
 
+  const isContainer = currentlySelected?.classList.contains("building-container");
+  const isColumn = currentlySelected?.classList.contains("building-column");
+  const isButton = currentlySelected?.classList.contains("button");
+  const isImage = currentlySelected?.classList.contains("image-element");
+  const isRatioImage = currentlySelected?.classList.contains("ratio-image");
+  const isCropImage = currentlySelected?.classList.contains("crop-image");
 
-  if (currentlySelected?.classList.contains("building-container") || currentlySelected?.classList.contains("building-column")) {
+  if (isContainer || isColumn) {
     backgroundImageControls.classList.remove("content-hide");
   } else {
     backgroundImageControls.classList.add("content-hide");
   }
 
-  // if (currentlySelected?.matches(".building-container, .building-column") && currentlySelected.style.backgroundImage !== "none" && currentlySelected.style.backgroundImage !== "") {
-  //   backgroundColorOpacityControls.classList.add("content-hide");
-  // } else {
-  //   backgroundColorOpacityControls.classList.remove("content-hide");
-  // }
-
-  if (currentlySelected?.classList.contains("button")) {
+  if (isButton) {
     backgroundColorOpacityControls.classList.add("content-hide");
     backgroundColorRemoveControls.classList.add("content-hide");
     backgroundColorHoverControls.classList.remove("content-hide");
@@ -451,55 +451,54 @@ function checkRestrictedControls() {
   } else {
     backgroundColorOpacityControls.classList.remove("content-hide");
     backgroundColorRemoveControls.classList.remove("content-hide");
-    backgroundImageControls.classList.remove("content-hide");
     backgroundColorHoverControls.classList.add("content-hide");
     borderColorHoverControls.classList.add("content-hide");
     textColorHoverControls.classList.add("content-hide");
   }
 
-  if (currentlySelected?.classList.contains("building-container") && !currentlySelected?.firstElementChild?.matches(".building-column-span-one, .building-column-span-two")) {
+  if (isContainer && !currentlySelected?.firstElementChild?.matches(".building-column-span-one, .building-column-span-two")) {
     containerResponsiveControls.classList.remove("content-hide");
   } else {
     containerResponsiveControls.classList.add("content-hide");
   }
 
-  if (currentlySelected?.classList.contains("building-container") && !currentlySelected?.parentElement.matches(".building-column")) {
+  if (isContainer && !currentlySelected?.parentElement.matches(".building-column")) {
     containerScreenControls.classList.remove("content-hide");
   } else {
     containerScreenControls.classList.add("content-hide");
   }
 
-  if (currentlySelected?.classList.contains("building-column") && !currentlySelected?.parentElement.matches(".building-column-span-one")) {
+  if (isColumn && !currentlySelected?.parentElement.matches(".building-column-span-one")) {
     verticalAlignControls.classList.remove("content-hide");
   } else {
     verticalAlignControls.classList.add("content-hide");
   }
 
-  if (currentlySelected?.classList.contains("building-column") && !currentlySelected?.parentElement?.matches(".building-column-span-one") && currentlySelected?.style.backgroundImage !== '') {
+  if (isColumn && !currentlySelected?.parentElement?.matches(".building-column-span-one") && currentlySelected?.style.backgroundImage !== '') {
     columnMatchControls.classList.remove("content-hide");
   } else {
     columnMatchControls.classList.add("content-hide");
   }
 
-  if (currentlySelected?.classList.contains("image-element")) {
+  if (isImage) {
     imageControls.classList.remove("content-hide");
   } else {
     imageControls.classList.add("content-hide");
   }
 
-  if (currentlySelected?.classList.contains("ratio-image")) {
+  if (isRatioImage) {
     imageRatioControls.classList.remove("content-hide");
   } else {
     imageRatioControls.classList.add("content-hide");
   }
 
-  if (currentlySelected?.classList.contains("crop-image")) {
+  if (isCropImage) {
     imageCropControls.classList.remove("content-hide");
   } else {
     imageCropControls.classList.add("content-hide");
   }
 
-  if (currentlySelected?.classList.contains("ratio-image") || currentlySelected?.classList.contains("crop-image")) {
+  if (isRatioImage || isCropImage) {
     widthInput.disabled = true;
     widthInput.style.opacity = "0.5";
   } else {
@@ -507,7 +506,7 @@ function checkRestrictedControls() {
     widthInput.style.opacity = "1.0";
   }
 
-  if (currentlySelected?.classList.contains("image-element") || currentlySelected?.classList.contains("button")) {
+  if (isImage || isButton) {
     linkControls.classList.remove("content-hide");
   } else {
     linkControls.classList.add("content-hide");
@@ -519,7 +518,7 @@ function checkRestrictedControls() {
     linkOptionControls.classList.add("content-hide");
   }
 
-  if (currentlySelected?.classList.contains("accordion-label") || currentlySelected?.classList.contains("button")) {
+  if (currentlySelected?.classList.contains("accordion-label") || isButton) {
     paddingLeftInput.disabled = true;
     paddingRightInput.disabled = true;
     paddingLeftInput.style.opacity = "0.5";
