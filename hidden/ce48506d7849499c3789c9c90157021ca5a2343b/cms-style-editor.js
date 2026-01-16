@@ -442,7 +442,7 @@ function checkRestrictedControls() {
     backgroundImageControls.classList.add("content-hide");
   }
 
-  const hasBgImage = (isContainer || isColumn) && currentlySelected.style.backgroundImage !== "" && currentlySelected.style.backgroundImage !== "none";
+  const hasBgImage = (isContainer || isColumn) && currentlySelected.style.backgroundImage !== '';
 
   const shouldHideOpacity = isButton || hasBgImage;
 
