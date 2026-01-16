@@ -130,15 +130,18 @@ let color = getComputedStyle(element).backgroundColor;
 function getRealWidthPercent() {
   if (!currentlySelected) return 100;
   const styleWidth = currentlySelected.style.width;
-  if (!styleWidth) return 100;
+  
+  if (!styleWidth || styleWidth.includes("px")) return 100;
 
   const calcMatch = styleWidth.match(/calc\((\d*\.?\d+)%/);
   if (calcMatch && calcMatch[1]) {
     return parseFloat(calcMatch[1]);
   }
+  
   if (styleWidth.includes("%")) {
     return parseFloat(styleWidth);
   }
+  
   return 100;
 }
 
@@ -315,18 +318,30 @@ if (backgroundHoverColorValueSpan) {
   
   backgroundColorOpacityInput.value = getRGBAlpha(currentlySelected) * 100;
 
-  // Width & Images
-  if (currentlySelected.style.width && currentlySelected.style.width.includes("px")) {
-    loadImageValues();
-  } else {
+// Width & Images
+const styleWidth = currentlySelected.style.width;
+
+if (styleWidth && styleWidth.includes("px")) {
+    widthUnit.value = "px";
+    widthInput.max = 2000;
+    widthInput.value = parseFloat(styleWidth);
+    
+    if (currentlySelected.classList.contains("image-element")) {
+        loadImageValues();
+    }
+} else {
+    widthUnit.value = "%";
+    widthInput.max = 100;
+    
     const realPercent = getRealWidthPercent();
     widthInput.value = realPercent;
+
     if (realPercent >= 100) {
-      currentlySelected.style.width = "";
+        currentlySelected.style.width = "";
     } else {
-      currentlySelected.style.width = `calc(${realPercent}% - 2rem)`;
+        currentlySelected.style.width = `calc(${realPercent}% - 2rem)`;
     }
-  }
+}
 
   // Padding
   paddingTopInput.value = parseInt(computed.paddingTop) || 0;
@@ -684,33 +699,40 @@ dropShadow.addEventListener("change", function() {
 });
 
 // --- Width ---
-widthInput.addEventListener("input", () => {
-  if (currentlySelected) {
-    let uiPercent = parseFloat(widthInput.value);
-    if (isNaN(uiPercent)) uiPercent = 5;
-    uiPercent = Math.max(5, Math.min(100, uiPercent));
-
-    if (uiPercent >= 100) {
-      currentlySelected.style.width = "";
-    } else {
-      currentlySelected.style.width = `calc(${uiPercent}% - 2rem)`;
+widthUnit.addEventListener("change", () => {
+    if (widthUnit.value === "%") {
+        widthInput.max = 100;
+        if (widthInput.value > 100) widthInput.value = 100;
+    } else {s
+        widthInput.max = 2000;
     }
-  }
+    updateWidth(); 
 });
 
-widthInput.addEventListener("change", () => {
-  let finalValue = parseFloat(widthInput.value) || 5;
-  finalValue = Math.max(5, Math.min(100, finalValue));
-  widthInput.value = finalValue;
+function updateWidth() {
+    if (!currentlySelected) return;
 
-  if (currentlySelected) {
-    if (finalValue >= 100) {
-      currentlySelected.style.width = "";
+    let val = parseFloat(widthInput.value) || 5;
+    const unit = widthUnit.value;
+
+    if (unit === "%") {
+        val = Math.max(5, Math.min(100, val));
+        widthInput.value = val;
+        
+        if (val >= 100) {
+            currentlySelected.style.width = "";
+        } else {
+            // Maintains your specific layout formula
+            currentlySelected.style.width = `calc(${val}% - 2rem)`;
+        }
     } else {
-      currentlySelected.style.width = `calc(${finalValue}% - 2rem)`;
+        val = Math.max(5, val);
+        widthInput.value = val;
+        currentlySelected.style.width = val + "px";
     }
-  }
-});
+}
+
+widthInput.addEventListener("input", updateWidth);
 
 // --- Images ---
 imageRatioWidthInput.addEventListener("input", () => {
