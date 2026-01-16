@@ -452,16 +452,14 @@ function checkRestrictedControls() {
       backgroundColorOpacityControls.classList.remove("content-hide");
   }
 
-  if (hasBgImage) {
-    document.querySelectorAll('.sidebar-control-label').forEach(el => {
+  document.querySelectorAll('.sidebar-control-label').forEach(el => {
     const text = el.textContent.trim();
       if (hasBgImage && text === "Background Color") {
         el.innerText = "Background Overlay Color";
       } else if (!hasBgImage && text === "Background Overlay Color") {
         el.innerText = "Background Color";
       }
-    });
-  }
+  });
 
   if (isButton) {
     backgroundColorRemoveControls.classList.add("content-hide");
