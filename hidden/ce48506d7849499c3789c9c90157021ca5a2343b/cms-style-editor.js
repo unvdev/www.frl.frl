@@ -545,6 +545,14 @@ function checkRestrictedControls() {
     linkControls.classList.add("content-hide");
   }
 
+  if (isImage) {
+    widthUnit.disabled = true;
+    widthUnit.style.opacity = "0.5";
+  } else {
+    widthUnit.disabled = false;
+    widthUnit.style.opacity = "1.0";
+  }
+
   if (currentlySelected?.parentElement.classList.contains("building-block-link")) {
     linkOptionControls.classList.remove("content-hide");
   } else {
