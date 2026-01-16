@@ -376,6 +376,7 @@ ol {
 
 li {
     margin-bottom: 0.5rem;
+    color: inherit;
 }
 
 li:has(span) {
