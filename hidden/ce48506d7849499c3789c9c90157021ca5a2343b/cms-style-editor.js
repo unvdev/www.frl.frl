@@ -562,6 +562,18 @@ function checkRestrictedControls() {
     paddingLeftInput.style.opacity = "1.0";
     paddingRightInput.style.opacity = "1.0";
   }
+
+  const styleWidth = currentlySelected?.style.width || "";
+
+  if (styleWidth.includes("px")) {
+    widthUnit.value = "px";
+    widthInput.max = 2000;
+    widthInput.value = parseFloat(styleWidth);
+  } else {
+    widthUnit.value = "%";
+    widthInput.max = 100;
+    widthInput.value = getRealWidthPercent();
+  }
 }
 
 // ==========================================
