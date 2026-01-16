@@ -1276,6 +1276,7 @@
 .sidebar-input-with-unit {
     display: flex;
     align-items: center;
+    margin-left: 10px;
     border-radius: 4px;
     overflow: hidden;
 }
@@ -1289,8 +1290,6 @@
 
 .sidebar-input-unit-selector {
     border: none;
-    border-left: 1px solid #ccc;
-    background: #f8f8f8;
     padding: 5px;
     cursor: pointer;
     outline: none;
