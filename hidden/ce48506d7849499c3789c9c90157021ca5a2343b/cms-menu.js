@@ -185,22 +185,18 @@ function insertImageLink(htmlContent) {
 
 async function insertImageUpload(htmlContent) {
   if (currentlySelected) {
-    // 1. Insert the HTML structure first
-    currentlySelected.insertAdjacentHTML("beforebegin", htmlContent);
-    const insertedImage = currentlySelected.previousElementSibling;
-
-    // 2. Process the file
     const imageUpload = await grabImageUpload();
 
-    // 3. Apply the source or remove if failed
-    if (imageUpload && insertedImage) {
-      insertedImage.src = imageUpload;
-    } else if (!imageUpload && insertedImage) {
-       // Optional: Remove the empty image tag if the user cancelled upload
-       // insertedImage.remove(); 
-    }
+    if (imageUpload) {
+      currentlySelected.insertAdjacentHTML("beforebegin", htmlContent);
+      const insertedImage = currentlySelected.previousElementSibling;
 
-    deselectAll();
+      if (insertedImage) {
+        insertedImage.src = imageUpload;
+      }
+      
+      deselectAll();
+    }
   }
 }
 
