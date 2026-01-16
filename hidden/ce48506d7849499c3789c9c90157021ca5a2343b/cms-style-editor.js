@@ -462,13 +462,11 @@ function checkRestrictedControls() {
   });
 
   if (isButton) {
-    backgroundColorOpacityControls.classList.add("content-hide");
     backgroundColorRemoveControls.classList.add("content-hide");
     backgroundColorHoverControls.classList.remove("content-hide");
     borderColorHoverControls.classList.remove("content-hide");
     textColorHoverControls.classList.remove("content-hide");
   } else {
-    backgroundColorOpacityControls.classList.remove("content-hide");
     backgroundColorRemoveControls.classList.remove("content-hide");
     backgroundColorHoverControls.classList.add("content-hide");
     borderColorHoverControls.classList.add("content-hide");
