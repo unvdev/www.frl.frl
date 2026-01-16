@@ -567,7 +567,7 @@ function checkRestrictedControls() {
 
   if (styleWidth.includes("px")) {
     widthUnit.value = "px";
-    widthInput.max = 2000;
+    widthInput.max = 1500;
     widthInput.value = parseFloat(styleWidth);
   } else {
     widthUnit.value = "%";
