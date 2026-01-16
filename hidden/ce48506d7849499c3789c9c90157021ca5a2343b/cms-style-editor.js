@@ -721,7 +721,7 @@ widthUnit.addEventListener("change", () => {
         let convertedPercent = Math.round((currentPx / parentWidth) * 100);
         widthInput.value = Math.min(100, convertedPercent);
     } else {
-        widthInput.max = 2000;
+        widthInput.max = 1500;
         const rect = currentlySelected.getBoundingClientRect();
         widthInput.value = Math.round(rect.width);
     }
@@ -755,7 +755,7 @@ widthInput.addEventListener("input", updateWidth);
 widthInput.addEventListener("change", () => {
     let val = parseFloat(widthInput.value) || 5;
     const unit = widthUnit.value;
-    const maxVal = (unit === "%") ? 100 : 2000;
+    const maxVal = (unit === "%") ? 100 : 1500;
 
     val = Math.max(5, Math.min(maxVal, val));
     widthInput.value = val;
