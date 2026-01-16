@@ -429,155 +429,196 @@ if (textHoverColorValueSpan) {
 }
 
 function checkRestrictedControls() {
+  const el = currentlySelected;
+  if (!el) return;
+
+  /* -----------------------------
+     Helpers
+  ----------------------------- */
+
+  const show = el => el?.classList.remove("content-hide");
+  const hide = el => el?.classList.add("content-hide");
+  const disable = (input, state = true) => {
+    if (!input) return;
+    input.disabled = state;
+    input.style.opacity = state ? "0.5" : "1.0";
+  };
+
+  /* -----------------------------
+     Controls
+  ----------------------------- */
+
   const containerResponsiveControls = document.getElementById("style-editor-building-container-responsive-controls");
   const containerScreenControls = document.getElementById("style-editor-building-container-screen-controls");
   const columnMatchControls = document.getElementById("style-editor-building-column-match-controls");
+
   const imageControls = document.getElementById("style-editor-image-controls");
   const imageRatioControls = document.getElementById("style-editor-image-ratio-controls");
   const imageCropControls = document.getElementById("style-editor-image-crop-controls");
+
   const linkControls = document.getElementById("style-editor-link-controls");
   const linkOptionControls = document.getElementById("style-editor-link-option-controls");
+
   const backgroundImageControls = document.getElementById("style-editor-background-image-controls");
   const backgroundColorOpacityControls = document.getElementById("style-editor-background-color-opacity-controls");
   const backgroundColorRemoveControls = document.getElementById("style-editor-bg-color-remove-controls");
   const backgroundColorHoverControls = document.getElementById("style-editor-background-hover-color-controls");
   const borderColorHoverControls = document.getElementById("style-editor-border-hover-color-controls");
   const textColorHoverControls = document.getElementById("style-editor-text-hover-color-controls");
+
   const widthControls = document.getElementById("style-editor-width-controls");
   const verticalAlignControls = document.getElementById("style-editor-vertical-align-controls");
 
-  const isContainer = currentlySelected?.classList.contains("building-container");
-  const isColumn = currentlySelected?.classList.contains("building-column");
-  const isButton = currentlySelected?.classList.contains("button");
-  const isAccordion = currentlySelected?.classList.contains("accordion-label");
-  const isImage = currentlySelected?.classList.contains("image-element");
-  const isRatioImage = currentlySelected?.classList.contains("ratio-image");
-  const isCropImage = currentlySelected?.classList.contains("crop-image");
+  /* -----------------------------
+     Element type detection
+  ----------------------------- */
 
-  if (isContainer || isColumn) {
-    backgroundImageControls.classList.remove("content-hide");
-  } else {
-    backgroundImageControls.classList.add("content-hide");
+  const type = {
+    container: el.classList.contains("building-container"),
+    column: el.classList.contains("building-column"),
+    button: el.classList.contains("button"),
+    accordion: el.classList.contains("accordion-label"),
+    image: el.classList.contains("image-element"),
+    ratioImage: el.classList.contains("ratio-image"),
+    cropImage: el.classList.contains("crop-image")
+  };
+
+  const hasBgImage =
+    (type.container || type.column) &&
+    el.style.backgroundImage !== "";
+
+  /* -----------------------------
+     Reset – hide everything
+  ----------------------------- */
+
+  [
+    containerResponsiveControls,
+    containerScreenControls,
+    columnMatchControls,
+    imageControls,
+    imageRatioControls,
+    imageCropControls,
+    linkControls,
+    linkOptionControls,
+    backgroundImageControls,
+    backgroundColorOpacityControls,
+    backgroundColorRemoveControls,
+    backgroundColorHoverControls,
+    borderColorHoverControls,
+    textColorHoverControls,
+    widthControls,
+    verticalAlignControls
+  ].forEach(hide);
+
+  /* -----------------------------
+     Containers / Columns
+  ----------------------------- */
+
+  if (type.container || type.column) {
+    show(backgroundImageControls);
   }
 
-  const hasBgImage = (isContainer || isColumn) && currentlySelected.style.backgroundImage !== '';
+  if (type.container) {
+    if (!el.firstElementChild?.matches(".building-column-span-one, .building-column-span-two")) {
+      show(containerResponsiveControls);
+    }
 
-  const shouldHideOpacity = isButton || isAccordion || hasBgImage;
-
-  if (shouldHideOpacity) {
-      backgroundColorOpacityControls.classList.add("content-hide");
-  } else {
-      backgroundColorOpacityControls.classList.remove("content-hide");
+    if (!el.parentElement?.matches(".building-column")) {
+      show(containerScreenControls);
+    }
   }
 
-  document.querySelectorAll('.sidebar-control-label').forEach(el => {
-    const text = el.textContent.trim();
-      if (hasBgImage && text === "Background Color") {
-        el.innerText = "Background Overlay Color";
-      } else if (!hasBgImage && text === "Background Overlay Color") {
-        el.innerText = "Background Color";
-      }
+  if (type.column) {
+    if (!el.parentElement?.matches(".building-column-span-one")) {
+      show(verticalAlignControls);
+    }
+
+    if (hasBgImage) {
+      show(columnMatchControls);
+    }
+  }
+
+  /* -----------------------------
+     Images
+  ----------------------------- */
+
+  if (type.image) {
+    show(imageControls);
+    show(linkControls);
+    disable(widthUnit, true);
+  } else {
+    disable(widthUnit, false);
+  }
+
+  if (type.ratioImage) {
+    show(imageRatioControls);
+    hide(widthControls);
+  }
+
+  if (type.cropImage) {
+    show(imageCropControls);
+    hide(widthControls);
+  }
+
+  /* -----------------------------
+     Buttons (authoritative rules)
+  ----------------------------- */
+
+  if (type.button) {
+    show(linkControls);
+
+    show(backgroundColorHoverControls);
+    show(borderColorHoverControls);
+    show(textColorHoverControls);
+
+    hide(backgroundColorOpacityControls);
+    hide(backgroundColorRemoveControls);
+
+    disable(paddingLeftInput, true);
+    disable(paddingRightInput, true);
+  }
+
+  /* -----------------------------
+     Accordions (no conflicts)
+  ----------------------------- */
+
+  if (type.accordion) {
+    hide(backgroundColorOpacityControls);
+    hide(backgroundColorRemoveControls);
+
+    disable(paddingLeftInput, true);
+    disable(paddingRightInput, true);
+  }
+
+  /* -----------------------------
+     Link wrapper options
+  ----------------------------- */
+
+  if (el.parentElement?.classList.contains("building-block-link")) {
+    show(linkOptionControls);
+  }
+
+  /* -----------------------------
+     Background color label text
+  ----------------------------- */
+
+  document.querySelectorAll(".sidebar-control-label").forEach(label => {
+    const text = label.textContent.trim();
+
+    if (hasBgImage && text === "Background Color") {
+      label.textContent = "Background Overlay Color";
+    }
+
+    if (!hasBgImage && text === "Background Overlay Color") {
+      label.textContent = "Background Color";
+    }
   });
 
-  if (isButton) {
-    backgroundColorRemoveControls.classList.add("content-hide");
-    backgroundColorHoverControls.classList.remove("content-hide");
-    borderColorHoverControls.classList.remove("content-hide");
-    textColorHoverControls.classList.remove("content-hide");
-  } else {
-    backgroundColorRemoveControls.classList.remove("content-hide");
-    backgroundColorHoverControls.classList.add("content-hide");
-    borderColorHoverControls.classList.add("content-hide");
-    textColorHoverControls.classList.add("content-hide");
-  }
+  /* -----------------------------
+     Width parsing
+  ----------------------------- */
 
-  if (isContainer && !currentlySelected?.firstElementChild?.matches(".building-column-span-one, .building-column-span-two")) {
-    containerResponsiveControls.classList.remove("content-hide");
-  } else {
-    containerResponsiveControls.classList.add("content-hide");
-  }
-
-  if (isContainer && !currentlySelected?.parentElement.matches(".building-column")) {
-    containerScreenControls.classList.remove("content-hide");
-  } else {
-    containerScreenControls.classList.add("content-hide");
-  }
-
-  if (isColumn && !currentlySelected?.parentElement.matches(".building-column-span-one")) {
-    verticalAlignControls.classList.remove("content-hide");
-  } else {
-    verticalAlignControls.classList.add("content-hide");
-  }
-
-  if (isColumn && !currentlySelected?.parentElement?.matches(".building-column-span-one") && currentlySelected?.style.backgroundImage !== '') {
-    columnMatchControls.classList.remove("content-hide");
-  } else {
-    columnMatchControls.classList.add("content-hide");
-  }
-
-  if (isImage) {
-    imageControls.classList.remove("content-hide");
-  } else {
-    imageControls.classList.add("content-hide");
-  }
-
-  if (isRatioImage) {
-    imageRatioControls.classList.remove("content-hide");
-  } else {
-    imageRatioControls.classList.add("content-hide");
-  }
-
-  if (isCropImage) {
-    imageCropControls.classList.remove("content-hide");
-  } else {
-    imageCropControls.classList.add("content-hide");
-  }
-
-  if (isRatioImage || isCropImage) {
-    widthControls.classList.add("content-hide");
-  } else {
-    widthControls.classList.remove("content-hide");
-  }
-
-  if (isImage || isButton) {
-    linkControls.classList.remove("content-hide");
-  } else {
-    linkControls.classList.add("content-hide");
-  }
-
-  if (isImage) {
-    widthUnit.disabled = true;
-    widthUnit.style.opacity = "0.5";
-  } else {
-    widthUnit.disabled = false;
-    widthUnit.style.opacity = "1.0";
-  }
-
-  if (currentlySelected?.parentElement.classList.contains("building-block-link")) {
-    linkOptionControls.classList.remove("content-hide");
-  } else {
-    linkOptionControls.classList.add("content-hide");
-  }
-
-  if (isAccordion || isButton) {
-    paddingLeftInput.disabled = true;
-    paddingRightInput.disabled = true;
-    paddingLeftInput.style.opacity = "0.5";
-    paddingRightInput.style.opacity = "0.5";
-  } else {
-    paddingLeftInput.disabled = false;
-    paddingRightInput.disabled = false;
-    paddingLeftInput.style.opacity = "1.0";
-    paddingRightInput.style.opacity = "1.0";
-  }
-
-  if (isAccordion) {
-    backgroundColorRemoveControls.classList.add("content-hide");
-  } else {
-    backgroundColorRemoveControls.classList.remove("content-hide");
-  }
-
-  const styleWidth = currentlySelected?.style.width || "";
+  const styleWidth = el.style.width || "";
 
   if (styleWidth.includes("px")) {
     widthUnit.value = "px";
