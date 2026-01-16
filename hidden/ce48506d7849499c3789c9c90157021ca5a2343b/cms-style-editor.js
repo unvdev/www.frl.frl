@@ -444,21 +444,22 @@ function checkRestrictedControls() {
 
   const hasBgImage = (isContainer || isColumn) && currentlySelected.style.backgroundImage !== "" && currentlySelected.style.backgroundImage !== "none";
 
-  if (hasBgImage) {
-    backgroundColorOpacityControls.classList.add("content-hide");
-    document.querySelectorAll('.sidebar-control-label').forEach(el => {
-      if (el.textContent.trim() === "Background Color") {
-        el.innerText = "Background Overlay Color";
-      }
-    });
+  const shouldHideOpacity = isButton || hasBgImage;
+
+  if (shouldHideOpacity) {
+      backgroundColorOpacityControls.classList.add("content-hide");
   } else {
-    backgroundColorOpacityControls.classList.remove("content-hide");
-    document.querySelectorAll('.sidebar-control-label').forEach(el => {
-      if (el.textContent.trim() === "Background Overlay Color") {
+      backgroundColorOpacityControls.classList.remove("content-hide");
+  }
+
+  document.querySelectorAll('.sidebar-control-label').forEach(el => {
+    const text = el.textContent.trim();
+      if (hasBgImage && text === "Background Color") {
+        el.innerText = "Background Overlay Color";
+      } else if (!hasBgImage && text === "Background Overlay Color") {
         el.innerText = "Background Color";
       }
-    });
-  }
+  });
 
   if (isButton) {
     backgroundColorOpacityControls.classList.add("content-hide");
