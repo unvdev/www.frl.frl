@@ -712,11 +712,18 @@ dropShadow.addEventListener("change", function() {
 
 // --- Width ---
 widthUnit.addEventListener("change", () => {
+    if (!currentlySelected) return;
+
     if (widthUnit.value === "%") {
         widthInput.max = 100;
-        if (widthInput.value > 100) widthInput.value = 100;
+        const parentWidth = currentlySelected.parentElement.offsetWidth;
+        const currentPx = currentlySelected.offsetWidth;
+        let convertedPercent = Math.round((currentPx / parentWidth) * 100);
+        widthInput.value = Math.min(100, convertedPercent);
     } else {
         widthInput.max = 2000;
+        const rect = currentlySelected.getBoundingClientRect();
+        widthInput.value = Math.round(rect.width);
     }
     updateWidth(); 
 });
@@ -724,27 +731,36 @@ widthUnit.addEventListener("change", () => {
 function updateWidth() {
     if (!currentlySelected) return;
 
-    let val = parseFloat(widthInput.value) || 5;
+    let val = parseFloat(widthInput.value);
+    if (isNaN(val)) return;
+
     const unit = widthUnit.value;
 
     if (unit === "%") {
-        val = Math.max(5, Math.min(100, val));
-        widthInput.value = val;
+        val = Math.min(100, val);
         
         if (val >= 100) {
             currentlySelected.style.width = "";
         } else {
-            // Maintains your specific layout formula
             currentlySelected.style.width = `calc(${val}% - 2rem)`;
         }
     } else {
-        val = Math.max(5, val);
-        widthInput.value = val;
+        val = Math.min(2000, val);
         currentlySelected.style.width = val + "px";
     }
 }
 
 widthInput.addEventListener("input", updateWidth);
+
+widthInput.addEventListener("change", () => {
+    let val = parseFloat(widthInput.value) || 5;
+    const unit = widthUnit.value;
+    const maxVal = (unit === "%") ? 100 : 2000;
+
+    val = Math.max(5, Math.min(maxVal, val));
+    widthInput.value = val;
+    updateWidth();
+});
 
 // --- Images ---
 imageRatioWidthInput.addEventListener("input", () => {
