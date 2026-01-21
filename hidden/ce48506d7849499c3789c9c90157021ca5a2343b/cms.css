@@ -186,6 +186,10 @@
     background-color: magenta;
 }
 
+.navigation {
+    position: relative !important;
+}
+
 .stretch-to-screen {
     height: auto !important;
 }
