@@ -1291,9 +1291,10 @@
     margin-left: 10px;
     width: auto !important;
     border: none;
-    padding: 5px;
+    padding: 8px;
     cursor: pointer;
     outline: none;
+    box-sizing: border-box;
 }
 
 .accordion-content {
