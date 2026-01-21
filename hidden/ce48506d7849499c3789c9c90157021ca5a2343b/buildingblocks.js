@@ -224,7 +224,7 @@ const button = `
 `;
 
 const navigation = `
-<div class="building-container building-block building-block-align-center stretch-to-screen navigation" data-name="Building Block: Navigation">
+<div class="building-container building-block building-block-align-center stretch-to-screen navigation" data-name="Building Block: Navigation Building Container">
     <div class="building-column-span-one">
         <div class="building-column building-block building-block-align-center building-column-content-center" data-name="Building Block: Building Column">
             <div class="placeholder-block"></div>
