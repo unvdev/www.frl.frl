@@ -833,4 +833,5 @@ footer {
 
 .navigation {
     position: fixed;
+    z-index: 100;
 }
