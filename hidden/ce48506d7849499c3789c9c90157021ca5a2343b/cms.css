@@ -1290,8 +1290,7 @@
 .sidebar-input-unit-selector {
     margin-left: 10px;
     width: auto !important;
-    border: none;
-    padding: 8px;
+    height: 36px;
     cursor: pointer;
     outline: none;
     box-sizing: border-box;
