@@ -86,7 +86,7 @@ function initHelpers() {
     navigationButton.onclick = (e) => e.preventDefault();
   } else {
     navigation.style.display = 'none';
-    navigationButton.onclick = navigation.style.display = '';
+    navigationButton.onclick = () => navigation.style.display = '';
   }
 
   if (params.get('mode') !== 'editing') {
