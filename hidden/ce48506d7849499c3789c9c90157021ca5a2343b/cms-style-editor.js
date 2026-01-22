@@ -508,8 +508,7 @@ function checkRestrictedControls() {
   toggle(controls.link, elementType.isButton || elementType.isImage);
   const isButtonLink = currentlySelected?.classList.contains("button-element") && currentlySelected?.href !== '';
   const isImageLink = currentlySelected?.parentElement.classList.contains("building-block-link") && currentlySelected?.parentElement.href !== '';
-  toggle(controls.linkOption, isButtonLink);
-  toggle(controls.linkOption, isImageLink);
+  toggle(controls.linkOption, isButtonLink || isImageLink);
 
   // Width unit control
   setControlState(widthUnit, !elementType.isImage);
