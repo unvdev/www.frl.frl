@@ -1080,7 +1080,6 @@ linkAdd.addEventListener("click", function() {
     if (url === null) return;
     currentlySelected.style.cursor = 'pointer';
     currentlySelected.setAttribute('onclick', url);
-    currentlySelected.setAttribute('data-link', url);
     checkRestrictedControls();
     loadStylesFromSelected();
   }
@@ -1096,7 +1095,6 @@ linkRemove.addEventListener("click", function() {
   if (currentlySelected && currentlySelected.classList.contains('image-element')) {
     currentlySelected.style.cursor = '';
     currentlySelected.removeAttribute('onclick');
-    currentlySelected.removeAttribute('data-link');
     checkRestrictedControls();
     loadStylesFromSelected();
   }
