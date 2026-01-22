@@ -1077,11 +1077,9 @@ linkAdd.addEventListener("click", function() {
   if (currentlySelected && currentlySelected.classList.contains('image-element')) {
     const url = grabLink();
     if (url === null) return;
-    const linkWrapper = document.createElement('a');
-    linkWrapper.classList.add('building-block-link');
-    linkWrapper.href = url;
-    currentlySelected.parentNode.insertBefore(linkWrapper, currentlySelected);
-    linkWrapper.appendChild(currentlySelected);
+    currentlySelected.style.cursor = 'pointer';
+    currentlySelected.setAttribute('data-link', url);
+    currentlySelected.setAttribute('onclick', url);
     checkRestrictedControls();
     loadStylesFromSelected();
   }
@@ -1094,28 +1092,30 @@ linkRemove.addEventListener("click", function() {
     loadStylesFromSelected();
   }
 
-  if (currentlySelected && currentlySelected.classList.contains('image-element') && currentlySelected.parentNode.classList.contains('building-block-link')) {
-    const parentLink = currentlySelected.parentNode;
-    parentLink.parentNode.insertBefore(currentlySelected, parentLink);
-    parentLink.remove();
+  if (currentlySelected && currentlySelected.classList.contains('image-element')) {
+    currentlySelected.style.cursor = '';
+    currentlySelected.removeAttribute('onclick');
     checkRestrictedControls();
     loadStylesFromSelected();
   }
 });
 
 linkOpenInNewTab.addEventListener("change", function() {
- if (currentlySelected && currentlySelected.classList.contains('button-element')) {
+  if (currentlySelected && currentlySelected.classList.contains('button-element')) {
     if (linkOpenInNewTab.checked) {
       currentlySelected.target = "_blank";
     } else {
       currentlySelected.removeAttribute("target");
     }
   }
-  if (currentlySelected && currentlySelected.classList.contains('image-element') && currentlySelected.parentNode.classList.contains('building-block-link')) {
-    if (linkOpenInNewTab.checked) {
-      currentlySelected.parentElement.target = "_blank";
-    } else {
-      currentlySelected.parentElement.removeAttribute("target");
+  if (currentlySelected && currentlySelected.classList.contains('image-element')) {
+    const url = currentlySelected.getAttribute('data-link');
+    if (url) {
+      if (linkOpenInNewTab.checked) {
+        currentlySelected.setAttribute('target', '_blank');
+      } else {
+        currentlySelected.removeAttribute('target');
+      }
     }
   }
 });
