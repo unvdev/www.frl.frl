@@ -505,7 +505,7 @@ function checkRestrictedControls() {
   toggle(controls.width, !elementType.isRatioImage && !elementType.isCropImage);
 
   // Link controls
-  toggle(controls.link, elementType.isImage || elementType.isButton);
+  toggle(controls.link, elementType.isButton);
   const isInLinkWrapper = currentlySelected?.classList.contains("building-block-link") && currentlySelected?.href !== '';
   toggle(controls.linkOption, isInLinkWrapper);
 
