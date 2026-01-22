@@ -417,7 +417,7 @@ if (textHoverColorValueSpan) {
   matchAdjacentHeight.checked = currentlySelected.classList.contains("match-adjacent-height");
   dropShadow.checked = currentlySelected?.matches('.drop-shadow, .drop-shadow-text');
 
-  linkOpenInNewTab.checked = currentlySelected.classList.contains("building-block-link") && currentlySelected.target === "_blank";
+  linkOpenInNewTab.checked = currentlySelected.classList.contains("button-element") && currentlySelected.target === "_blank";
 
   highlightActiveControls();
 }
@@ -506,7 +506,7 @@ function checkRestrictedControls() {
 
   // Link controls
   toggle(controls.link, elementType.isButton);
-  const isInLinkWrapper = currentlySelected?.classList.contains("building-block-link") && currentlySelected?.href !== '';
+  const isInLinkWrapper = currentlySelected?.classList.contains("button-element") && currentlySelected?.href !== '';
   toggle(controls.linkOption, isInLinkWrapper);
 
   // Width unit control
@@ -668,7 +668,7 @@ function updateWidthInput() {
 //     widthUnit.style.opacity = "1.0";
 //   }
 
-//   if (currentlySelected?.parentElement.classList.contains("building-block-link")) {
+//   if (currentlySelected?.parentElement.classList.contains("button-element")) {
 //     linkOptionControls.classList.remove("content-hide");
 //   } else {
 //     linkOptionControls.classList.add("content-hide");
@@ -1066,17 +1066,28 @@ matchAdjacentHeight.addEventListener("change", function() {
 
 // --- Links ---
 linkAdd.addEventListener("click", function() {
-  if (currentlySelected && currentlySelected.classList.contains('building-block-link')) {
+  if (currentlySelected && currentlySelected.classList.contains('button-element')) {
     const url = grabLink();
     if (url === null) return;
     currentlySelected.href = url;
     checkRestrictedControls();
     loadStylesFromSelected();
   }
+  if (currentlySelected && currentlySelected.classList.contains('image-element')) {
+    linkRemove();
+    const url = grabLink();
+    if (url === null) return;
+    const linkWrapper = document.createElement('a');
+    linkWrapper.classList.add('building-block-link');
+    linkWrapper.href = url;
+    currentlySelected.parentNode.insertBefore(linkWrapper, currentlySelected);
+    linkWrapper.appendChild(currentlySelected);
+    checkRestrictedControls();
+    loadStylesFromSelected();
 });
 
 linkRemove.addEventListener("click", function() {
-  if (currentlySelected && currentlySelected.classList.contains('building-block-link')) {
+  if (currentlySelected && currentlySelected.classList.contains('button-element')) {
     currentlySelected.removeAttribute('href');
     checkRestrictedControls();
     loadStylesFromSelected();
@@ -1084,7 +1095,7 @@ linkRemove.addEventListener("click", function() {
 });
 
 linkOpenInNewTab.addEventListener("change", function() {
- if (currentlySelected && currentlySelected.classList.contains('building-block-link')) {
+ if (currentlySelected && currentlySelected.classList.contains('button-element')) {
     if (linkOpenInNewTab.checked) {
       currentlySelected.target = "_blank";
     } else {
