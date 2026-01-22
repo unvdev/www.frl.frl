@@ -1075,37 +1075,26 @@ linkAdd.addEventListener("click", function() {
   if (currentlySelected) {
     const url = grabLink();
     if (url === null) return;
-
-    if (currentlySelected && currentlySelected.parentNode) {
-      const linkWrapper = document.createElement('a');
-      linkWrapper.classList.add('building-block-link');
-      linkWrapper.href = url;
-      currentlySelected.parentNode.insertBefore(linkWrapper, currentlySelected);
-      linkWrapper.appendChild(currentlySelected);
-      checkRestrictedControls();
-      loadStylesFromSelected();
-    }
+    currentlySelected.href = url;
+    checkRestrictedControls();
+    loadStylesFromSelected();
   }
 });
 
 linkRemove.addEventListener("click", function() {
-  if (currentlySelected && currentlySelected.parentNode) {
-    const parentLink = currentlySelected.parentNode;
-    if (parentLink.tagName === 'A' && parentLink.classList.contains('building-block-link')) {
-      parentLink.parentNode.insertBefore(currentlySelected, parentLink);
-      parentLink.remove();
-      checkRestrictedControls();
-      loadStylesFromSelected();
-    }
+  if (currentlySelected && currentlySelected.classList.contains('building-block-link')) {
+    currentlySelected.removeAttribute('href');
+    checkRestrictedControls();
+    loadStylesFromSelected();
   }
 });
 
 linkOpenInNewTab.addEventListener("change", function() {
-  if (currentlySelected && currentlySelected.parentElement.tagName === 'A') {
+ if (currentlySelected && currentlySelected.classList.contains('building-block-link')) {
     if (linkOpenInNewTab.checked) {
-      currentlySelected.parentElement.target = "_blank";
+      currentlySelected.target = "_blank";
     } else {
-      currentlySelected.parentElement.removeAttribute("target");
+      currentlySelected.removeAttribute("target");
     }
   }
 });
