@@ -417,13 +417,7 @@ if (textHoverColorValueSpan) {
   matchAdjacentHeight.checked = currentlySelected.classList.contains("match-adjacent-height");
   dropShadow.checked = currentlySelected?.matches('.drop-shadow, .drop-shadow-text');
 
-  if (currentlySelected.parentElement) {
-    if (currentlySelected.parentElement.classList.contains("building-block-link") && currentlySelected.parentElement.target === "_blank") {
-      linkOpenInNewTab.checked = true;
-    } else {
-      linkOpenInNewTab.checked = false;
-    }
-  }
+  linkOpenInNewTab.checked = currentlySelected.classList.contains("building-block-link") && currentlySelected.parentElement.target === "_blank";
 
   highlightActiveControls();
 }
@@ -512,7 +506,7 @@ function checkRestrictedControls() {
 
   // Link controls
   toggle(controls.link, elementType.isImage || elementType.isButton);
-  const isInLinkWrapper = currentlySelected?.classList.contains("building-block-link") && currentlySelected?.href !== '';
+  const isInLinkWrapper = currentlySelected?.classList.contains("building-block-link");
   toggle(controls.linkOption, isInLinkWrapper);
 
   // Width unit control
