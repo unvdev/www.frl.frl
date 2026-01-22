@@ -417,7 +417,7 @@ if (textHoverColorValueSpan) {
   matchAdjacentHeight.checked = currentlySelected.classList.contains("match-adjacent-height");
   dropShadow.checked = currentlySelected?.matches('.drop-shadow, .drop-shadow-text');
 
-  linkOpenInNewTab.checked = currentlySelected.classList.contains("building-block-link") && currentlySelected.parentElement.target === "_blank";
+  linkOpenInNewTab.checked = currentlySelected.classList.contains("building-block-link") && currentlySelected.target === "_blank";
 
   highlightActiveControls();
 }
