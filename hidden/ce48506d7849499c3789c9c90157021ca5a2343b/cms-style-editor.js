@@ -319,7 +319,11 @@ if (backgroundHoverColorValueSpan) {
   backgroundColorOpacityInput.value = getRGBAlpha(currentlySelected) * 100;
 
 // Width & Images
-const styleWidth = currentlySelected.style.width;
+const parentLink = currentlySelected.parentElement;
+const isImageLink = currentlySelected.classList.contains('image-element') && 
+                   parentLink?.classList.contains('building-block-link');
+
+const styleWidth = isImageLink ? parentLink.style.width : currentlySelected.style.width;
 
 if (styleWidth && styleWidth.includes("px")) {
     widthUnit.value = "px";
@@ -337,9 +341,18 @@ if (styleWidth && styleWidth.includes("px")) {
     widthInput.value = realPercent;
 
     if (realPercent >= 100) {
-        currentlySelected.style.width = "";
+        if (isImageLink) {
+            parentLink.style.width = "";
+        } else {
+            currentlySelected.style.width = "";
+        }
     } else {
-        currentlySelected.style.width = `calc(${realPercent}% - 2rem)`;
+        if (isImageLink) {
+            parentLink.style.width = `calc(${realPercent}% - 2rem)`;
+            currentlySelected.style.width = "100%";
+        } else {
+            currentlySelected.style.width = `calc(${realPercent}% - 2rem)`;
+        }
     }
 }
 
@@ -865,6 +878,10 @@ function updateWidth() {
     if (isNaN(val)) return;
 
     const unit = widthUnit.value;
+    
+    // Check if image is wrapped in a link
+    const parentLink = currentlySelected.parentElement;
+    const isImageLink = currentlySelected.classList.contains('image-element') && parentLink?.classList.contains('building-block-link');
 
     if (unit === "%") {
         if (val > 100) {
@@ -872,17 +889,32 @@ function updateWidth() {
             widthInput.value = 100;
         }
         
-        if (val >= 100) {
-            currentlySelected.style.width = "";
+        if (isImageLink) {
+            if (val >= 100) {
+                parentLink.style.width = "";
+            } else {
+                parentLink.style.width = `calc(${val}% - 2rem)`;
+            }
+            currentlySelected.style.width = "100%";
         } else {
-            currentlySelected.style.width = `calc(${val}% - 2rem)`;
+            if (val >= 100) {
+                currentlySelected.style.width = "";
+            } else {
+                currentlySelected.style.width = `calc(${val}% - 2rem)`;
+            }
         }
     } else {
         if (val > 1500) {
             val = 1500;
             widthInput.value = 1500;
         }
-        currentlySelected.style.width = val + "px";
+        
+        if (isImageLink) {
+            parentLink.style.width = val + "px";
+            currentlySelected.style.width = "100%";
+        } else {
+            currentlySelected.style.width = val + "px";
+        }
     }
 }
 
@@ -903,7 +935,16 @@ imageRatioWidthInput.addEventListener("input", () => {
   if (currentlySelected) {
     let width = parseFloat(imageRatioWidthInput.value) || 100;
     width = Math.max(10, Math.min(9999, width));
-    currentlySelected.style.width = width + "px";
+    
+    const parentLink = currentlySelected.parentElement;
+    const isWrapped = parentLink?.classList.contains('building-block-link');
+    
+    if (isWrapped) {
+      parentLink.style.width = width + "px";
+      currentlySelected.style.width = "100%";
+    } else {
+      currentlySelected.style.width = width + "px";
+    }
   }
 });
 
@@ -911,7 +952,16 @@ imageCropWidthInput.addEventListener("input", () => {
   if (currentlySelected) {
     let width = parseFloat(imageCropWidthInput.value) || 100;
     width = Math.max(10, Math.min(9999, width));
-    currentlySelected.style.width = width + "px";
+    
+    const parentLink = currentlySelected.parentElement;
+    const isWrapped = parentLink?.classList.contains('building-block-link');
+    
+    if (isWrapped) {
+      parentLink.style.width = width + "px";
+      currentlySelected.style.width = "100%";
+    } else {
+      currentlySelected.style.width = width + "px";
+    }
   }
 });
 
