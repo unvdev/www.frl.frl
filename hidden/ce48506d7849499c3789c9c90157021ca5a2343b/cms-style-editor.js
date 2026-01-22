@@ -1069,7 +1069,6 @@ matchAdjacentHeight.addEventListener("change", function() {
 // --- Links ---
 linkAdd.addEventListener("click", function() {
   if (currentlySelected && currentlySelected.classList.contains('button-element')) {
-    linkRemove();
     const url = grabLink();
     if (url === null) return;
     currentlySelected.href = url;
@@ -1077,7 +1076,6 @@ linkAdd.addEventListener("click", function() {
     loadStylesFromSelected();
   }
   if (currentlySelected && currentlySelected.classList.contains('image-element')) {
-    linkRemove();
     const url = grabLink();
     if (url === null) return;
     const linkWrapper = document.createElement('a');
