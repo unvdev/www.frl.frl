@@ -1087,6 +1087,7 @@ linkAdd.addEventListener("click", function() {
     linkWrapper.appendChild(currentlySelected);
     checkRestrictedControls();
     loadStylesFromSelected();
+  }
 });
 
 linkRemove.addEventListener("click", function() {
