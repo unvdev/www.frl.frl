@@ -319,11 +319,7 @@ if (backgroundHoverColorValueSpan) {
   backgroundColorOpacityInput.value = getRGBAlpha(currentlySelected) * 100;
 
 // Width & Images
-const parentLink = currentlySelected.parentElement;
-const isImageLink = currentlySelected.classList.contains('image-element') && 
-                   parentLink?.classList.contains('building-block-link');
-
-const styleWidth = isImageLink ? parentLink.style.width : currentlySelected.style.width;
+const styleWidth = currentlySelected.style.width;
 
 if (styleWidth && styleWidth.includes("px")) {
     widthUnit.value = "px";
@@ -341,18 +337,9 @@ if (styleWidth && styleWidth.includes("px")) {
     widthInput.value = realPercent;
 
     if (realPercent >= 100) {
-        if (isImageLink) {
-            parentLink.style.width = "";
-        } else {
-            currentlySelected.style.width = "";
-        }
+        currentlySelected.style.width = "";
     } else {
-        if (isImageLink) {
-            parentLink.style.width = `calc(${realPercent}% - 2rem)`;
-            currentlySelected.style.width = "100%";
-        } else {
-            currentlySelected.style.width = `calc(${realPercent}% - 2rem)`;
-        }
+        currentlySelected.style.width = `calc(${realPercent}% - 2rem)`;
     }
 }
 
@@ -878,10 +865,6 @@ function updateWidth() {
     if (isNaN(val)) return;
 
     const unit = widthUnit.value;
-    
-    // Check if image is wrapped in a link
-    const parentLink = currentlySelected.parentElement;
-    const isImageLink = currentlySelected.classList.contains('image-element') && parentLink?.classList.contains('building-block-link');
 
     if (unit === "%") {
         if (val > 100) {
@@ -889,32 +872,17 @@ function updateWidth() {
             widthInput.value = 100;
         }
         
-        if (isImageLink) {
-            if (val >= 100) {
-                parentLink.style.width = "";
-            } else {
-                parentLink.style.width = `calc(${val}% - 2rem)`;
-            }
-            currentlySelected.style.width = "100%";
+        if (val >= 100) {
+            currentlySelected.style.width = "";
         } else {
-            if (val >= 100) {
-                currentlySelected.style.width = "";
-            } else {
-                currentlySelected.style.width = `calc(${val}% - 2rem)`;
-            }
+            currentlySelected.style.width = `calc(${val}% - 2rem)`;
         }
     } else {
         if (val > 1500) {
             val = 1500;
             widthInput.value = 1500;
         }
-        
-        if (isImageLink) {
-            parentLink.style.width = val + "px";
-            currentlySelected.style.width = "100%";
-        } else {
-            currentlySelected.style.width = val + "px";
-        }
+        currentlySelected.style.width = val + "px";
     }
 }
 
@@ -935,16 +903,7 @@ imageRatioWidthInput.addEventListener("input", () => {
   if (currentlySelected) {
     let width = parseFloat(imageRatioWidthInput.value) || 100;
     width = Math.max(10, Math.min(9999, width));
-    
-    const parentLink = currentlySelected.parentElement;
-    const isWrapped = parentLink?.classList.contains('building-block-link');
-    
-    if (isWrapped) {
-      parentLink.style.width = width + "px";
-      currentlySelected.style.width = "100%";
-    } else {
-      currentlySelected.style.width = width + "px";
-    }
+    currentlySelected.style.width = width + "px";
   }
 });
 
@@ -952,16 +911,7 @@ imageCropWidthInput.addEventListener("input", () => {
   if (currentlySelected) {
     let width = parseFloat(imageCropWidthInput.value) || 100;
     width = Math.max(10, Math.min(9999, width));
-    
-    const parentLink = currentlySelected.parentElement;
-    const isWrapped = parentLink?.classList.contains('building-block-link');
-    
-    if (isWrapped) {
-      parentLink.style.width = width + "px";
-      currentlySelected.style.width = "100%";
-    } else {
-      currentlySelected.style.width = width + "px";
-    }
+    currentlySelected.style.width = width + "px";
   }
 });
 
@@ -1127,12 +1077,11 @@ linkAdd.addEventListener("click", function() {
   if (currentlySelected && currentlySelected.classList.contains('image-element')) {
     const url = grabLink();
     if (url === null) return;
-    
-    const parentLink = currentlySelected.parentElement;
-    if (parentLink?.classList.contains('building-block-link')) {
-      parentLink.href = url;
-    }
-    
+    const linkWrapper = document.createElement('a');
+    linkWrapper.classList.add('building-block-link');
+    linkWrapper.href = url;
+    currentlySelected.parentNode.insertBefore(linkWrapper, currentlySelected);
+    linkWrapper.appendChild(currentlySelected);
     checkRestrictedControls();
     loadStylesFromSelected();
   }
@@ -1145,33 +1094,28 @@ linkRemove.addEventListener("click", function() {
     loadStylesFromSelected();
   }
 
-  if (currentlySelected && currentlySelected.classList.contains('image-element')) {
-    const parentLink = currentlySelected.parentElement;
-    if (parentLink?.classList.contains('building-block-link')) {
-      parentLink.removeAttribute('href');
-    }
-    
+  if (currentlySelected && currentlySelected.classList.contains('image-element') && currentlySelected.parentNode.classList.contains('building-block-link')) {
+    const parentLink = currentlySelected.parentNode;
+    parentLink.parentNode.insertBefore(currentlySelected, parentLink);
+    parentLink.remove();
     checkRestrictedControls();
     loadStylesFromSelected();
   }
 });
 
 linkOpenInNewTab.addEventListener("change", function() {
-  if (currentlySelected && currentlySelected.classList.contains('button-element')) {
+ if (currentlySelected && currentlySelected.classList.contains('button-element')) {
     if (linkOpenInNewTab.checked) {
       currentlySelected.target = "_blank";
     } else {
       currentlySelected.removeAttribute("target");
     }
   }
-  if (currentlySelected && currentlySelected.classList.contains('image-element')) {
-    const parentLink = currentlySelected.parentElement;
-    if (parentLink?.classList.contains('building-block-link')) {
-      if (linkOpenInNewTab.checked) {
-        parentLink.target = "_blank";
-      } else {
-        parentLink.removeAttribute("target");
-      }
+  if (currentlySelected && currentlySelected.classList.contains('image-element') && currentlySelected.parentNode.classList.contains('building-block-link')) {
+    if (linkOpenInNewTab.checked) {
+      currentlySelected.parentElement.target = "_blank";
+    } else {
+      currentlySelected.parentElement.removeAttribute("target");
     }
   }
 });
