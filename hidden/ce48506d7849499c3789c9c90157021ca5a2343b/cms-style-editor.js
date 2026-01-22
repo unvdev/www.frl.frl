@@ -505,9 +505,11 @@ function checkRestrictedControls() {
   toggle(controls.width, !elementType.isRatioImage && !elementType.isCropImage);
 
   // Link controls
-  toggle(controls.link, elementType.isButton);
-  const isInLinkWrapper = currentlySelected?.classList.contains("button-element") && currentlySelected?.href !== '';
-  toggle(controls.linkOption, isInLinkWrapper);
+  toggle(controls.link, elementType.isButton || elementType.isImage);
+  const isButtonLink = currentlySelected?.classList.contains("button-element") && currentlySelected?.href !== '';
+  const isImageLink = currentlySelected?.parentElement.classList.contains("building-block-link") && currentlySelected?.parentElement.href !== '';
+  toggle(controls.linkOption, isButtonLink);
+  toggle(controls.linkOption, isImageLink);
 
   // Width unit control
   setControlState(widthUnit, !elementType.isImage);
@@ -1067,6 +1069,7 @@ matchAdjacentHeight.addEventListener("change", function() {
 // --- Links ---
 linkAdd.addEventListener("click", function() {
   if (currentlySelected && currentlySelected.classList.contains('button-element')) {
+    linkRemove();
     const url = grabLink();
     if (url === null) return;
     currentlySelected.href = url;
@@ -1092,6 +1095,14 @@ linkRemove.addEventListener("click", function() {
     checkRestrictedControls();
     loadStylesFromSelected();
   }
+
+  if (currentlySelected && currentlySelected.classList.contains('image-element') && currentlySelected.parentNode.classList.contains('building-block-link')) {
+    const parentLink = currentlySelected.parentNode;
+    parentLink.parentNode.insertBefore(currentlySelected, parentLink);
+    parentLink.remove();
+    checkRestrictedControls();
+    loadStylesFromSelected();
+  }
 });
 
 linkOpenInNewTab.addEventListener("change", function() {
@@ -1100,6 +1111,13 @@ linkOpenInNewTab.addEventListener("change", function() {
       currentlySelected.target = "_blank";
     } else {
       currentlySelected.removeAttribute("target");
+    }
+  }
+  if (currentlySelected && currentlySelected.classList.contains('image-element') && currentlySelected.parentNode.classList.contains('building-block-link')) {
+    if (linkOpenInNewTab.checked) {
+      currentlySelected.parentElement.target = "_blank";
+    } else {
+      currentlySelected.parentElement.removeAttribute("target");
     }
   }
 });
