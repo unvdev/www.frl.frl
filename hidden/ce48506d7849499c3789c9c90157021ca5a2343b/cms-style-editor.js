@@ -1078,7 +1078,7 @@ linkAdd.addEventListener("click", function() {
 
     if (currentlySelected && currentlySelected.parentNode) {
       const linkWrapper = document.createElement('a');
-      linkWrapper.classList.add('building-block-link');
+      linkWrapper.classList.add('building-block', 'building-block-link');
       linkWrapper.href = url;
       currentlySelected.parentNode.insertBefore(linkWrapper, currentlySelected);
       linkWrapper.appendChild(currentlySelected);
