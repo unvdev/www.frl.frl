@@ -1079,7 +1079,7 @@ linkAdd.addEventListener("click", function() {
     const url = grabLink();
     if (url === null) return;
     currentlySelected.style.cursor = 'pointer';
-    currentlySelected.setAttribute('onclick', url);
+    currentlySelected.setAttribute('onclick', `window.location.href='${url}'`);
     checkRestrictedControls();
     loadStylesFromSelected();
   }
