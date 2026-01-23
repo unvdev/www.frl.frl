@@ -267,6 +267,7 @@ function enableCMS() {
 function formatHtml(node, level = 0, indentChar = '  ') {
     const inlineTags = new Set(['abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'dfn', 'em', 'i', 'kbd', 'mark', 'q', 's', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'time', 'u', 'var', 'wbr']);
     const voidTags = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
+    const preserveWhitespaceTags = new Set(['pre', 'code', 'textarea', 'script', 'style']);
 
     let result = '';
 
@@ -274,6 +275,7 @@ function formatHtml(node, level = 0, indentChar = '  ') {
         case Node.ELEMENT_NODE:
             const tagName = node.nodeName.toLowerCase();
             const isInline = inlineTags.has(tagName);
+            const preserveWhitespace = preserveWhitespaceTags.has(tagName);
             const indent = indentChar.repeat(level);
 
             // Add newline and indentation before block-level tags
@@ -282,8 +284,15 @@ function formatHtml(node, level = 0, indentChar = '  ') {
             }
 
             result += `<${tagName}`;
+            
+            // Improved attribute handling with proper escaping
             for (const attr of node.attributes) {
-                result += ` ${attr.name}="${attr.value.replace(/"/g, '&quot;')}"`;
+                const value = attr.value
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                result += ` ${attr.name}="${value}"`;
             }
             result += '>';
 
@@ -292,6 +301,10 @@ function formatHtml(node, level = 0, indentChar = '  ') {
                 // Check if the element contains any non-whitespace children
                 if (node.hasChildNodes()) {
                     for (const child of node.childNodes) {
+                        if (preserveWhitespace) {
+                            isEffectivelyEmpty = false;
+                            break;
+                        }
                         if ((child.nodeType === Node.TEXT_NODE && child.nodeValue.trim() !== '') || child.nodeType === Node.ELEMENT_NODE) {
                             isEffectivelyEmpty = false;
                             break;
@@ -303,7 +316,7 @@ function formatHtml(node, level = 0, indentChar = '  ') {
                     for (const child of node.childNodes) {
                         result += formatHtml(child, level + 1, indentChar);
                     }
-                    if (!isInline) {
+                    if (!isInline && !preserveWhitespace) {
                         result += '\n' + indent;
                     }
                 }
@@ -312,14 +325,28 @@ function formatHtml(node, level = 0, indentChar = '  ') {
             break;
 
         case Node.TEXT_NODE:
-            const trimmedValue = node.nodeValue.trim();
-            if (trimmedValue) {
-                result += trimmedValue;
+            const parent = node.parentElement;
+            const shouldPreserveWhitespace = parent && preserveWhitespaceTags.has(parent.tagName.toLowerCase());
+            
+            if (shouldPreserveWhitespace) {
+                // Preserve all whitespace for pre, code, textarea, script, style
+                result += node.nodeValue;
+            } else {
+                const trimmedValue = node.nodeValue.trim();
+                if (trimmedValue) {
+                    // Escape special HTML characters in text nodes
+                    const escapedValue = trimmedValue
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                    result += escapedValue;
+                }
             }
             break;
 
         case Node.COMMENT_NODE:
-            result += ``;
+            const indent = indentChar.repeat(level);
+            result += `\n${indent}<!--${node.nodeValue}-->`;
             break;
     }
 
