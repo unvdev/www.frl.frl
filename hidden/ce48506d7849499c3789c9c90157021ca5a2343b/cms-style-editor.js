@@ -1066,41 +1066,77 @@ matchAdjacentHeight.addEventListener("change", function() {
 });
 
 // --- Links ---
+// Helper function to safely check if the image is already wrapped
+function getParentLink(element) {
+  if (element.parentElement && element.parentElement.tagName === 'A' && element.parentElement.classList.contains('link-element')) {
+    return element.parentElement;
+  }
+  return null;
+}
+
 linkAdd.addEventListener("click", function() {
+  const url = grabLink();
+  if (url === null) return;
+
+  // 1. Handle Button Elements (Existing Logic)
   if (currentlySelected && currentlySelected.classList.contains('button-element')) {
-    const url = grabLink();
-    if (url === null) return;
     currentlySelected.href = url;
     checkRestrictedControls();
     loadStylesFromSelected();
   }
 
+  // 2. Handle Image Elements (New Wrapping Logic)
   if (currentlySelected && currentlySelected.classList.contains('image-element')) {
-    const url = grabLink();
-    if (url === null) return;
-    currentlySelected.style.cursor = 'pointer';
-    currentlySelected.setAttribute('onclick', `window.location.href='${url}'`);
+    let linkWrapper = getParentLink(currentlySelected);
+
+    // If it's NOT already wrapped, create the wrapper
+    if (!linkWrapper) {
+      linkWrapper = document.createElement('a');
+      linkWrapper.className = 'link-element building-block building-block-align-center';
+      linkWrapper.setAttribute('data-name', 'Building Block: Link Container');
+      
+      // Use display: contents to prevent the link from breaking the layout width
+      linkWrapper.style.display = 'contents'; 
+
+      // Insert the wrapper before the image, then move the image inside
+      currentlySelected.parentNode.insertBefore(linkWrapper, currentlySelected);
+      linkWrapper.appendChild(currentlySelected);
+    }
+
+    // Set the URL
+    linkWrapper.href = url;
+    
     checkRestrictedControls();
     loadStylesFromSelected();
   }
 });
 
 linkRemove.addEventListener("click", function() {
+  // 1. Handle Button Elements
   if (currentlySelected && currentlySelected.classList.contains('button-element')) {
     currentlySelected.removeAttribute('href');
     checkRestrictedControls();
     loadStylesFromSelected();
   }
 
+  // 2. Handle Image Elements (New Unwrapping Logic)
   if (currentlySelected && currentlySelected.classList.contains('image-element')) {
-    currentlySelected.style.cursor = '';
-    currentlySelected.removeAttribute('onclick');
+    const linkWrapper = getParentLink(currentlySelected);
+
+    if (linkWrapper) {
+      // Move the image out of the wrapper (back to the main container)
+      linkWrapper.parentNode.insertBefore(currentlySelected, linkWrapper);
+      // Delete the empty wrapper
+      linkWrapper.remove();
+    }
+
     checkRestrictedControls();
     loadStylesFromSelected();
   }
 });
 
 linkOpenInNewTab.addEventListener("change", function() {
+  // 1. Handle Button Elements
   if (currentlySelected && currentlySelected.classList.contains('button-element')) {
     if (linkOpenInNewTab.checked) {
       currentlySelected.target = "_blank";
@@ -1109,12 +1145,15 @@ linkOpenInNewTab.addEventListener("change", function() {
     }
   }
 
+  // 2. Handle Image Elements (Target the Wrapper)
   if (currentlySelected && currentlySelected.classList.contains('image-element')) {
-    if (currentlySelected.hasAttribute('onclick')) {
+    const linkWrapper = getParentLink(currentlySelected);
+    
+    if (linkWrapper) {
       if (linkOpenInNewTab.checked) {
-        currentlySelected.setAttribute('target', '_blank');
+        linkWrapper.target = "_blank";
       } else {
-        currentlySelected.removeAttribute('target');
+        linkWrapper.removeAttribute("target");
       }
     }
   }
