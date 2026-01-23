@@ -507,7 +507,7 @@ function checkRestrictedControls() {
   // Link controls
   toggle(controls.link, elementType.isButton || elementType.isImage);
   const isButtonLink = currentlySelected?.classList.contains("button-element") && currentlySelected?.href !== '';
-  const isImageLink = currentlySelected.classList.contains("image-element") && currentlySelected?.hasAttribute('onclick');
+  const isImageLink = currentlySelected.classList.contains("link-element") && currentlySelected?.href !== '';
   toggle(controls.linkOption, isButtonLink || isImageLink);
 
   // Width unit control
@@ -1066,7 +1066,6 @@ matchAdjacentHeight.addEventListener("change", function() {
 });
 
 // --- Links ---
-// Helper function to safely check if the image is already wrapped
 function getParentLink(element) {
   if (element.parentElement && element.parentElement.tagName === 'A' && element.parentElement.classList.contains('link-element')) {
     return element.parentElement;
@@ -1078,32 +1077,26 @@ linkAdd.addEventListener("click", function() {
   const url = grabLink();
   if (url === null) return;
 
-  // 1. Handle Button Elements (Existing Logic)
   if (currentlySelected && currentlySelected.classList.contains('button-element')) {
     currentlySelected.href = url;
     checkRestrictedControls();
     loadStylesFromSelected();
   }
 
-  // 2. Handle Image Elements (New Wrapping Logic)
   if (currentlySelected && currentlySelected.classList.contains('image-element')) {
     let linkWrapper = getParentLink(currentlySelected);
 
-    // If it's NOT already wrapped, create the wrapper
     if (!linkWrapper) {
       linkWrapper = document.createElement('a');
       linkWrapper.className = 'link-element building-block building-block-align-center';
       linkWrapper.setAttribute('data-name', 'Building Block: Link Container');
       
-      // Use display: contents to prevent the link from breaking the layout width
       linkWrapper.style.display = 'contents'; 
 
-      // Insert the wrapper before the image, then move the image inside
       currentlySelected.parentNode.insertBefore(linkWrapper, currentlySelected);
       linkWrapper.appendChild(currentlySelected);
     }
 
-    // Set the URL
     linkWrapper.href = url;
     
     checkRestrictedControls();
@@ -1112,21 +1105,17 @@ linkAdd.addEventListener("click", function() {
 });
 
 linkRemove.addEventListener("click", function() {
-  // 1. Handle Button Elements
   if (currentlySelected && currentlySelected.classList.contains('button-element')) {
     currentlySelected.removeAttribute('href');
     checkRestrictedControls();
     loadStylesFromSelected();
   }
 
-  // 2. Handle Image Elements (New Unwrapping Logic)
   if (currentlySelected && currentlySelected.classList.contains('image-element')) {
     const linkWrapper = getParentLink(currentlySelected);
 
     if (linkWrapper) {
-      // Move the image out of the wrapper (back to the main container)
       linkWrapper.parentNode.insertBefore(currentlySelected, linkWrapper);
-      // Delete the empty wrapper
       linkWrapper.remove();
     }
 
@@ -1136,7 +1125,6 @@ linkRemove.addEventListener("click", function() {
 });
 
 linkOpenInNewTab.addEventListener("change", function() {
-  // 1. Handle Button Elements
   if (currentlySelected && currentlySelected.classList.contains('button-element')) {
     if (linkOpenInNewTab.checked) {
       currentlySelected.target = "_blank";
@@ -1145,7 +1133,6 @@ linkOpenInNewTab.addEventListener("change", function() {
     }
   }
 
-  // 2. Handle Image Elements (Target the Wrapper)
   if (currentlySelected && currentlySelected.classList.contains('image-element')) {
     const linkWrapper = getParentLink(currentlySelected);
     
