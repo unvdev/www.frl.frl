@@ -71,7 +71,7 @@ const linkOpenInNewTab = document.getElementById("style-editor-link-open-in-new-
 
 function invokeStyleMenu() {
   if (currentlySelected) {
-    getLinkChild(currentlySelected);
+    currentlySelected = getLinkChild(currentlySelected) || currentlySelected;
     styles.classList.remove('content-hide');
     loadedPage.classList.add("sidebar-active");
     checkRestrictedControls();
