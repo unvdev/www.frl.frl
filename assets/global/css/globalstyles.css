@@ -405,6 +405,10 @@ a {
     text-align: justify;
 }
 
+.link-element {
+    display: contents;
+}
+
 .image-element {
     width: 100%;
 }
