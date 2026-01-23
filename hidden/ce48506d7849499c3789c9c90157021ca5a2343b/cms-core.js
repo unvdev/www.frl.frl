@@ -532,9 +532,100 @@ publishPage.addEventListener("click", publishPageCode);
 previewPage.addEventListener('click', checkCMSVisibilityState);
 
 // Global Functions
+
+// --- Links ---
 function getParentLink(element) {
   if (element.parentElement && element.parentElement.tagName === 'A' && element.parentElement.classList.contains('link-element')) {
     return element.parentElement;
   }
   return null;
+}
+
+// --- Image Uploading ---
+function grabImageLink() {
+  const link = prompt("Enter a photo link:");
+  
+  if (link === null) return null; // Handle cancel
+
+  if (link.toLowerCase().includes('google')) {
+      return link;
+  }
+
+  const imageRegex = /\.(jpe?g|png|gif|webp|svg)(\?.*)?(#.*)?$/i;
+
+  if (link && imageRegex.test(link)) {
+    return link;
+  } else if (link) {
+    alert("Please enter a valid image URL (jpg, png, gif, webp, svg).");
+    return grabImageLink(); 
+  }
+
+  return null;
+}
+
+function grabImageUpload() {
+  return new Promise((resolve) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/jpeg,image/png,image/gif,image/webp,image/svg+xml";
+
+    input.onchange = () => {
+      const file = input.files[0];
+      if (!file) {
+        resolve(null);
+        return;
+      }
+
+      if (file.type === "image/svg+xml") {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
+          let { width, height } = img;
+          const maxDimension = 1200;
+          
+          if (width > maxDimension || height > maxDimension) {
+            if (width > height) {
+              height *= maxDimension / width;
+              width = maxDimension;
+            } else {
+              width *= maxDimension / height;
+              height = maxDimension;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+
+          let outputMime = 'image/webp'; 
+          let quality = 0.85;
+          let base64 = canvas.toDataURL(outputMime, quality);
+
+          const maxSizeBytes = 1 * 1024 * 1024; 
+          
+          while (base64.length > maxSizeBytes && quality > 0.1) {
+            quality -= 0.1;
+            base64 = canvas.toDataURL(outputMime, quality);
+          }
+
+          resolve(base64);
+        };
+        img.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    };
+
+    input.click();
+  });
 }
