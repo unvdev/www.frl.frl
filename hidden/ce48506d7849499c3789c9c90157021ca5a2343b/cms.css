@@ -24,11 +24,6 @@
     padding: 5px;
 }
 
-.selected {
-    position: relative;
-    cursor: move !important;
-}
-
 /* .selected {
   position: relative;
 }
@@ -64,6 +59,11 @@
     position: relative;
     outline: 2px solid magenta !important;
     outline-offset: -2px !important;
+}
+
+.link-element.selected > .image-element {
+    outline: 2px solid magenta !important;
+    outline-offset: -2px !important
 }
 
 .selected-label {
