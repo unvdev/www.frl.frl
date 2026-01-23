@@ -1071,13 +1071,6 @@ matchAdjacentHeight.addEventListener("change", function() {
 });
 
 // --- Links ---
-function getParentLink(element) {
-  if (element.parentElement && element.parentElement.tagName === 'A' && element.parentElement.classList.contains('link-element')) {
-    return element.parentElement;
-  }
-  return null;
-}
-
 linkAdd.addEventListener("click", function() {
   const url = grabLink();
   if (url === null) return;
