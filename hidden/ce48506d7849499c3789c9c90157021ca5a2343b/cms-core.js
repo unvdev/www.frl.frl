@@ -48,13 +48,14 @@ function selectBuildingBlock(blockToSelect, originalTarget) {
     }
     deselectAll();
     currentlySelected = blockToSelect;
-    if (currentlySelected.classList.contains('image-element')) {
-        let linkWrapper = getParentLink(currentlySelected);
+    let currentlySelectedParent = currentlySelected.parentElement;
 
-        if (linkWrapper) {
+    if (currentlySelectedParent) {
+        if (currentlySelectedParent.classlist.contains('link-element')) {
             currentlySelected = blockToSelect.parentElement;
         }
     }
+    
     currentlySelected.classList.add('selected');
 }
 
