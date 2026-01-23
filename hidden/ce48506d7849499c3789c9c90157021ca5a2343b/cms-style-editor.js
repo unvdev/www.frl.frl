@@ -920,7 +920,7 @@ linkAdd.addEventListener("click", function() {
     if (!linkWrapper) {
       linkWrapper = document.createElement('a');
       linkWrapper.className = 'link-element building-block building-block-align-center';
-      linkWrapper.setAttribute('data-name', 'Building Block: Link Container');
+      linkWrapper.setAttribute('data-name', 'Building Block: Linked Image');
       
       linkWrapper.style.display = 'contents'; 
 
