@@ -217,6 +217,10 @@ const button = `
 </a>
 `;
 
+const embed = `
+<div class="embed-element building-block building-block-align-center" data-name="Building Block: Embed"></div>
+`;
+
 const navigation = `
 <div class="building-container building-block building-block-align-center stretch-to-screen navigation" data-name="Building Block: Navigation Building Container">
     <div class="building-column-span-one">

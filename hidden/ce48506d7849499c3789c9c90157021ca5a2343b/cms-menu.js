@@ -33,6 +33,9 @@ const layoutElementAccordionButton = document.getElementById("layout-element-acc
 const imageElementLinkButton = document.getElementById("image-element-link-button");
 const imageElementUploadButton = document.getElementById("image-element-upload-button");
 
+//Embed Element
+const embedElementButton = document.getElementById("embed-element-button");
+
 // ==========================================
 // 2. INSERTION LOGIC
 // ==========================================
@@ -89,16 +92,14 @@ function insertImageLink(htmlContent) {
   }
 }
 
-async function insertImageUpload(htmlContent) {
+async function insertEmbedContent() {
   if (currentlySelected) {
-    const imageUpload = await grabImageUpload();
+    const code = await grabEmbedCode();
 
-    if (imageUpload) {
-      currentlySelected.insertAdjacentHTML("beforebegin", htmlContent);
-      const insertedImage = currentlySelected.previousElementSibling;
-
-      if (insertedImage) {
-        insertedImage.src = imageUpload;
+    if (code) {
+      const embedWrapper = currentlySelected.querySelector('.embed-wrapper');
+      if (embedWrapper) {
+        embedWrapper.innerHTML = code;
       }
       
       deselectAll();
@@ -106,6 +107,146 @@ async function insertImageUpload(htmlContent) {
   }
 }
 
+async function insertEmbedContent(htmlContent) {
+  if (currentlySelected) {
+    const code = await grabEmbedCode();
+
+    if (code) {
+      currentlySelected.insertAdjacentHTML("beforebegin", htmlContent);
+      const insertedEmbed = currentlySelected.previousElementSibling;
+
+      if (insertedEmbed) {
+        const embedWrapper = insertedEmbed.querySelector('.embed-wrapper');
+        if (embedWrapper) {
+          embedWrapper.innerHTML = code;
+        }
+      }
+      
+      deselectAll();
+    }
+  }
+}
+
+// --- Embed Code ---
+function grabEmbedCode() {
+  const paste = prompt("Paste embed code:");
+  
+  if (paste === null) return null;
+
+  if (paste) {
+    const cleaned = paste.trim();
+    
+    if (!validateEmbedCode(cleaned)) {
+      alert("Invalid embed code. Please paste valid HTML (iframe, script, or blockquote).");
+      return null;
+    }
+    
+    return cleaned;
+  }
+
+  return null;
+}
+
+function validateEmbedCode(code) {
+  if (!code || code.length === 0) {
+    return false;
+  }
+  
+  const hasHtmlTag = /<[^>]+>/i.test(code);
+  if (!hasHtmlTag) {
+    return false;
+  }
+  
+  const allowedPatterns = [
+    /<iframe[\s\S]*?<\/iframe>/i,
+    /<script[\s\S]*?<\/script>/i,
+    /<blockquote[\s\S]*?<\/blockquote>/i,
+    /<video[\s\S]*?<\/video>/i,
+    /<audio[\s\S]*?<\/audio>/i,
+    /<div[\s\S]*?<\/div>/i
+  ];
+  
+  const hasAllowedPattern = allowedPatterns.some(pattern => pattern.test(code));
+  if (!hasAllowedPattern) {
+    return false;
+  }
+  
+  const dangerousPatterns = [
+    /javascript:/i,
+    /on\w+\s*=/i,
+    /<script[^>]*>(?!.*src=)/i,
+  ];
+  
+  const hasDangerousPattern = dangerousPatterns.some(pattern => pattern.test(code));
+  if (hasDangerousPattern) {
+    alert("Embed code contains potentially unsafe content. Please use only trusted embed codes.");
+    return false;
+  }
+  
+  if (/<iframe/i.test(code)) {
+    return validateIframeSrc(code);
+  }
+  
+  return true;
+}
+
+function validateIframeSrc(code) {
+  const srcMatch = code.match(/src\s*=\s*["']([^"']+)["']/i);
+  
+  if (!srcMatch) {
+    alert("iframe must have a valid src attribute.");
+    return false;
+  }
+  
+  const src = srcMatch[1];
+  
+  const allowedDomains = [
+    'youtube.com',
+    'youtube-nocookie.com',
+    'youtu.be',
+    'vimeo.com',
+    'player.vimeo.com',
+    'spotify.com',
+    'soundcloud.com',
+    'open.spotify.com',
+    'w.soundcloud.com',
+    'maps.google.com',
+    'google.com/maps',
+    'twitter.com',
+    'platform.twitter.com',
+    'instagram.com',
+    'facebook.com',
+    'codepen.io',
+    'jsfiddle.net',
+    'codesandbox.io',
+    'giphy.com',
+    'tenor.com',
+    'tally.so',
+    'formspree.io',
+    'forms.zohopublic.com'
+  ];
+  
+  try {
+    const url = new URL(src);
+    const isAllowed = allowedDomains.some(domain => 
+      url.hostname === domain || url.hostname.endsWith('.' + domain)
+    );
+    
+    if (!isAllowed) {
+      const proceed = confirm(
+        `Warning: "${url.hostname}" is not in the trusted domains list.\n\n` +
+        `Only embed content from sources you trust.\n\n` +
+        `Continue anyway?`
+      );
+      return proceed;
+    }
+    
+    return true;
+  } catch (e) {
+    alert("Invalid URL in iframe src attribute.");
+    return false;
+  }
+}
 
 // ==========================================
 // 3. EVENT LISTENERS
