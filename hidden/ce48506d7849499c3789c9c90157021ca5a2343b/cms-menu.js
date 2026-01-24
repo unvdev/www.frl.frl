@@ -92,6 +92,25 @@ function insertImageLink(htmlContent) {
   }
 }
 
+function insertEmbedContent(htmlContent) {
+  if (currentlySelected) {
+    const code = grabEmbedCode();
+
+    if (code === null) {
+      return;
+    }
+    
+    currentlySelected.insertAdjacentHTML('beforebegin', htmlContent);
+    const insertedEmbed = currentlySelected.previousElementSibling;
+
+    if (code && insertedEmbed) {
+      insertedEmbed.innerHTML = code;
+    }
+
+    deselectAll();
+  }
+}
+
 function grabEmbedCode() {
   const paste = prompt("Paste embed code:");
   
