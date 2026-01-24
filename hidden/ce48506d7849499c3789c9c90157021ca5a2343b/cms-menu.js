@@ -170,7 +170,7 @@ function validateEmbedCode(code) {
 }
 
 function validateIframeSrc(code) {
-  const srcMatch = code.match(/src\s*=\s*["']([^"']+)["']/i);
+  const srcMatch = code.match(/(?:data-[\w-]+-)?src\s*=\s*["']([^"']+)["']/i);
   
   if (!srcMatch) {
     alert("iframe must have a valid src attribute.");
