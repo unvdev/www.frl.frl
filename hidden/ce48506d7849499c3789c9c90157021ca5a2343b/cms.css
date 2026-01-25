@@ -13,15 +13,97 @@
     width: calc(100% - 250px);
 }
 
+/* --- New Top Menu Bar Styles --- */
+
 .cms-menu-bar {
-    display: block;
+    display: flex;
+    justify-content: space-between; /* Spreads groups to left and right */
+    align-items: center;
     position: fixed;
     top: 0;
-    background-color: blue;
-    height: 40px;
+    left: 0;
     width: 100vw;
+    height: 40px;
+    background-color: #2c3e50; /* Matches sidebar dark gray */
+    border-bottom: 1px solid #34495e;
     z-index: 1000000;
-    padding: 5px;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+.cms-menu-group {
+    display: flex;
+    height: 100%;
+}
+
+.cms-menu-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px; /* Square touch target */
+    height: 100%;
+    color: #ecf0f1; /* Matches sidebar text color */
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    border-right: 1px solid #34495e; /* Subtle separator like sidebar */
+}
+
+/* Remove border from the last item on the right group if desired */
+.cms-menu-group:last-child .cms-menu-btn:first-child {
+    border-left: 1px solid #34495e;
+    border-right: none;
+}
+
+.cms-menu-btn:hover {
+    background-color: magenta;
+    color: white;
+}
+
+.cms-menu-divider {
+    width: 1px;
+    height: 20px;
+    background-color: #7f8c8d;
+    margin: auto 5px;
+    align-self: center;
+}
+
+/* --- Magenta Status Bar --- */
+
+.cms-status-bar {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 40px; /* Pushed down by menu height */
+    left: 0;
+    width: 100vw;
+    height: 24px; /* Minimum height to fit text legibly */
+    background-color: magenta;
+    z-index: 999999;
+    padding: 0 10px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+}
+
+#selected-element-label {
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-family: 'Roboto', sans-serif; /* Matches sidebar font */
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --- Page Content Adjustment --- */
+
+/* Adjust loaded page to not hide behind the new taller header setup (40px menu + 24px bar = 64px) */
+#loaded-page {
+    margin-top: 64px !important;
 }
 
 /*CMS Element Visibility*/
