@@ -55,6 +55,10 @@
     color: white;
 }
 
+.cms-menu-button> * {
+    pointer-events: none;
+}
+
 .cms-menu-divider {
     width: 1px;
     height: 20px;
