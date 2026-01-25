@@ -661,3 +661,55 @@ function grabImageUpload() {
     input.click();
   });
 }
+
+// --- Embeds ---
+function grabEmbedCode() {
+  const paste = prompt("Paste embed code:");
+  
+  if (paste === null) return null;
+
+  if (paste) {
+    const cleaned = paste.trim();
+    
+    if (!validateEmbedCode(cleaned)) {
+      alert("Invalid embed code. Please paste valid HTML.");
+      return null;
+    }
+    
+    return cleaned;
+  }
+
+  return null;
+}
+
+function validateEmbedCode(code) {
+  if (!code || code.length === 0) {
+    return false;
+  }
+  
+  const hasHtmlTag = /<\w+[^>]*>/i.test(code);
+  if (!hasHtmlTag) {
+    return false;
+  }
+  
+  const hasClosingTag = /<\/\w+>/i.test(code);
+  const isSelfClosing = /<\w+[^>]*\/>/i.test(code);
+  
+  if (!hasClosingTag && !isSelfClosing) {
+    return false;
+  }
+  
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(code, 'text/html');
+    
+    const parserError = doc.querySelector('parsererror');
+    if (parserError) {
+      return false;
+    }
+    
+    return doc.body.children.length > 0;
+  } catch (e) {
+    return false;
+  }
+}
