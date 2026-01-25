@@ -202,6 +202,16 @@
     pointer-events: none;
 }
 
+.embed-element> :first-child::before {
+  content: "📺 Embed Preview (will appear on published page)";
+  display: block;
+  padding: 40px;
+  background: #f0f0f0;
+  border: 2px dashed #ccc;
+  text-align: center;
+  color: #666;
+}
+
 /* CMS CSS Testing */
 
 .content-show {
