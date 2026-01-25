@@ -48,17 +48,6 @@
     cursor: pointer;
     font-size: 16px;
     transition: all 0.2s ease;
-    border-right: 1px solid #34495e; /* Subtle separator like sidebar */
-}
-
-.cms-menu-button .after-cms-menu-divider {
-    border-left: 1px solid #34495e;
-}
-
-/* Remove border from the last item on the right group if desired */
-.cms-menu-group:last-child .cms-menu-button:first-child {
-    border-left: 1px solid #34495e;
-    border-right: none;
 }
 
 .cms-menu-button:hover {
