@@ -24,21 +24,17 @@
     padding: 5px;
 }
 
-/* .selected {
-  position: relative;
-}
-
-.selected::before {
+.header-environment::before {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   pointer-events: none;
   box-shadow: 0 0 0 2px magenta;
   z-index: 9998;
-} */
+}
 
-/* .selected::after {
-  content: attr(data-name);
+.header-environment::after {
+  content: 'Header Environment';
   position: absolute;
   top: -20px;
   left: 50%;
@@ -51,7 +47,7 @@
   pointer-events: none;
   z-index: 9999;
   white-space: nowrap;
-} */
+}
 
 /*CMS Element Visibility*/
 
