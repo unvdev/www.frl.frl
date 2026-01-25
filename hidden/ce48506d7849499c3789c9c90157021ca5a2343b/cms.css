@@ -199,7 +199,7 @@
 }
 
 .embed-element::before {
-  content: "⚠️ Embed Preview (Will appear on preview and published page.)";
+  content: "⚠️ Embed Preview (Will appear on published page.)";
   display: block;
   padding: 40px;
   background: #f0f0f0;
@@ -208,8 +208,8 @@
   color: #666;
 }
 
-.embed-element> :first-child {
-    display: none !important;
+.embed-element > * {
+  display: none !important;
 }
 
 /* CMS CSS Testing */
