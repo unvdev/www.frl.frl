@@ -37,7 +37,7 @@
     height: 100%;
 }
 
-.cms-menu-btn {
+.cms-menu-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -56,12 +56,12 @@
 }
 
 /* Remove border from the last item on the right group if desired */
-.cms-menu-group:last-child .cms-menu-btn:first-child {
+.cms-menu-group:last-child .cms-menu-button:first-child {
     border-left: 1px solid #34495e;
     border-right: none;
 }
 
-.cms-menu-btn:hover {
+.cms-menu-button:hover {
     background-color: magenta;
     color: white;
 }
