@@ -51,6 +51,10 @@
     border-right: 1px solid #34495e; /* Subtle separator like sidebar */
 }
 
+.cms-menu-button .after-cms-menu-divider {
+    border-right: 1px solid #34495e;
+}
+
 /* Remove border from the last item on the right group if desired */
 .cms-menu-group:last-child .cms-menu-btn:first-child {
     border-left: 1px solid #34495e;
