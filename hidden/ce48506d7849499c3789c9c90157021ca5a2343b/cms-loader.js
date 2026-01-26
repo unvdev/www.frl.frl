@@ -91,6 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const loadAppendedAssets = async (scriptsToMove) => {
             loadStylesheet('cms.css');
+            loadStylesheet('cms-menu-bar-styles.css');
             loadStylesheet('https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css');
 
             // Add cms-loader.js specifically to the <head>
