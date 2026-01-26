@@ -18,11 +18,12 @@
 .cms-main-menu {
     display: block;
     position: fixed;
+    top: 0;
+    width: 100%;
     z-index: 100;
 }
 
 .cms-main-menu.sidebar-active {
-    top: 0;
     right: 0;
     width: calc(100% - 250px);
 }
