@@ -578,7 +578,7 @@ document.addEventListener("click", (e) => {
     // Define the primary UI containers that should not trigger selection changes.
     const isInsideQuillUI = target.closest('.text-editor-pop');
     const isInsideCmsUI = target.closest('.cms-menu');
-    const isInsideCmsMenuBar = target.closest('.cms-menu-bar');
+    const isInsideCmsMenuBar = target.closest('.cms-main-menu');
     const isInsideStyleEditor = target.closest('#style-editor-sidebar');
 
     if (isInsideQuillUI || isInsideCmsUI || isInsideStyleEditor) {
