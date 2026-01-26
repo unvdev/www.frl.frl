@@ -67,8 +67,6 @@
     align-self: center;
 }
 
-/* --- Magenta Status Bar --- */
-
 .cms-status-bar {
     display: flex;
     align-items: center;
@@ -97,9 +95,6 @@
     text-overflow: ellipsis;
 }
 
-/* --- Page Content Adjustment --- */
-
-/* Adjust loaded page to not hide behind the new taller header setup (40px menu + 24px bar = 64px) */
 #loaded-page {
     margin-top: 64px !important;
 }
