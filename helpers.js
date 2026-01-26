@@ -27,6 +27,7 @@ function initHelpers() {
     initScrollAnimations();
   } else {
     initResponsiveVisibility();
+    initNavigation();
   }
 
   function initAccordionColors() {
@@ -79,12 +80,16 @@ function initHelpers() {
     const navigationCloseButton = document.querySelector(".navigation-close-button");
 
     navigation.style.display = (isEditMode) ? '' : 'none';
-    navigationOpenButton.addEventListener('click', () => {
-      navigation.style.display = '';
-    });
-    navigationCloseButton.addEventListener('click', () => {
-      navigation.style.display = 'none';
-    });
+    
+    if (isEditMode) {
+        navigationOpenButton.addEventListener('click', () => {
+            navigation.style.display = '';
+        });
+
+        navigationCloseButton.addEventListener('click', () => {
+            navigation.style.display = 'none';
+        });
+    }
   }
 
   function initScrollAnimations() {
