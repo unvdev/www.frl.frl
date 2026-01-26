@@ -270,13 +270,12 @@ function enableCMS() {
 // 5. SAVING & PUBLISHING
 // ==========================================
 
-// --- Database Configuration ---
 const DATABASE_NAME = 'CMS_Backup_DATABASE';
 const DATABASE_VERSION = 1;
 const STORE_NAME = 'page_drafts';
 let cmsBackupDatabase;
 
-const request = indexedDatabase.open(DATABASE_NAME, DATABASE_VERSION);
+const request = indexedDB.open(DATABASE_NAME, DATABASE_VERSION);
 
 request.onupgradeneeded = (event) => {
     cmsBackupDatabase = event.target.result;
