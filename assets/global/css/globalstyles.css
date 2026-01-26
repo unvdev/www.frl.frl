@@ -461,7 +461,7 @@ header {
     height: 100px;
     background-color: #2D2D3A;
     border-bottom: 2px solid #555BBB;
-    z-index: 999;
+    z-index: 10;
 }
 
 footer {
@@ -471,7 +471,7 @@ footer {
     width: 100%;
     height: 60px;
     background-color: #2D2D3A;
-    z-index: 999;
+    z-index: 10;
 }
 
 /*Classes*/
@@ -838,5 +838,5 @@ footer {
 .navigation {
     position: fixed;
     overflow: auto;
-    z-index: 100;
+    z-index: 10;
 }
