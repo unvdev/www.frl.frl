@@ -572,7 +572,7 @@ async function publishPageCode() {
 // ==========================================
 
 
-if (!cmsPreviewCounter === 0) {
+if (cmsPreviewCounter === 0) {
 // Global Click (Selection & UI Logic)
 document.addEventListener("click", (e) => {
     const target = e.target;
