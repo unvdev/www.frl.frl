@@ -338,11 +338,11 @@ function saveCurrentPage() {
 function flashSaveSuccess() {
     const saveIcon = saveBtn.querySelector('i');
     
-    saveIcon.className = 'fa-check';
+    saveIcon.className = 'fas fa-check';
     saveIcon.style.color = '#2ecc71';
 
     setTimeout(() => {
-        saveIcon.className = 'fa-floppy-disk';
+        saveIcon.className = 'fas fa-floppy-disk';
         saveIcon.style.color = '';
     }, 1500);
 }
