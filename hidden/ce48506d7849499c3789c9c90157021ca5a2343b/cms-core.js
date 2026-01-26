@@ -41,7 +41,7 @@ function deselectAll() {
     }
 }
 
-function selectBuildingBlock(blockToSelect, originalTarget) {
+function selectBuildingBlock(blockToSelect) {
     deselectAll();
     currentlySelected = blockToSelect;
     currentlySelected = getParentLink(currentlySelected) || currentlySelected;
