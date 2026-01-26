@@ -384,7 +384,7 @@ function clearSavedPage() {
     const deleteRequest = store.delete('manual_save');
 
     deleteRequest.onsuccess = () => {
-        alert("Saved data cleared. You won't be prompted to load on refresh.");
+        alert("Saved data cleared.");
     };
 
     deleteRequest.onerror = () => {
