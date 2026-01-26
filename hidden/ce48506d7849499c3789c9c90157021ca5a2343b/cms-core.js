@@ -585,30 +585,30 @@ document.addEventListener("click", (e) => {
         return;
     }
 
-if (isInsideCmsMenuBar) {
-    if (target !== moveUp && target !== moveDown) {
-        return;
-    } else {
-        if (currentlySelected) {
-            if (target === moveUp) {
-                const prev = currentlySelected.previousElementSibling;
-                if (prev) {
-                    currentlySelected.parentElement.insertBefore(currentlySelected, prev);
-                }
-            } else if (target === moveDown) {
-                const next = currentlySelected.nextElementSibling;
-                if (next) {
-                    if (next.classList.contains("placeholder-block") || next.classList.contains("accordion-content")) {
-                        return;
-                    } else {
-                        currentlySelected.parentElement.insertBefore(currentlySelected, next.nextElementSibling);
+    if (isInsideCmsMenuBar) {
+        if (target !== moveUp && target !== moveDown) {
+            return;
+        } else {
+            if (currentlySelected) {
+                if (target === moveUp) {
+                    const prev = currentlySelected.previousElementSibling;
+                    if (prev) {
+                        currentlySelected.parentElement.insertBefore(currentlySelected, prev);
+                    }
+                } else if (target === moveDown) {
+                    const next = currentlySelected.nextElementSibling;
+                    if (next) {
+                        if (next.classList.contains("placeholder-block") || next.classList.contains("accordion-content")) {
+                            return;
+                        } else {
+                            currentlySelected.parentElement.insertBefore(currentlySelected, next.nextElementSibling);
+                        }
                     }
                 }
             }
+            return;
         }
-        return;
     }
-}
 
     // Building Block Selection
     const targetBuildingBlock = target.closest('.building-block');
