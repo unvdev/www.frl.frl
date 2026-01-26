@@ -369,9 +369,21 @@ function loadSavedPage() {
 const clearBtn = document.getElementById('clear-save');
 if (clearBtn) {
     clearBtn.addEventListener('click', () => {
-        if(confirm("Are you sure you want to delete your saved draft? This cannot be undone.")) {
-            clearSavedPage();
-        }
+        if (!db) return;
+
+        const transaction = db.transaction([STORE_NAME], 'readonly');
+        const store = transaction.objectStore(STORE_NAME);
+        const countRequest = store.count('manual_save');
+
+        countRequest.onsuccess = () => {
+            if (countRequest.result > 0) {
+                if(confirm("Are you sure you want to delete your saved draft? This cannot be undone.")) {
+                    clearSavedPage();
+                }
+            } else {
+                alert("No saved data to clear.");
+            }
+        };
     });
 }
 
