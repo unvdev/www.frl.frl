@@ -267,8 +267,105 @@ function enableCMS() {
 
 
 // ==========================================
-// 5. PUBLISHING & EXPORT
+// 5. SAVING & PUBLISHING
 // ==========================================
+
+// --- Database Configuration ---
+const DB_NAME = 'CMS_Backup_DB';
+const DB_VERSION = 1;
+const STORE_NAME = 'page_drafts';
+let db;
+
+// --- Open Database ---
+const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+request.onupgradeneeded = (event) => {
+    db = event.target.result;
+    if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+    }
+};
+
+request.onsuccess = (event) => {
+    db = event.target.result;
+    // Auto-load on refresh
+    loadSavedPage(); 
+};
+
+request.onerror = (event) => {
+    console.error("Database error: ", event.target.errorCode);
+};
+
+// --- Button Listener ---
+const saveBtn = document.getElementById('save-page');
+if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+        saveCurrentPage();
+    });
+}
+
+// --- Save Function ---
+function saveCurrentPage() {
+    if (!db) return;
+
+    const contentContainer = document.getElementById('loaded-page');
+    if (!contentContainer) return;
+
+    const clone = contentContainer.cloneNode(true);
+    const selectedItems = clone.querySelectorAll('.selected');
+    selectedItems.forEach(el => el.classList.remove('selected'));
+    
+    const pageData = {
+        id: 'manual_save',
+        content: clone.innerHTML,
+        timestamp: new Date().getTime()
+    };
+
+    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+    const putRequest = store.put(pageData);
+
+    putRequest.onsuccess = () => {
+        flashSaveSuccess();
+    };
+
+    putRequest.onerror = () => {
+        alert("Error saving page.");
+    };
+}
+
+// --- Visual Feedback ---
+function flashSaveSuccess() {
+    const icon = saveBtn.querySelector('i');
+    
+    icon.classList.remove('fa-save');
+    icon.classList.add('fa-check');
+    icon.style.color = '#2ecc71';
+
+    setTimeout(() => {
+        icon.classList.remove('fa-check');
+        icon.classList.add('fa-save');
+        icon.style.color = '';
+    }, 1500);
+}
+
+// --- Load Function ---
+function loadSavedPage() {
+    if(!db) return;
+    
+    const transaction = db.transaction([STORE_NAME], 'readonly');
+    const store = transaction.objectStore(STORE_NAME);
+    const getRequest = store.get('manual_save');
+
+    getRequest.onsuccess = (event) => {
+        const result = event.target.result;
+        if (result && result.content) {
+            if(confirm("Load last saved version?")) {
+                document.getElementById('loaded-page').innerHTML = result.content;
+            }
+        }
+    };
+}
 
 function formatHtml(node, level = 0, indentChar = '  ') {
     const inlineTags = new Set(['abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'dfn', 'em', 'i', 'kbd', 'mark', 'q', 's', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'time', 'u', 'var', 'wbr']);
