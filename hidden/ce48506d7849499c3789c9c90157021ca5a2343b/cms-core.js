@@ -345,14 +345,13 @@ function loadSavedPage() {
     
     const transaction = cmsBackupDatabase.transaction([STORE_NAME], 'readonly');
     const store = transaction.objectStore(STORE_NAME);
-    const getRequest = store.get(getPageID()); // <--- CHANGED: Looks for THIS page's data
+    const getRequest = store.get(getPageID());
 
     getRequest.onsuccess = (event) => {
         const result = event.target.result;
         if (result && result.content) {
-            if(confirm("Found a saved draft for this specific page. Load it?")) {
-                document.getElementById('loaded-page').innerHTML = result.content;
-            }
+            document.getElementById('loaded-page').innerHTML = result.content;
+            console.log("Auto-loaded saved draft for: " + getPageID());
         }
     };
 }
