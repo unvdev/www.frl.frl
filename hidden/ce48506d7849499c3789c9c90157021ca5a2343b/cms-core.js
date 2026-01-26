@@ -271,23 +271,22 @@ function enableCMS() {
 // ==========================================
 
 // --- Database Configuration ---
-const DB_NAME = 'CMS_Backup_DB';
-const DB_VERSION = 1;
+const DATABASE_NAME = 'CMS_Backup_DATABASE';
+const DATABASE_VERSION = 1;
 const STORE_NAME = 'page_drafts';
-let db;
+let cmsBackupDatabase;
 
-// --- Open Database ---
-const request = indexedDB.open(DB_NAME, DB_VERSION);
+const request = indexedDatabase.open(DATABASE_NAME, DATABASE_VERSION);
 
 request.onupgradeneeded = (event) => {
-    db = event.target.result;
-    if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+    cmsBackupDatabase = event.target.result;
+    if (!cmsBackupDatabase.objectStoreNames.contains(STORE_NAME)) {
+        cmsBackupDatabase.createObjectStore(STORE_NAME, { keyPath: 'id' });
     }
 };
 
 request.onsuccess = (event) => {
-    db = event.target.result;
+    cmsBackupDatabase = event.target.result;
     // Auto-load on refresh
     loadSavedPage(); 
 };
@@ -296,7 +295,6 @@ request.onerror = (event) => {
     console.error("Database error: ", event.target.errorCode);
 };
 
-// --- Button Listener ---
 const saveBtn = document.getElementById('save-page');
 if (saveBtn) {
     saveBtn.addEventListener('click', () => {
@@ -304,10 +302,12 @@ if (saveBtn) {
     });
 }
 
-// --- Save Function ---
-function saveCurrentPage() {
-    if (!db) return;
+function getPageID() {
+    return window.location.href;
+}
 
+function saveCurrentPage() {
+    if (!cmsBackupDatabase) return;
     const contentContainer = document.getElementById('loaded-page');
     if (!contentContainer) return;
 
@@ -316,25 +316,19 @@ function saveCurrentPage() {
     selectedItems.forEach(el => el.classList.remove('selected'));
     
     const pageData = {
-        id: 'manual_save',
+        id: getPageID(), // <--- CHANGED: Unique ID per page
         content: clone.innerHTML,
         timestamp: new Date().getTime()
     };
 
-    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    const transaction = cmsBackupDatabase.transaction([STORE_NAME], 'readwrite');
     const store = transaction.objectStore(STORE_NAME);
     const putRequest = store.put(pageData);
 
-    putRequest.onsuccess = () => {
-        flashSaveSuccess();
-    };
-
-    putRequest.onerror = () => {
-        alert("Error saving page.");
-    };
+    putRequest.onsuccess = () => flashSaveSuccess();
+    putRequest.onerror = () => alert("Error saving page.");
 }
 
-// --- Visual Feedback ---
 function flashSaveSuccess() {
     const saveIcon = saveBtn.querySelector('i');
     
@@ -347,60 +341,53 @@ function flashSaveSuccess() {
     }, 1500);
 }
 
-// --- Load Function ---
 function loadSavedPage() {
-    if(!db) return;
+    if(!cmsBackupDatabase) return;
     
-    const transaction = db.transaction([STORE_NAME], 'readonly');
+    const transaction = cmsBackupDatabase.transaction([STORE_NAME], 'readonly');
     const store = transaction.objectStore(STORE_NAME);
-    const getRequest = store.get('manual_save');
+    const getRequest = store.get(getPageID()); // <--- CHANGED: Looks for THIS page's data
 
     getRequest.onsuccess = (event) => {
         const result = event.target.result;
         if (result && result.content) {
-            if(confirm("Load last saved version?")) {
+            if(confirm("Found a saved draft for this specific page. Load it?")) {
                 document.getElementById('loaded-page').innerHTML = result.content;
             }
         }
     };
 }
 
-// --- Clear Save Listener ---
 const clearBtn = document.getElementById('clear-save');
 if (clearBtn) {
     clearBtn.addEventListener('click', () => {
-        if (!db) return;
-
-        const transaction = db.transaction([STORE_NAME], 'readonly');
+        if (!cmsBackupDatabase) return;
+        const transaction = cmsBackupDatabase.transaction([STORE_NAME], 'readonly');
         const store = transaction.objectStore(STORE_NAME);
-        const countRequest = store.count('manual_save');
+        const countRequest = store.count(getPageID()); // <--- CHANGED: Check THIS page
 
         countRequest.onsuccess = () => {
             if (countRequest.result > 0) {
-                if(confirm("Are you sure you want to delete your saved draft? This cannot be undone.")) {
+                if(confirm("Delete saved draft for this page?")) {
                     clearSavedPage();
                 }
             } else {
-                alert("No saved data to clear.");
+                alert("No saved data for this page.");
             }
         };
     });
 }
 
-// --- Clear Function ---
 function clearSavedPage() {
-    if (!db) return;
-
-    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    if (!cmsBackupDatabase) return;
+    const transaction = cmsBackupDatabase.transaction([STORE_NAME], 'readwrite');
     const store = transaction.objectStore(STORE_NAME);
-    const deleteRequest = store.delete('manual_save');
+    const deleteRequest = store.delete(getPageID()); // <--- CHANGED: Deletes only THIS page
 
     deleteRequest.onsuccess = () => {
-        alert("Saved data cleared. You won't be prompted to load on refresh.");
-    };
-
-    deleteRequest.onerror = () => {
-        alert("Error clearing data.");
+        const icon = clearBtn.querySelector('i');
+        icon.classList.add('fa-spin');
+        setTimeout(() => icon.classList.remove('fa-spin'), 500);
     };
 }
 
