@@ -351,7 +351,6 @@ function loadSavedPage() {
         const result = event.target.result;
         if (result && result.content) {
             document.getElementById('loaded-page').innerHTML = result.content;
-            console.log("Auto-loaded saved draft for: " + getPageID());
         }
     };
 }
