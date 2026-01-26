@@ -367,6 +367,40 @@ function loadSavedPage() {
     };
 }
 
+// --- Clear Save Listener ---
+const clearBtn = document.getElementById('clear-save');
+if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+        if(confirm("Are you sure you want to delete your saved draft? This cannot be undone.")) {
+            clearSavedPage();
+        }
+    });
+}
+
+// --- Clear Function ---
+function clearSavedPage() {
+    if (!db) return;
+
+    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+    const deleteRequest = store.delete('manual_save');
+
+    deleteRequest.onsuccess = () => {
+        alert("Saved data cleared. You won't be prompted to load on refresh.");
+        
+        // Optional: Visual feedback on the button
+        const icon = clearBtn.querySelector('i');
+        icon.classList.add('fa-spin'); // Spin the icon briefly
+        setTimeout(() => icon.classList.remove('fa-spin'), 500);
+    };
+
+    deleteRequest.onerror = () => {
+        alert("Error clearing data.");
+    };
+}
+
+//Legacy Format
+
 function formatHtml(node, level = 0, indentChar = '  ') {
     const inlineTags = new Set(['abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'dfn', 'em', 'i', 'kbd', 'mark', 'q', 's', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'time', 'u', 'var', 'wbr']);
     const voidTags = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
