@@ -36,6 +36,7 @@ function deselectAll() {
         cms.classList.add("content-hide");
         styles.classList.add("content-hide");
         loadedPage.classList.remove("sidebar-active");
+        cmsMenuBar.classList.remove("sidebar-active");
     }
 }
 

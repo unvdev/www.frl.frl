@@ -78,7 +78,6 @@
     align-items: center;
     position: fixed;
     top: 40px; /* Pushed down by menu height */
-    left: 0;
     width: 100vw;
     height: 24px; /* Minimum height to fit text legibly */
     background-color: magenta;
