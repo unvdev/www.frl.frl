@@ -82,7 +82,7 @@ function initHelpers() {
     if (!navigation) return;
 
     if (!navigationOpenButton || !navigationCloseButton) {
-      navigation.style.display = 'none';
+      navigation.style.display = (isEditMode) ? '' : 'none';
     };
 
     navigation.style.display = (isEditMode) ? '' : 'none';
