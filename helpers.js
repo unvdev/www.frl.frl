@@ -79,7 +79,11 @@ function initHelpers() {
     const navigationOpenButton = document.querySelector(".navigation-open-button");
     const navigationCloseButton = document.querySelector(".navigation-close-button");
 
-    if (!navigation || !navigationOpenButton || !navigationCloseButton) return;
+    if (!navigation) return;
+
+    if (!navigationOpenButton || !navigationCloseButton) {
+      navigation.style.display = 'none';
+    };
 
     navigation.style.display = (isEditMode) ? '' : 'none';
     
