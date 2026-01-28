@@ -2,23 +2,18 @@ function initHelpers() {
   const params = new URLSearchParams(window.location.search);
   const isEditMode = params.get('mode') === 'editing';
 
-  // Recursive function to get the first non-default color
   function getEffectiveColor(el) {
     if (!el) return null;
     const color = getComputedStyle(el).color;
-    // Check if color is not transparent/black
     if (color && color !== 'rgba(0, 0, 0, 0)' && color !== 'rgb(0, 0, 0)') {
       return color;
     }
-    // Recursively check children
     for (const child of el.children) {
       const childColor = getEffectiveColor(child);
       if (childColor) return childColor;
     }
     return null;
   }
-
-  // Only run interactive features if not in edit mode
   if (!isEditMode) {
     initAccordionColors();
     initAccordionToggles();
@@ -99,10 +94,8 @@ function initHelpers() {
   }
 
   function initScrollAnimations() {
-    // Register the ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
 
-    // Configuration for all animations
     const defaults = {
       duration: 0.8,
       ease: "power2.out",
@@ -110,14 +103,12 @@ function initHelpers() {
       start: "top 66%",
     };
 
-    // Select all elements with the data-anim attribute
     const elements = document.querySelectorAll("[data-anim]");
 
     elements.forEach((el) => {
       const type = el.getAttribute("data-anim");
       const delay = el.getAttribute("data-delay") || 0;
 
-      // Base settings for GSAP
       let settings = {
         scrollTrigger: {
           trigger: el,
@@ -129,9 +120,7 @@ function initHelpers() {
         delay: delay,
       };
 
-      // Animation configurations
       switch (type) {
-        // === FADES ===
         case "fade-in":
           settings.opacity = 0;
           break;
@@ -156,7 +145,6 @@ function initHelpers() {
           settings.x = 50;
           break;
 
-        // === FLY INS ===
         case "fly-in-up":
           settings.opacity = 0;
           settings.y = 200;
@@ -181,7 +169,6 @@ function initHelpers() {
           settings.ease = "back.out(1.7)";
           break;
 
-        // === GROWS ===
         case "grow-up":
           settings.opacity = 0;
           settings.scaleY = 0;
@@ -211,9 +198,26 @@ function initHelpers() {
           settings.scale = 0.5;
           settings.ease = "elastic.out(1, 0.5)";
           break;
+
+        case "fade-out-shrink":
+          settings.scrollTrigger.start = "top 20%";
+          gsap.to(el, {
+            ...settings,
+            opacity: 0,
+            scale: 0,
+          });
+          return;
+
+        case "fade-out-grow":
+          settings.scrollTrigger.start = "top 20%";
+          gsap.to(el, {
+            ...settings,
+            opacity: 0,
+            scale: 1.5,
+          });
+          return;
       }
 
-      // Apply the animation
       gsap.from(el, settings);
     });
   }
