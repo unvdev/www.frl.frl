@@ -106,6 +106,9 @@ function initHelpers() {
     }
   }
 
+  window.disableScrollAnimations = disableScrollAnimations;
+  window.enableScrollAnimations = enableScrollAnimations;
+
   function initScrollAnimations() {
     gsap.registerPlugin(ScrollTrigger);
 

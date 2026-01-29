@@ -241,7 +241,7 @@ function disableCMS() {
     window.history.pushState({}, '', url.toString());
 
     initHelpers();
-    enableScrollAnimations();
+    window.enableScrollAnimations();
 }
 
 function enableCMS() {
@@ -265,7 +265,7 @@ function enableCMS() {
     window.history.pushState({}, '', url.toString());
 
     initHelpers();
-    disableScrollAnimations();
+    window.disableScrollAnimations();
 }
 
 
