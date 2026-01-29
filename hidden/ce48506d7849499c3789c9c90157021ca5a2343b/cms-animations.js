@@ -25,6 +25,7 @@ const animationFadeOutShrink = document.getElementById('animation-fade-out-shrin
 const animationFadeOutGrow = document.getElementById('animation-fade-out-grow-checkbox');
 
 function invokeAnimationMenu() {
+  console.log('invokeAnimationMenu');
   if (currentlySelected) {
     currentlySelected = getLinkChild(currentlySelected) || currentlySelected;
     animations.classList.remove('content-hide');
@@ -149,6 +150,7 @@ animationCheckboxes.forEach(({ checkbox, type }) => {
 });
 
 animateButton.addEventListener("click", () => {
+  console.log('animateButton');
   if (currentlySelected) {
     invokeAnimationMenu();
   }
