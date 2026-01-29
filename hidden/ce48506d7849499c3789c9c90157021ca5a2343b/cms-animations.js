@@ -36,37 +36,37 @@ function invokeAnimationMenu() {
 }
 
 function loadAnimationsFromSelected() {
-    if (!currentlySelected) return;
+  if (!currentlySelected) return;
 
-    const hasAnimation = currentlySelected.hasAttribute('data-anim');
+  const animationType = currentlySelected.getAttribute('data-anim');
 
-    if (!hasAnimation) return;
-    
-    // -- Fades --
-    animationFadeIn.checked = hasAnimation === 'fade-in';
-    animationFadeInUp.checked = hasAnimation === 'fade-in-up';
-    animationFadeInDown.checked = hasAnimation === 'fade-in-down';
-    animationFadeInLeft.checked = hasAnimation === 'fade-in-left';
-    animationFadeInRight.checked = hasAnimation === 'fade-in-right';
+  if (!animationType) return;
+  
+  // -- Fades --
+  animationFadeIn.checked = animationType === 'fade-in';
+  animationFadeInUp.checked = animationType === 'fade-in-up';
+  animationFadeInDown.checked = animationType === 'fade-in-down';
+  animationFadeInLeft.checked = animationType === 'fade-in-left';
+  animationFadeInRight.checked = animationType === 'fade-in-right';
 
-    // -- Flys --
-    animationFlyInUp.checked = hasAnimation === 'fly-in-up';
-    animationFlyInDown.checked = hasAnimation === 'fly-in-down';
-    animationFlyInLeft.checked = hasAnimation === 'fly-in-left';
-    animationFlyInRight.checked = hasAnimation === 'fly-in-right';
+  // -- Flys --
+  animationFlyInUp.checked = animationType === 'fly-in-up';
+  animationFlyInDown.checked = animationType === 'fly-in-down';
+  animationFlyInLeft.checked = animationType === 'fly-in-left';
+  animationFlyInRight.checked = animationType === 'fly-in-right';
 
-    // -- Grows --
-    animationGrowUp.checked = hasAnimation === 'grow-up';
-    animationGrowDown.checked = hasAnimation === 'grow-down';
-    animationGrowRight.checked = hasAnimation === 'grow-right';
-    animationGrowLeft.checked = hasAnimation === 'grow-left';
+  // -- Grows --
+  animationGrowUp.checked = animationType === 'grow-up';
+  animationGrowDown.checked = animationType === 'grow-down';
+  animationGrowRight.checked = animationType === 'grow-right';
+  animationGrowLeft.checked = animationType === 'grow-left';
 
-    // -- Pop --
-    animationPopIn.checked = hasAnimation === 'pop-in';
+  // -- Pop --
+  animationPopIn.checked = animationType === 'pop-in';
 
-    // -- Scroll --
-    animationFadeOutShrink.checked = hasAnimation === 'fade-out-shrink';
-    animationFadeOutGrow.checked = hasAnimation === 'fade-out-grow';
+  // -- Scroll --
+  animationFadeOutShrink.checked = animationType === 'fade-out-shrink';
+  animationFadeOutGrow.checked = animationType === 'fade-out-grow';
 }
 
 function setAnimation(animationType) {
