@@ -37,35 +37,17 @@ function invokeAnimationMenu() {
 function loadAnimationsFromSelected() {
   if (!currentlySelected) return;
 
+  uncheckAllAnimations();
+
   const animationType = currentlySelected.getAttribute('data-anim');
 
   if (!animationType) return;
   
-  // -- Fades --
-  animationFadeIn.checked = animationType === 'fade-in';
-  animationFadeInUp.checked = animationType === 'fade-in-up';
-  animationFadeInDown.checked = animationType === 'fade-in-down';
-  animationFadeInLeft.checked = animationType === 'fade-in-left';
-  animationFadeInRight.checked = animationType === 'fade-in-right';
-
-  // -- Flys --
-  animationFlyInUp.checked = animationType === 'fly-in-up';
-  animationFlyInDown.checked = animationType === 'fly-in-down';
-  animationFlyInLeft.checked = animationType === 'fly-in-left';
-  animationFlyInRight.checked = animationType === 'fly-in-right';
-
-  // -- Grows --
-  animationGrowUp.checked = animationType === 'grow-up';
-  animationGrowDown.checked = animationType === 'grow-down';
-  animationGrowRight.checked = animationType === 'grow-right';
-  animationGrowLeft.checked = animationType === 'grow-left';
-
-  // -- Pop --
-  animationPopIn.checked = animationType === 'pop-in';
-
-  // -- Scroll --
-  animationFadeOutShrink.checked = animationType === 'fade-out-shrink';
-  animationFadeOutGrow.checked = animationType === 'fade-out-grow';
+  const checkbox = document.getElementById(`animation-${animationType}-checkbox`);
+  
+  if (checkbox) {
+    checkbox.checked = true;
+  }
 }
 
 function setAnimation(animationType) {
