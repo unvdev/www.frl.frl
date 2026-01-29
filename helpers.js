@@ -14,6 +14,17 @@ function initHelpers() {
     }
     return null;
   }
+
+  function killScrollAnimations() {
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    gsap.killTweensOf("*");
+    
+    const elements = document.querySelectorAll("[data-anim]");
+    elements.forEach(el => {
+      gsap.set(el, { clearProps: "all" });
+    });
+  }
+
   if (!isEditMode) {
     initAccordionColors();
     initAccordionToggles();
@@ -23,6 +34,7 @@ function initHelpers() {
   } else {
     initResponsiveVisibility();
     initNavigation();
+    killScrollAnimations();
   }
 
   function initAccordionColors() {
@@ -203,7 +215,7 @@ function initHelpers() {
           gsap.to(el, {
             scrollTrigger: {
               trigger: el,
-              start: "top 5%",
+              start: "top 10%",
               end: "top -90%",
               scrub: 1,
             },
@@ -231,8 +243,8 @@ function initHelpers() {
           gsap.to(el, {
             scrollTrigger: {
               trigger: el,
-              start: "top 20%",
-              end: "top -50%",
+              start: "top 10%",
+              end: "top -90%",
               scrub: 1,
             },
             opacity: 0,
@@ -245,8 +257,8 @@ function initHelpers() {
           gsap.to(el, {
             scrollTrigger: {
               trigger: el,
-              start: "top 20%",
-              end: "top -50%",
+              start: "top 10%",
+              end: "top -90%",
               scrub: 1,
             },
             opacity: 0,
