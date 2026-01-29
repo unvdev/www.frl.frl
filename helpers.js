@@ -205,11 +205,11 @@ function initHelpers() {
               trigger: el,
               start: "top 33%",
               end: "top 5%",
-              scrub: true,
+              scrub: 1,
             },
             opacity: 0,
             scale: 0,
-            ease: "none",
+            ease: "power2.inOut",
           });
           return;
 
@@ -219,11 +219,11 @@ function initHelpers() {
               trigger: el,
               start: "top 33%",
               end: "top 5%",
-              scrub: true,
+              scrub: 1,
             },
             opacity: 0,
             scale: 1.5,
-            ease: "none",
+            ease: "power2.inOut",
           });
           return;
       }
