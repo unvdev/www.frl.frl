@@ -241,9 +241,8 @@ function disableCMS() {
     window.history.pushState({}, '', url.toString());
 
     initHelpers();
-    
+
     window.scrollTo(0, 0);
-    window.enableScrollAnimations();
 }
 
 function enableCMS() {
@@ -269,7 +268,6 @@ function enableCMS() {
     initHelpers();
 
     window.scrollTo(0, 0);
-    window.disableScrollAnimations();
 }
 
 
