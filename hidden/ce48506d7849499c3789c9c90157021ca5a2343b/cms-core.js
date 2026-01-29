@@ -6,6 +6,7 @@ const cmsMainMenu = document.querySelector(".cms-main-menu");
 const selectedElementLabel = document.getElementById("selected-element-label");
 const elements = document.getElementById("page-element-sidebar");
 const styles = document.getElementById("style-editor-sidebar");
+const animations = document.getElementById("animations-sidebar");
 const loadedPage = document.getElementById("loaded-page");
 
 // Buttons
